@@ -47,7 +47,12 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
     compileOnly project(":common")
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
+    compileOnly "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
+    annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+    compileOnly 'org.jetbrains:annotations:26.0.2-1'
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 }
 
 jar {
@@ -55,4 +60,8 @@ jar {
     manifest.attributes([
             "MixinConfigs": "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
     ])
+}
+
+publishMods {
+    file = tasks.named("reobfJar").flatMap { it.archiveFile }
 }
