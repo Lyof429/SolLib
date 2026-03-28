@@ -55,20 +55,6 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
-
-    maven {
-        name = 'Fabric'
-        url = 'https://maven.fabricmc.net/'
-    }
-
-    maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "ClothConfig"
-        url = "https://maven.shedaniel.me/"
-    }
 }
 
 ['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
