@@ -1,4 +1,4 @@
-package net.lcc.sollib.data;
+package net.lcc.sollib.api.data;
 
 public interface RuntimeData {
 }

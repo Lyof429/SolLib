@@ -1,5 +1,7 @@
 package net.lcc.sollib.platform.services;
 
+import java.nio.file.Path;
+
 public interface IPlatformHelper {
     /**
      * Gets the name of the current platform
@@ -24,11 +26,7 @@ public interface IPlatformHelper {
     boolean isDevelopmentEnvironment();
 
     /**
-     * Gets the name of the environment type as a string.
      *
-     * @return The name of the environment type.
      */
-    default String getEnvironmentName() {
-        return isDevelopmentEnvironment() ? "development" : "production";
-    }
+    Path getConfigDirectory();
 }
