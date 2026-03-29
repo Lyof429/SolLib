@@ -10,56 +10,25 @@ public class SolLib {
     public static void init() {
         //LOG.info("Hello", Services.PLATFORM.getPlatformName(), "World!");
         ConfigBuilder config = new ConfigBuilder("sollib", 1.0)
-                .push("test_category")
+                .category("test_category", a -> a
                     .comment("This is a comment")
-                    .add("hello", "world")
-                    .push("nested")
+                    .entry("hello", "world")
+                    .category("nested", b -> b
                         .comment("Supports string, number and boolean values by default")
-                        .add("number", "hi")
-                    .pop()
-                    .push("another")
+                        .entry("number", "hi"))
+                    .category("another", b -> b
                         .comment("Ah and lists of them too I forgot about that")
                         .comment("  (Lists don't have to hold a single type btw)")
-                        .addList("michel")
-                            .add(2)
-                            .add("this is a list, in case you didn't notice")
-                            .add(12)
-                        .pop()
-                        .add("working", true)
-                    .pop()
-                .pop();
+                        .list("michel", c -> c
+                            .entry(2)
+                            .entry("this is a list, in case you didn't notice")
+                            .list(d -> d.
+                                entry("ayaya")
+                                .category(e -> e
+                                    .entry("thing", false)))
+                            .entry(12))
+                        .entry("working", true))
+                );
         LOG.info(config.build());
-
-        /*
-        {
-          "solconfig": {
-            "version": 1.0,
-            "force_reset": false
-          },
-
-          // This config file uses a custom defined parser. That's why there are comments here, they wouldn't be valid in any other .json file
-          //   To add a comment yourself, just start a line with // like here
-
-          // TEST CATEGORY
-          "test_category": {
-            // This is a comment
-            "hello": "world",
-            "nested": {
-              // Supports string, number and boolean values by default
-              "number": "hi"
-            },
-            "another": {
-              // Ah and lists of them too I forgot about that
-              //   (Lists don't have to hold a single type btw)
-              "michel": [
-                2,
-                "this is a list, in case you didn't notice",
-                12
-              ],
-              "working": true
-            }
-          }
-        }
-         */
     }
 }
