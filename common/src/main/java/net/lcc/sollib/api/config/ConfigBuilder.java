@@ -8,31 +8,28 @@ import java.util.function.Consumer;
 
 public class ConfigBuilder {
     private final StringBuilder builder;
-    private final String name;
     private int indent;
     private final Stack<String> path;
+    private String lastPath;
     private final ArrayDeque<String> comments;
     private boolean first;
 
-    public ConfigBuilder(String name, double version) {
-         this.name = name;
+    public ConfigBuilder(double version) {
          this.builder = new StringBuilder();
          this.indent = 0;
          this.path = new Stack<>();
+         this.lastPath = "";
          this.comments = new ArrayDeque<>();
          this.first = true;
 
          this.builder.append("version: ").append(version).append("\nforce_reset: ").append((false))
-                 .append("\n\n// This config file uses a custom defined parser. That's why there are comments here, they wouldn't be valid in any other .json file")
+                 .append("\n\n// This config file uses a custom defined parser.")
+                 .append("\n//   That's why there are comments here and stray values above, they wouldn't be valid in any other .json file")
                  .append("\n//   To add a comment yourself, just start a line with // like here");
     }
 
-    public String build() {
+    public String build(String name) {
         return this.builder.append("\n").toString();
-    }
-
-    public String getCurrentPath() {
-        return String.join(".", this.path);
     }
 
     protected void jump(boolean comma) {
@@ -57,36 +54,15 @@ public class ConfigBuilder {
         this.comments.addLast(comment);
         return this;
     }
-/*
-    public ConfigBuilder push(String entry) {
-        if (this.indent == 0 && this.builder.length() > 1)
-            this.comment("").comment(entry.toUpperCase().replace('_', ' '));
-        this.newLine(true);
-
-        this.path.push(entry);
-        this.indent++;
-        this.builder.append("\"").append(entry).append("\": {");
-        return this;
-    }
-
-    public ConfigBuilder pop() {
-        if (this.indent <= 0)
-            throw new IllegalStateException("Tried to pop a closed ConfigBuilder:\n" + this.builder.toString());
-
-        this.path.pop();
-        this.indent--;
-        this.newLine(false);
-        this.builder.append("}");
-        return this;
-    }*/
 
     public ConfigBuilder bind(ConfigEntry entry) {
-        SolLib.LOG.info(this.getCurrentPath());
+        SolLib.LOG.info(this.lastPath);
         return this;
     }
 
     protected void append(String key, String value) {
         this.path.push(key);
+        this.lastPath = String.join(".", this.path);
         this.jump(true);
         this.builder.append("\"").append(key).append("\": ").append(value);
         this.path.pop();
@@ -114,6 +90,7 @@ public class ConfigBuilder {
 
     public ConfigBuilder category(String key, Consumer<ConfigBuilder> consumer) {
         this.path.push(key);
+        this.lastPath = String.join(".", this.path);
 
         if (this.indent == 0 && this.builder.length() > 1)
             this.comment("").comment(key.toUpperCase().replace('_', ' '));
@@ -147,11 +124,6 @@ public class ConfigBuilder {
     }
 
     public class List {
-        public ConfigBuilder.List bind(ConfigEntry entry) {
-            SolLib.LOG.info(ConfigBuilder.this.getCurrentPath());
-            return this;
-        }
-
         protected void append(String value) {
             ConfigBuilder self = ConfigBuilder.this;
 

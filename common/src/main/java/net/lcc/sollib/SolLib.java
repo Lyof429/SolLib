@@ -9,14 +9,17 @@ public class SolLib {
 
     public static void init() {
         //LOG.info("Hello", Services.PLATFORM.getPlatformName(), "World!");
-        ConfigBuilder config = new ConfigBuilder("sollib", 1.0)
+        ConfigBuilder config = new ConfigBuilder(1.0)
                 .category("test_category", a -> a
                     .comment("This is a comment")
                     .entry("hello", "world")
+                    .bind(null)
                     .category("nested", b -> b
                         .comment("Supports string, number and boolean values by default")
-                        .entry("number", "hi"))
+                        .entry("number", "hi")
+                        .bind(null))
                     .category("another", b -> b
+                        .bind(null)
                         .comment("Ah and lists of them too I forgot about that")
                         .comment("  (Lists don't have to hold a single type btw)")
                         .list("michel", c -> c
@@ -27,8 +30,9 @@ public class SolLib {
                                 .category(e -> e
                                     .entry("thing", false)))
                             .entry(12))
-                        .entry("working", true))
-                );
-        LOG.info(config.build());
+                        .entry("working", true)))
+                .category("patrick", a -> a
+                    .entry("idkwhattowrite", 42));
+        LOG.info(config.build("sollib"));
     }
 }
