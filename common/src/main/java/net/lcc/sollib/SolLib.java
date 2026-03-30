@@ -1,17 +1,18 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.common.config.Configurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
+import net.lcc.sollib.api.common.config.SolConfig;
+import net.lcc.sollib.api.common.config.SolConfigRegistry;
 import net.lcc.sollib.api.common.logger.SolLogger;
-import net.lcc.sollib.platform.Services;
+
+import java.util.function.Consumer;
 
 public class SolLib {
     public static final String MOD_ID = "sollib";
     public static final SolLogger LOG = new SolLogger("SolLib");
 
     public static void init() {
-        LOG.info(Services.PLATFORM.getConfigDirectory());
-        JsonBuilder config = new JsonBuilder()
+        Consumer<JsonBuilder> builder = it -> it
                 .addCategory("test_category", a -> a
                     .comment("This is a comment")
                     .add("hello", "world")
@@ -28,7 +29,7 @@ public class SolLib {
                             .add(2)
                             .add("this is a list, in case you didn't notice")
                             .add(12))));
-        LOG.info(config.toString());
-        LOG.info(config.toJson());
+        SolConfig config = new SolConfig("test/sollib", 1.0, builder);
+        SolConfigRegistry.reload();
     }
 }

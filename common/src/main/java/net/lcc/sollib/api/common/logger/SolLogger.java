@@ -25,8 +25,8 @@ public class SolLogger {
     }
 
     /**
-     * @param message Any number of values to log
      * Displays a blank space between each value
+     * @param message Any number of values to log
      * @return The first parameter
      */
     @SafeVarargs
@@ -36,8 +36,8 @@ public class SolLogger {
     }
 
     /**
-     * @param message Any number of values to log
      * Displays a blank space between each value
+     * @param message Any number of values to log
      * @return The first parameter
      */
     @SafeVarargs
@@ -47,8 +47,8 @@ public class SolLogger {
     }
 
     /**
-     * @param message Any number of values to log
      * Displays a blank space between each value
+     * @param message Any number of values to log
      * @return The first parameter
      */
     @SafeVarargs
@@ -58,9 +58,9 @@ public class SolLogger {
     }
 
     /**
-     * @param message Any number of values to log
-     * Displays a blank space between each value
+     * Displays a blank space between each value <br/>
      * Ignores consecutive identical logs
+     * @param message Any number of values to log
      * @return The first parameter
      */
     @SafeVarargs

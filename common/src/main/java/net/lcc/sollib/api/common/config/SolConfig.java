@@ -11,20 +11,19 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class SolConfig {
     public static String fromJson(String json) {
-        StringBuilder builder = new StringBuilder();
-        /*builder.append("version: ").append(this.version).append("\nforce_reset: ").append((false))
+        /*StringBuilder builder = new StringBuilder();
+        builder.append("version: ").append(this.version).append("\nforce_reset: ").append((false))
                 .append("\n\n// This config file uses a custom defined parser.")
                 .append("\n//   That's why there are comments here and stray values above, they wouldn't be valid in any other .json file")
                 .append("\n//   To add a comment yourself, just start a line with // like here");*/
-        return "";
+        return json;
     }
 
     public static String toJson(String json) {
-        return "";
+        return json;
     }
 
 
@@ -50,7 +49,7 @@ public class SolConfig {
         for (String dir : this.getSuffixName().split("/")) {
             path = path.resolve(dir);
 
-            if (!path.endsWith(".json") && !Files.isDirectory(path)) {
+            if (!path.endsWith(".json") && !Files.exists(path)) {
                 try {
                     Files.createDirectory(path);
                 } catch (IOException e) {

@@ -18,7 +18,7 @@ public class SolConfigRegistry {
     }
 
     /**
-     * @param config The instance of SolConfig to register
+     * @param config The instance of SolConfig to register  <br/>
      * Automatically called by any SolConfig in its constructor
      */
     public static void register(SolConfig config) {
@@ -26,7 +26,7 @@ public class SolConfigRegistry {
     }
 
     /**
-     * Reloads every config registered, reading their file and fetching the required ConfigEntry
+     * Reloads every config registered, reading their file and fetching the required ConfigEntry <br/>
      * Automatically called on resource reload
      */
     public static void reload() {
