@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import net.lcc.sollib.SolLib;
 
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -46,10 +47,17 @@ public class JsonBuilder {
                  .append("\n//   To add a comment yourself, just start a line with // like here");*/
     }
 
+
+    /**
+     * @return
+     */
     public String toString() {
         return "{\n" + this.builder + "\n}";
     }
 
+    /**
+     * @return
+     */
     public JsonElement toJson() {
         return JsonBuilder.toJson(this.toString());
     }
@@ -146,12 +154,12 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addList(String key, Consumer<JsonBuilder.List> consumer) {
+    public JsonBuilder addList(String key, Consumer<JsonList> consumer) {
         this.path.push(key);
         this.jump(true);
         this.indent++;
         this.builder.append("\"").append(key).append("\": [");
-        consumer.accept(new JsonBuilder.List());
+        consumer.accept(new JsonList());
 
         this.path.pop();
         this.indent--;
@@ -161,7 +169,18 @@ public class JsonBuilder {
         return this;
     }
 
-    public class List {
+    public <T> JsonBuilder addList(String key, List<T> value) {
+        return this.addList(key, self -> {
+            for (T v : value) {
+                if (v instanceof String it) self.add(it);
+                else if (v instanceof Number it) self.add(it);
+                else if (v instanceof Boolean it) self.add(it);
+                else if (v instanceof Configurable it) self.add(it);
+            }
+        });
+    }
+
+    public class JsonList {
         protected void append(String value) {
             JsonBuilder self = JsonBuilder.this;
 
@@ -169,7 +188,7 @@ public class JsonBuilder {
             self.builder.append(value);
         }
 
-        public JsonBuilder.List add(Configurable value) {
+        public JsonList add(Configurable value) {
             String[] json = value.toConfigEntry().toString().split("\n");
             JsonBuilder self = JsonBuilder.this;
             self.jump(true);
@@ -184,22 +203,22 @@ public class JsonBuilder {
             return this;
         }
 
-        public JsonBuilder.List add(String value) {
+        public JsonList add(String value) {
             this.append("\"" + value + "\"");
             return this;
         }
 
-        public JsonBuilder.List add(Number value) {
+        public JsonList add(Number value) {
             this.append(value.toString());
             return this;
         }
 
-        public JsonBuilder.List add(Boolean value) {
+        public JsonList add(Boolean value) {
             this.append(value.toString());
             return this;
         }
 
-        public JsonBuilder.List addCategory(Consumer<JsonBuilder> consumer) {
+        public JsonList addCategory(Consumer<JsonBuilder> consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
@@ -214,19 +233,30 @@ public class JsonBuilder {
             return this;
         }
 
-        public JsonBuilder.List addList(Consumer<JsonBuilder.List> consumer) {
+        public JsonList addList(Consumer<JsonList> consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
             self.indent++;
             self.builder.append("[");
-            consumer.accept(new JsonBuilder.List());
+            consumer.accept(new JsonList());
 
             self.indent--;
             self.jump(false);
             self.builder.append("]");
 
             return this;
+        }
+
+        public <T> JsonList addList(List<T> value) {
+            return this.addList(self -> {
+                for (T v : value) {
+                    if (v instanceof String it) self.add(it);
+                    else if (v instanceof Number it) self.add(it);
+                    else if (v instanceof Boolean it) self.add(it);
+                    else if (v instanceof Configurable it) self.add(it);
+                }
+            });
         }
     }
 }
