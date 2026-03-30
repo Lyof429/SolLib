@@ -1,38 +1,49 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.common.config.ConfigBuilder;
+import net.lcc.sollib.api.common.config.Configurable;
+import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.logger.SolLogger;
 
 public class SolLib {
     public static final String MOD_ID = "sollib";
     public static final SolLogger LOG = new SolLogger("SolLib");
 
+    public record Test(int x, String name) implements Configurable {
+        @Override
+        public JsonBuilder toConfigEntry() {
+            return new JsonBuilder().add("x", this.x()).add("name", this.name());
+        }
+    }
+
     public static void init() {
         //LOG.info("Hello", Services.PLATFORM.getPlatformName(), "World!");
-        ConfigBuilder config = new ConfigBuilder(1.0)
-                .category("test_category", a -> a
+        JsonBuilder config = new JsonBuilder()
+                .addCategory("test_category", a -> a
                     .comment("This is a comment")
-                    .entry("hello", "world")
+                    .add("hello", "world")
                     .bind(null)
-                    .category("nested", b -> b
+                    .addCategory("nested", b -> b
                         .comment("Supports string, number and boolean values by default")
-                        .entry("number", "hi")
-                        .bind(null))
-                    .category("another", b -> b
+                        .add("number", new Test(3, "mario"))
+                        .bind(null)
+                        .add("afterobject", 2.3))
+                    .addCategory("another", b -> b
                         .bind(null)
                         .comment("Ah and lists of them too I forgot about that")
                         .comment("  (Lists don't have to hold a single type btw)")
-                        .list("michel", c -> c
-                            .entry(2)
-                            .entry("this is a list, in case you didn't notice")
-                            .list(d -> d.
-                                entry("ayaya")
-                                .category(e -> e
-                                    .entry("thing", false)))
-                            .entry(12))
-                        .entry("working", true)))
-                .category("patrick", a -> a
-                    .entry("idkwhattowrite", 42));
-        LOG.info(config.build("sollib"));
+                        .addList("michel", c -> c
+                            .add(2)
+                            .add("this is a list, in case you didn't notice")
+                            .addList(d -> d.
+                                    add("ayaya")
+                                .addCategory(e -> e
+                                    .add("thing", false)))
+                            .add(new Test(31, "luigi"))
+                            .add(12))
+                        .add("working", true)))
+                .addCategory("patrick", a -> a
+                    .add("idkwhattowrite", 42));
+        LOG.info(config.toString());
+        LOG.info(config.toJson());
     }
 }
