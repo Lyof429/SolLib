@@ -31,6 +31,12 @@ public class JsonBuilder {
     private String lastPath;
     private final ArrayDeque<String> comments;
     private boolean first;
+    private SolConfig config;
+
+    public JsonBuilder(SolConfig config) {
+        this();
+        this.config = config;
+    }
 
     public JsonBuilder() {
          this.builder = new StringBuilder();
@@ -39,12 +45,7 @@ public class JsonBuilder {
          this.lastPath = "";
          this.comments = new ArrayDeque<>();
          this.first = true;
-
-         /*
-         this.builder.append("version: ").append(version).append("\nforce_reset: ").append((false))
-                 .append("\n\n// This config file uses a custom defined parser.")
-                 .append("\n//   That's why there are comments here and stray values above, they wouldn't be valid in any other .json file")
-                 .append("\n//   To add a comment yourself, just start a line with // like here");*/
+         this.config = null;
     }
 
 
