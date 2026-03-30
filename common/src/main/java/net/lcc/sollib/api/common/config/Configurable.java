@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.config;
+package net.lcc.sollib.api.common.config;
 
 public interface Configurable {
     String toConfigEntry();

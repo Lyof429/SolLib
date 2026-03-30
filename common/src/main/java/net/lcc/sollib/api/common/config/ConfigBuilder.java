@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.config;
+package net.lcc.sollib.api.common.config;
 
 import net.lcc.sollib.SolLib;
 

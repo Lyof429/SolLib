@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.logger;
+package net.lcc.sollib.api.common.logger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

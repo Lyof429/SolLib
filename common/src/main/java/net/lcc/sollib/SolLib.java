@@ -1,7 +1,7 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.config.ConfigBuilder;
-import net.lcc.sollib.api.logger.SolLogger;
+import net.lcc.sollib.api.common.config.ConfigBuilder;
+import net.lcc.sollib.api.common.logger.SolLogger;
 
 public class SolLib {
     public static final String MOD_ID = "sollib";
