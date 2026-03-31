@@ -7,6 +7,9 @@
   "mixins": [
   ],
   "client": [
+    "client.BossHealthOverlayMixin",
+    "client.model.EntityModelMixin",
+    "client.model.ModelPartMixin"
   ],
   "server": [
   ],
