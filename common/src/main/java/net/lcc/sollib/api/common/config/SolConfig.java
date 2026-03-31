@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.config;
 
+import com.google.gson.JsonElement;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.platform.Services;
 import org.apache.commons.io.FileUtils;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 public class SolConfig {
     public static String fromJson(String json) {
@@ -29,12 +29,13 @@ public class SolConfig {
 
     private final String name;
     private final double version;
-    private final Consumer<JsonBuilder> builder;
+    private final Configurable contentBuilder;
+    private JsonElement content;
 
-    public SolConfig(String name, double version, Consumer<JsonBuilder> builder) {
+    public SolConfig(String name, double version, Configurable contentBuilder) {
         this.name = name;
         this.version = version;
-        this.builder = builder;
+        this.contentBuilder = contentBuilder;
 
         SolConfigRegistry.register(this);
     }
@@ -63,7 +64,7 @@ public class SolConfig {
         boolean create = !file.isFile();
 
         JsonBuilder builder = new JsonBuilder(this);
-        this.builder.accept(builder);
+        this.contentBuilder.toJson(builder);
         String content = builder.toString();
 
         try {

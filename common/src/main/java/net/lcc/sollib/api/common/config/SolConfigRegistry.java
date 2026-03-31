@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.config;
 
+import net.lcc.sollib.SolLib;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class SolConfigRegistry {
      * Automatically called on resource reload
      */
     public static void reload() {
+        SolLib.LOG.info("Loading", CONFIG_MAP.size(), "configs");
         for (SolConfig config : CONFIG_MAP.values())
             config.init();
     }

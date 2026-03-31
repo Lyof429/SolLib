@@ -13,6 +13,9 @@ import java.util.function.Consumer;
 public class JsonBuilder {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * @return The JSON represented by the given String
+     */
     public static JsonElement toJson(String json) {
         StringBuilder result = new StringBuilder();
 
@@ -28,11 +31,15 @@ public class JsonBuilder {
     private final StringBuilder builder;
     private int indent;
     private final Stack<String> path;
-    private String lastPath;
+    private String currentPath;
     private final ArrayDeque<String> comments;
     private boolean first;
     private SolConfig config;
 
+    /**
+     * Instantiates a JsonBuilder configured for the creation of a SolConfig <br/>
+     * Allows directly binding a ConfigEntry to the config
+     */
     public JsonBuilder(SolConfig config) {
         this();
         this.config = config;
@@ -42,25 +49,32 @@ public class JsonBuilder {
          this.builder = new StringBuilder();
          this.indent = 0;
          this.path = new Stack<>();
-         this.lastPath = "";
+         this.currentPath = "";
          this.comments = new ArrayDeque<>();
          this.first = true;
          this.config = null;
     }
 
-
     /**
-     * @return
+     * @return A String representation of the JSON this built, with pretty printing
      */
     public String toString() {
         return "{\n" + this.builder + "\n}";
     }
 
     /**
-     * @return
+     * @return The JSON this built
      */
     public JsonElement toJson() {
         return JsonBuilder.toJson(this.toString());
+    }
+
+    /**
+     * {@link #bind(ConfigEntry)} should instead be used to directly bind a ConfigEntry to this path
+     * @return The current config path this builder is at
+     */
+    public String getCurrentPath() {
+        return this.currentPath;
     }
 
     protected void jump(boolean comma) {
@@ -89,21 +103,26 @@ public class JsonBuilder {
     }
 
     public JsonBuilder bind(ConfigEntry entry) {
-        SolLib.LOG.info(this.lastPath);
+        if (this.config != null && entry != null)
+            SolLib.LOG.info(this.getCurrentPath());
         return this;
     }
 
     protected void append(String key, String value) {
         this.path.push(key);
-        this.lastPath = String.join(".", this.path);
+        this.currentPath = String.join(".", this.path);
         this.jump(true);
         this.builder.append("\"").append(key).append("\": ").append(value);
         this.path.pop();
     }
 
     public JsonBuilder add(String key, Configurable value) {
-        String[] json = value.toConfigEntry().toString().split("\n");
+        JsonBuilder it = new JsonBuilder(this.config);
+        value.toJson(it);
+        String[] json = it.toString().split("\n");
+
         this.path.push(key);
+        this.currentPath = String.join(".", this.path);
 
         this.jump(true);
         this.builder.append("\"").append(key).append("\": ");
@@ -115,7 +134,6 @@ public class JsonBuilder {
                 this.builder.append("\n");
         }
 
-        this.lastPath = String.join(".", this.path);
         this.path.pop();
         return this;
     }
@@ -137,7 +155,7 @@ public class JsonBuilder {
 
     public JsonBuilder addCategory(String key, Consumer<JsonBuilder> consumer) {
         this.path.push(key);
-        this.lastPath = String.join(".", this.path);
+        this.currentPath = String.join(".", this.path);
 
         if (this.indent == 0 && this.builder.length() > 1)
             this.comment("").comment(key.toUpperCase().replace('_', ' '));
@@ -190,8 +208,12 @@ public class JsonBuilder {
         }
 
         public JsonList add(Configurable value) {
-            String[] json = value.toConfigEntry().toString().split("\n");
             JsonBuilder self = JsonBuilder.this;
+
+            JsonBuilder it = new JsonBuilder(self.config);
+            value.toJson(it);
+            String[] json = it.toString().split("\n");
+
             self.jump(true);
 
             self.builder.append(json[0]).append("\n");
