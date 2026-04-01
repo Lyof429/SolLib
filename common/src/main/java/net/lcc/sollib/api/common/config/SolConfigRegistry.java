@@ -31,7 +31,7 @@ public class SolConfigRegistry {
      * Automatically called on resource reload
      */
     public static void reload() {
-        SolLib.LOG.info("Loading", CONFIG_MAP.size(), "configs");
+        SolLib.LOG.info("Loaded", CONFIG_MAP.size(), "configs");
         for (SolConfig config : CONFIG_MAP.values())
             config.init();
     }

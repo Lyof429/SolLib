@@ -3,6 +3,8 @@ package net.lcc.sollib.api.common.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.MalformedJsonException;
 import net.lcc.sollib.SolLib;
 
 import java.util.ArrayDeque;
@@ -15,8 +17,9 @@ public class JsonBuilder {
 
     /**
      * @return The JSON represented by the given String
+     * @throws MalformedJsonException If the given String has wrong syntax
      */
-    public static JsonElement toJson(String json) {
+    public static JsonElement toJson(String json) throws MalformedJsonException {
         StringBuilder result = new StringBuilder();
 
         for (String line : json.split("\n")) {
@@ -66,7 +69,11 @@ public class JsonBuilder {
      * @return The JSON this built
      */
     public JsonElement toJson() {
-        return JsonBuilder.toJson(this.toString());
+        try {
+            return JsonBuilder.toJson(this.toString());
+        } catch (MalformedJsonException e) {
+            return new JsonObject();
+        }
     }
 
     /**

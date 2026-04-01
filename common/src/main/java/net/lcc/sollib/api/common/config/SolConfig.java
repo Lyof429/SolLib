@@ -2,6 +2,8 @@ package net.lcc.sollib.api.common.config;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.MalformedJsonException;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.platform.Services;
 import org.apache.commons.io.FileUtils;
@@ -15,6 +17,9 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SolConfig {
+    /**
+     * Converts {@code json} from a JSON to a SolConfig formatted string
+     */
     public static String fromJson(String json, double version) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n// This config file uses a custom defined parser.")
@@ -34,8 +39,29 @@ public class SolConfig {
         return builder.append("\n").toString();
     }
 
+    /**
+     * Converts {@code json} from a SolConfig formatted string to a JSON, and removes comments
+     */
     public static String toJson(String json, AtomicDouble version, AtomicBoolean reset) {
-        return json;
+        StringBuilder builder = new StringBuilder("{");
+
+        boolean started = false;
+        for (String line : json.split("\n")) {
+            if (line.startsWith("version")) {
+                try {
+                    version.set(Double.parseDouble(line.split(":")[1].strip()));
+                } catch (Exception ignored) {}
+            } else if (line.startsWith("reset")) {
+                try {
+                    reset.set(Boolean.parseBoolean(line.split(":")[1].strip()));
+                } catch (Exception ignored) {}
+            }
+
+            if (line.startsWith("\"")) started = true;
+            if (started && !line.strip().startsWith("//")) builder.append("\n  ").append(line);
+        }
+
+        return builder.append("\n}").toString();
     }
 
 
@@ -100,7 +126,16 @@ public class SolConfig {
             return;
         }
 
-        SolLib.LOG.info(content);
+        if (reset.get()) this.init(true);
+
+        try {
+            this.content = JsonBuilder.toJson(content);
+        } catch (MalformedJsonException e) {
+            SolLib.LOG.error(this.getName(), ": Error while reading config file\n", e);
+            this.content = new JsonObject();
+        }
+
+        SolLib.LOG.info(this.content);
     }
 
     public String getName() {
