@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SolConfig {
@@ -69,11 +71,14 @@ public class SolConfig {
     private final double version;
     private final Configurable contentBuilder;
     private JsonElement content;
+    private final Map<String, ConfigEntry<?>> entries;
 
     public SolConfig(String name, double version, Configurable contentBuilder) {
         this.name = name;
         this.version = version;
         this.contentBuilder = contentBuilder;
+        this.content = new JsonObject();
+        this.entries = new HashMap<>();
 
         SolConfigRegistry.register(this);
     }
@@ -135,7 +140,8 @@ public class SolConfig {
             this.content = new JsonObject();
         }
 
-        SolLib.LOG.info(this.content);
+        for (ConfigEntry<?> entry : this.entries.values())
+            entry.clear();
     }
 
     public String getName() {
@@ -144,5 +150,14 @@ public class SolConfig {
 
     public String getSuffixName() {
         return this.name + ".json";
+    }
+
+    protected JsonElement getContent() {
+        return this.content;
+    }
+
+    protected <T> void addEntry(String path, ConfigEntry<T> entry) {
+        this.entries.remove(path);
+        this.entries.put(path, entry);
     }
 }

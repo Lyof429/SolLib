@@ -1,5 +1,7 @@
 package net.lcc.sollib;
 
+import com.google.gson.JsonObject;
+import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.Configurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
@@ -13,17 +15,21 @@ public class SolTest {
     }
 
     public static void init() {
+        ConfigEntry<String> hello = new ConfigEntry<>("world");
+        ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
+        ConfigEntry<JsonObject> another = new ConfigEntry<>(new JsonObject());
+
         Configurable builder = it -> it
                 .addCategory("test_category", a -> a
                         .comment("This is a comment")
                         .add("hello", "world")
-                        .bind(null)
+                        .bind(hello)
                         .addCategory("nested", b -> b
                                 .comment("Supports string, number and boolean values by default")
-                                .bind(null)
-                                .add("exists", true))
+                                .add("exists", true)
+                                .bind(exists))
                         .addCategory("another", b -> b
-                                .bind(null)
+                                .bind(another)
                                 .comment("Ah and lists of them too I forgot about that")
                                 .comment("  (Lists don't have to hold a single type btw)")
                                 .addList("michel", c -> c
@@ -32,7 +38,13 @@ public class SolTest {
                                         .addCategory(new Thing(7, "luigi"))
                                         .add(12))))
                 .addCategory("thing", new Thing(3, "mario"));
-        SolConfig config = new SolConfig("sollib/test", 1.0, builder);
+        SolConfig config = new SolConfig("sollib/test", 1.0, builder) {
+            @Override
+            public void init() {
+                super.init();
+                SolLib.LOG.info(hello.get(), exists.get(), another.get());
+            }
+        };
         config.init();
     }
 }

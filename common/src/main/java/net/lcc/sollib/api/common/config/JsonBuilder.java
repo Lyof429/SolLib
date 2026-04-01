@@ -35,6 +35,7 @@ public class JsonBuilder {
     private int indent;
     private final Stack<String> path;
     private String currentPath;
+    private Object currentValue;
     private final ArrayDeque<String> comments;
     private boolean first;
     private SolConfig config;
@@ -109,9 +110,10 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder bind(ConfigEntry entry) {
+    public <T> JsonBuilder bind(ConfigEntry<T> entry) {
         if (this.config != null && entry != null)
-            SolLib.LOG.info(this.getCurrentPath());
+            entry.set(this.config, this.getCurrentPath());
+
         return this;
     }
 
@@ -142,7 +144,7 @@ public class JsonBuilder {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
 
-        if (this.indent == 0)
+        if (this.indent == 0 && this.config != null)
             this.comment("").comment(key.toUpperCase().replace('_', ' '));
         this.jump(true);
 
