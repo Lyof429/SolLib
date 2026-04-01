@@ -116,28 +116,6 @@ public class JsonBuilder {
         this.path.pop();
     }
 
-    public JsonBuilder add(String key, Configurable value) {
-        JsonBuilder it = new JsonBuilder(this.config);
-        value.toJson(it);
-        String[] json = it.toString().split("\n");
-
-        this.path.push(key);
-        this.currentPath = String.join(".", this.path);
-
-        this.jump(true);
-        this.builder.append("\"").append(key).append("\": ");
-
-        this.builder.append(json[0]).append("\n");
-        for (int i = 1; i < json.length; i++) {
-            this.builder.append("  ".repeat(this.indent + 1)).append(json[i]);
-            if (i != json.length - 1)
-                this.builder.append("\n");
-        }
-
-        this.path.pop();
-        return this;
-    }
-
     public JsonBuilder add(String key, String value) {
         this.append(key, "\"" + value + "\"");
         return this;
@@ -153,18 +131,19 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addCategory(String key, Consumer<JsonBuilder> consumer) {
+    public JsonBuilder addCategory(String key, Configurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
 
-        if (this.indent == 0 && this.builder.length() > 1)
+        if (this.indent == 0)
             this.comment("").comment(key.toUpperCase().replace('_', ' '));
         this.jump(true);
 
         this.indent++;
         this.builder.append("\"").append(key).append("\": {");
-        consumer.accept(this);
+        consumer.toJson(this);
 
+        this.currentPath = String.join(".", this.path);
         this.path.pop();
         this.indent--;
         this.jump(false);
@@ -194,7 +173,7 @@ public class JsonBuilder {
                 if (v instanceof String it) self.add(it);
                 else if (v instanceof Number it) self.add(it);
                 else if (v instanceof Boolean it) self.add(it);
-                else if (v instanceof Configurable it) self.add(it);
+                else if (v instanceof Configurable it) self.addCategory(it);
             }
         });
     }
@@ -205,25 +184,6 @@ public class JsonBuilder {
 
             self.jump(true);
             self.builder.append(value);
-        }
-
-        public JsonList add(Configurable value) {
-            JsonBuilder self = JsonBuilder.this;
-
-            JsonBuilder it = new JsonBuilder(self.config);
-            value.toJson(it);
-            String[] json = it.toString().split("\n");
-
-            self.jump(true);
-
-            self.builder.append(json[0]).append("\n");
-            for (int i = 1; i < json.length; i++) {
-                self.builder.append("  ".repeat(self.indent + 1)).append(json[i]);
-                if (i != json.length - 1)
-                    self.builder.append("\n");
-            }
-
-            return this;
         }
 
         public JsonList add(String value) {
@@ -241,13 +201,13 @@ public class JsonBuilder {
             return this;
         }
 
-        public JsonList addCategory(Consumer<JsonBuilder> consumer) {
+        public JsonList addCategory(Configurable consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
             self.indent++;
             self.builder.append("{");
-            consumer.accept(self);
+            consumer.toJson(self);
 
             self.indent--;
             self.jump(false);
@@ -277,7 +237,7 @@ public class JsonBuilder {
                     if (v instanceof String it) self.add(it);
                     else if (v instanceof Number it) self.add(it);
                     else if (v instanceof Boolean it) self.add(it);
-                    else if (v instanceof Configurable it) self.add(it);
+                    else if (v instanceof Configurable it) self.addCategory(it);
                 }
             });
         }

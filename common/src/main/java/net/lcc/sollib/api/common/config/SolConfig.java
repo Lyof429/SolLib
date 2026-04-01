@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.config;
 
+import com.google.common.util.concurrent.AtomicDouble;
 import com.google.gson.JsonElement;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.platform.Services;
@@ -11,18 +12,29 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SolConfig {
-    public static String fromJson(String json) {
-        /*StringBuilder builder = new StringBuilder();
-        builder.append("version: ").append(this.version).append("\nforce_reset: ").append((false))
-                .append("\n\n// This config file uses a custom defined parser.")
-                .append("\n//   That's why there are comments here and stray values above, they wouldn't be valid in any other .json file")
-                .append("\n//   To add a comment yourself, just start a line with // like here");*/
-        return json;
+    public static String fromJson(String json, double version) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n// This config file uses a custom defined parser.")
+                .append("\n//   That's why there are comments here and stray values below, they wouldn't be valid in any other .json file")
+                .append("\n//   To add a comment yourself, just start a line with // like here")
+                .append("\n\nversion: ").append(version).append("\nreset: ").append(false);
+
+        boolean started = false;
+        for (String line : json.split("\n")) {
+            if (line.startsWith("{")) started = true;
+            else if (started) {
+                if (line.startsWith("}")) started = false;
+                else builder.append("\n").append(line.substring(2));
+            }
+        }
+
+        return builder.append("\n").toString();
     }
 
-    public static String toJson(String json) {
+    public static String toJson(String json, AtomicDouble version, AtomicBoolean reset) {
         return json;
     }
 
@@ -66,6 +78,8 @@ public class SolConfig {
         JsonBuilder builder = new JsonBuilder(this);
         this.contentBuilder.toJson(builder);
         String content = builder.toString();
+        AtomicDouble version = new AtomicDouble(this.version);
+        AtomicBoolean reset = new AtomicBoolean(false);
 
         try {
             if (create || force) {
@@ -73,13 +87,13 @@ public class SolConfig {
                 file.createNewFile();
 
                 FileWriter writer = new FileWriter(file);
-                writer.write(SolConfig.fromJson(content));
+                writer.write(SolConfig.fromJson(content, this.version));
                 writer.close();
 
                 SolLib.LOG.debug(this.getName(), ": Config file created");
             }
 
-            content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+            content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), version, reset);
 
         } catch (IOException e) {
             SolLib.LOG.error(this.getName(), ": Error while creating config file\n", e);
