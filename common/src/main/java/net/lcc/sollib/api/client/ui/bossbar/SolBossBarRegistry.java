@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.common.ui.bossbar;
+package net.lcc.sollib.api.client.ui.bossbar;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,7 @@ public class SolBossBarRegistry {
 
     /**
      * Manages registration of custom boss bar render introduced in SolLib
-     * @param condition Predicate to condition the actual boss bar event to be processed by {@link SolBossBarRenderer}
+     * @param condition Filters the actual boss bar event to be processed by {@link SolBossBarRenderer}
      * @param renderer Management of how custom boss bar should be rendered
      * @since 1.0.0
      */

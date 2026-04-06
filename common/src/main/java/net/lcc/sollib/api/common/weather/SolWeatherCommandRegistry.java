@@ -14,15 +14,17 @@ public class SolWeatherCommandRegistry {
     private static final Map<String, BiConsumer<CommandSourceStack, Integer>> WEATHER_TYPES = new HashMap<>();
 
     /**
-     * Registers a new weather type to the /weather command.
-     * @param name The subcommand name (e.g., "grippfall")
+     * Registers a new weather type to the /weather command
+     * @param name The subcommand name
      * @param action A consumer taking the source and the duration (in ticks)
+     * @since 1.0.0
      */
     public static void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
         WEATHER_TYPES.put(name, action);
     }
     /**
-     * Internal method to inject all registered weather types into the builder.
+     * Internal method to inject all registered weather types into the builder
+     * @since 1.0.0
      */
     public static void injectCustomWeather(LiteralArgumentBuilder<CommandSourceStack> builder) {
         for (Map.Entry<String, BiConsumer<CommandSourceStack, Integer>> entry : WEATHER_TYPES.entrySet()) {
