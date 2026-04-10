@@ -2,7 +2,7 @@ package net.lcc.sollib.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lcc.sollib.api.common.ui.bossbar.SolBossBarRegistry;
+import net.lcc.sollib.api.client.ui.bossbar.SolBossBarRegistry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.world.BossEvent;
