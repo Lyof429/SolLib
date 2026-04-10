@@ -141,7 +141,7 @@ public class SolConfig {
         }
 
         for (ConfigEntry<?> entry : this.entries.values())
-            entry.clear();
+            entry.reload(this.content);
     }
 
     public String getName() {
@@ -150,10 +150,6 @@ public class SolConfig {
 
     public String getSuffixName() {
         return this.name + ".json";
-    }
-
-    protected JsonElement getContent() {
-        return this.content;
     }
 
     protected <T> void addEntry(String path, ConfigEntry<T> entry) {

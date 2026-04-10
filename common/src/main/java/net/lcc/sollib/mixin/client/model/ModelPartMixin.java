@@ -1,6 +1,6 @@
 package net.lcc.sollib.mixin.client.model;
 
-import net.lcc.sollib.api.client.model.i.IModelPartExtension;
+import net.lcc.sollib.api.client.model.inject.IModelPartExtension;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.client.model.i;
+package net.lcc.sollib.api.client.model.inject;
 
 import net.minecraft.client.model.geom.ModelPart;
 

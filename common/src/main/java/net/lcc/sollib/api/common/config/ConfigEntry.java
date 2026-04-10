@@ -8,7 +8,6 @@ import net.lcc.sollib.SolLib;
 import java.util.function.Supplier;
 
 public class ConfigEntry<T> implements Supplier<T> {
-    private SolConfig config;
     private String[] path;
     private T cache;
     private T fallback;
@@ -24,21 +23,14 @@ public class ConfigEntry<T> implements Supplier<T> {
 
     public void set(SolConfig config, String path/*, T fallback*/) {
         if (config != null) config.addEntry(path, this);
-        this.config = config;
         this.path = path.split("\\.");
         this.cache = null;
         /*this.fallback = fallback;*/
     }
 
-    public void clear() {
+    public T reload(JsonElement elm) {
         this.cache = null;
-    }
 
-    public T get() {
-        if (this.config == null) return this.fallback;
-        if (this.cache != null) return this.cache;
-
-        JsonElement elm = this.config.getContent();
         JsonObject obj;
         for (String s : this.path) {
             if (!elm.isJsonObject())
@@ -54,6 +46,14 @@ public class ConfigEntry<T> implements Supplier<T> {
 
         this.convert(elm);
         return this.cache;
+    }
+
+    public T get() {
+        return this.get(this.fallback);
+    }
+
+    public T get(T fallback) {
+        return this.cache == null ? fallback : this.cache;
     }
 
     @SuppressWarnings("unchecked")

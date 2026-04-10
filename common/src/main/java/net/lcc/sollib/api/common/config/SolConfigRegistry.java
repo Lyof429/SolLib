@@ -19,7 +19,7 @@ public class SolConfigRegistry {
     }
 
     /**
-     * @param config The instance of SolConfig to register  <br/>
+     * @param config The instance of SolConfig to register <br/>
      * Automatically called by any SolConfig in its constructor
      */
     public static void register(SolConfig config) {
