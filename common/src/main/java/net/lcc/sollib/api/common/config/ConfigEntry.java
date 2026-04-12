@@ -13,7 +13,11 @@ public class ConfigEntry<T> implements Supplier<T> {
     private T fallback;
 
     public ConfigEntry(T fallback) {
-        this(null, "", fallback);
+        this((SolConfig) null, "", fallback);
+    }
+
+    public ConfigEntry(String configId, String path, T fallback) {
+        this(SolConfigRegistry.get(configId), path, fallback);
     }
 
     public ConfigEntry(SolConfig config, String path, T fallback) {
@@ -49,11 +53,7 @@ public class ConfigEntry<T> implements Supplier<T> {
     }
 
     public T get() {
-        return this.get(this.fallback);
-    }
-
-    public T get(T fallback) {
-        return this.cache == null ? fallback : this.cache;
+        return this.cache == null ? this.fallback : this.cache;
     }
 
     @SuppressWarnings("unchecked")

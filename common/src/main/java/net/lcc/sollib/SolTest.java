@@ -14,7 +14,7 @@ public class SolTest {
         }
     }
 
-    public static void init() {
+    public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
         ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
         ConfigEntry<JsonObject> another = new ConfigEntry<>(new JsonObject());

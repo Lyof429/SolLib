@@ -1,13 +1,10 @@
 package net.lcc.sollib.api.common.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.MalformedJsonException;
-import net.lcc.sollib.SolLib;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
@@ -34,11 +31,12 @@ public class JsonBuilder {
     private final StringBuilder builder;
     private int indent;
     private final Stack<String> path;
-    private String currentPath;
-    private Object currentValue;
     private final ArrayDeque<String> comments;
     private boolean first;
+
     private SolConfig config;
+    private String currentPath;
+    private Object currentValue;
 
     /**
      * Instantiates a JsonBuilder configured for the creation of a SolConfig <br/>
@@ -50,13 +48,15 @@ public class JsonBuilder {
     }
 
     public JsonBuilder() {
-         this.builder = new StringBuilder();
-         this.indent = 0;
-         this.path = new Stack<>();
-         this.currentPath = "";
-         this.comments = new ArrayDeque<>();
-         this.first = true;
-         this.config = null;
+        this.builder = new StringBuilder();
+        this.indent = 0;
+        this.path = new Stack<>();
+        this.comments = new ArrayDeque<>();
+        this.first = true;
+
+        this.config = null;
+        this.currentPath = "";
+        this.currentValue = null;
     }
 
     /**
@@ -127,22 +127,26 @@ public class JsonBuilder {
 
     public JsonBuilder add(String key, String value) {
         this.append(key, "\"" + value + "\"");
+        this.currentValue = value;
         return this;
     }
 
     public JsonBuilder add(String key, Number value) {
         this.append(key, value.toString());
+        this.currentValue = value;
         return this;
     }
 
     public JsonBuilder add(String key, Boolean value) {
         this.append(key, value.toString());
+        this.currentValue = value;
         return this;
     }
 
     public JsonBuilder addCategory(String key, Configurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
+        this.currentValue = new JsonObject();
 
         if (this.indent == 0 && this.config != null)
             this.comment("").comment(key.toUpperCase().replace('_', ' '));
@@ -161,12 +165,15 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addList(String key, Consumer<JsonList> consumer) {
+    public JsonBuilder addList(String key, Consumer<ArrayBuilder> consumer) {
         this.path.push(key);
+        this.currentPath = String.join(".", this.path);
+        this.currentValue = new JsonArray();
+
         this.jump(true);
         this.indent++;
         this.builder.append("\"").append(key).append("\": [");
-        consumer.accept(new JsonList());
+        consumer.accept(new ArrayBuilder());
 
         this.path.pop();
         this.indent--;
@@ -176,7 +183,7 @@ public class JsonBuilder {
         return this;
     }
 
-    public <T> JsonBuilder addList(String key, List<T> value) {
+    public <T> JsonBuilder addList(String key, Collection<T> value) {
         return this.addList(key, self -> {
             for (T v : value) {
                 if (v instanceof String it) self.add(it);
@@ -187,7 +194,7 @@ public class JsonBuilder {
         });
     }
 
-    public class JsonList {
+    public class ArrayBuilder {
         protected void append(String value) {
             JsonBuilder self = JsonBuilder.this;
 
@@ -195,22 +202,22 @@ public class JsonBuilder {
             self.builder.append(value);
         }
 
-        public JsonList add(String value) {
+        public ArrayBuilder add(String value) {
             this.append("\"" + value + "\"");
             return this;
         }
 
-        public JsonList add(Number value) {
+        public ArrayBuilder add(Number value) {
             this.append(value.toString());
             return this;
         }
 
-        public JsonList add(Boolean value) {
+        public ArrayBuilder add(Boolean value) {
             this.append(value.toString());
             return this;
         }
 
-        public JsonList addCategory(Configurable consumer) {
+        public ArrayBuilder addCategory(Configurable consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
@@ -225,13 +232,13 @@ public class JsonBuilder {
             return this;
         }
 
-        public JsonList addList(Consumer<JsonList> consumer) {
+        public ArrayBuilder addList(Consumer<ArrayBuilder> consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
             self.indent++;
             self.builder.append("[");
-            consumer.accept(new JsonList());
+            consumer.accept(new ArrayBuilder());
 
             self.indent--;
             self.jump(false);
@@ -240,7 +247,7 @@ public class JsonBuilder {
             return this;
         }
 
-        public <T> JsonList addList(List<T> value) {
+        public <T> ArrayBuilder addList(List<T> value) {
             return this.addList(self -> {
                 for (T v : value) {
                     if (v instanceof String it) self.add(it);

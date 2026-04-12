@@ -19,8 +19,8 @@ public class SolConfigRegistry {
     }
 
     /**
-     * @param config The instance of SolConfig to register <br/>
      * Automatically called by any SolConfig in its constructor
+     * @param config The instance of SolConfig to register
      */
     public static void register(SolConfig config) {
         CONFIG_MAP.put(config.getName(), config);

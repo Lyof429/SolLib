@@ -42,12 +42,11 @@ public class SolConfig {
     }
 
     /**
-     * Converts {@code json} from a SolConfig formatted string to a JSON, and removes comments
+     * Converts {@code json} from a SolConfig formatted string to a JSON
      */
     public static String toJson(String json, AtomicDouble version, AtomicBoolean reset) {
         StringBuilder builder = new StringBuilder("{");
 
-        boolean started = false;
         for (String line : json.split("\n")) {
             if (line.startsWith("version")) {
                 try {
@@ -59,8 +58,7 @@ public class SolConfig {
                 } catch (Exception ignored) {}
             }
 
-            if (line.startsWith("\"")) started = true;
-            if (started && !line.strip().startsWith("//")) builder.append("\n  ").append(line);
+            else builder.append("\n  ").append(line);
         }
 
         return builder.append("\n}").toString();
