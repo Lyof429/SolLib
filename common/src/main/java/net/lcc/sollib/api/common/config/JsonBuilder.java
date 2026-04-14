@@ -183,9 +183,9 @@ public class JsonBuilder {
         return this;
     }
 
-    public <T> JsonBuilder addList(String key, Collection<T> value) {
+    public JsonBuilder addList(String key, Collection<?> value) {
         return this.addList(key, self -> {
-            for (T v : value) {
+            for (Object v : value) {
                 if (v instanceof String it) self.add(it);
                 else if (v instanceof Number it) self.add(it);
                 else if (v instanceof Boolean it) self.add(it);

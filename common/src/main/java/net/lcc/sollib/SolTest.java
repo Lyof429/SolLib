@@ -7,17 +7,26 @@ import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
 
 public class SolTest {
-    public record Thing(int x, String name) implements Configurable {
+    public record Thing(double x, String name) implements Configurable {
         @Override
         public void toJson(JsonBuilder builder) {
             builder.add("name", name).add("x", x);
+        }
+
+        @Override
+        public String toString() {
+            return "Thing{" +
+                    "x=" + x +
+                    ", name='" + name + '\'' +
+                    '}';
         }
     }
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
         ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
-        ConfigEntry<JsonObject> another = new ConfigEntry<>(new JsonObject());
+        ConfigEntry<Thing> another = new ConfigEntry<>(new Thing(-4, "error")).withProcessor(elm ->
+                new Thing(elm.getAsJsonObject().get("x").getAsDouble(), elm.getAsJsonObject().get("name").getAsString()));
 
         Configurable builder = it -> it
                 .addCategory("test_category", a -> a
@@ -30,6 +39,8 @@ public class SolTest {
                                 .bind(exists))
                         .addCategory("another", b -> b
                                 .bind(another)
+                                .add("x", 3.14)
+                                .add("name", "toad")
                                 .comment("Ah and lists of them too I forgot about that")
                                 .comment("  (Lists don't have to hold a single type btw)")
                                 .addList("michel", c -> c

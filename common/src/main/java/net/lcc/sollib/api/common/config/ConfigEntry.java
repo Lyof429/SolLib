@@ -5,12 +5,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ConfigEntry<T> implements Supplier<T> {
     private String[] path;
     private T cache;
     private T fallback;
+    private Function<JsonElement, T> processor;
 
     public ConfigEntry(T fallback) {
         this((SolConfig) null, "", fallback);
@@ -23,6 +25,7 @@ public class ConfigEntry<T> implements Supplier<T> {
     public ConfigEntry(SolConfig config, String path, T fallback) {
         this.set(config, path/*, fallback*/);
         this.fallback = fallback;
+        this.processor = null;
     }
 
     public void set(SolConfig config, String path/*, T fallback*/) {
@@ -30,6 +33,11 @@ public class ConfigEntry<T> implements Supplier<T> {
         this.path = path.split("\\.");
         this.cache = null;
         /*this.fallback = fallback;*/
+    }
+
+    public ConfigEntry<T> withProcessor(Function<JsonElement, T> processor) {
+        this.processor = processor;
+        return this;
     }
 
     public T reload(JsonElement elm) {
@@ -45,7 +53,6 @@ public class ConfigEntry<T> implements Supplier<T> {
                 return this.fail();
 
             elm = obj.get(s);
-            SolLib.LOG.info(String.join(".", this.path), elm);
         }
 
         this.convert(elm);
@@ -59,7 +66,9 @@ public class ConfigEntry<T> implements Supplier<T> {
     @SuppressWarnings("unchecked")
     protected void convert(JsonElement result) {
         try {
-            if (this.fallback instanceof Integer) this.cache = (T) (Integer) result.getAsInt();
+            if (this.processor != null) this.cache = this.processor.apply(result);
+
+            else if (this.fallback instanceof Integer) this.cache = (T) (Integer) result.getAsInt();
             else if (this.fallback instanceof Double) this.cache = (T) (Double) result.getAsDouble();
             else if (this.fallback instanceof Boolean) this.cache = (T) (Boolean) result.getAsBoolean();
             else if (this.fallback instanceof String) this.cache = (T) result.getAsString();
