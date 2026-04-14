@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin.data;
+package net.lcc.sollib.mixin.common.data;
 
 import net.lcc.sollib.api.common.config.SolConfigRegistry;
 import net.minecraft.server.packs.PackResources;
