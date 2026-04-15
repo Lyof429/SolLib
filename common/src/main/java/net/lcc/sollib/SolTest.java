@@ -74,13 +74,16 @@ public class SolTest {
 
         SolReloadRegistry.register(new TestReloader());
 
-        SolDataRegistry.addText(ResourceLocation.tryBuild("minecraft", "recipes/bucket.json"), SolLib.LOG::warn);
-        SolDataRegistry.addJson(ResourceLocation.tryBuild("minecraft", "recipes/bucket.json"), original -> {
+        ResourceLocation id = ResourceLocation.tryBuild("minecraft", "recipes/bucket.json");
+        SolDataRegistry.addText(id, SolLib.LOG::warn);
+        SolDataRegistry.addRemoval(id, () -> true);
+        SolDataRegistry.addJson(id, original -> {
             if (original != null)
                 original.getAsJsonObject("key")
                         .getAsJsonObject("#")
                         .add("item", new JsonPrimitive("minecraft:gold_ingot"));
             return original;
         });
+        SolDataRegistry.addText(id, SolLib.LOG::warn);
     }
 }

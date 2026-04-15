@@ -7,18 +7,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RuntimeData {
-    protected ResourceLocation target;
     protected Supplier<Boolean> activationRule;
     protected Function<String, String> function;
 
-    public RuntimeData(ResourceLocation target, Supplier<Boolean> activationRule, Function<String, String> function) {
-        this.target = target;
+    public RuntimeData(Supplier<Boolean> activationRule, Function<String, String> function) {
         this.activationRule = activationRule;
         this.function = function;
-    }
-
-    public ResourceLocation getTarget() {
-        return this.target;
     }
 
     public @Nullable String apply(@Nullable String original) {

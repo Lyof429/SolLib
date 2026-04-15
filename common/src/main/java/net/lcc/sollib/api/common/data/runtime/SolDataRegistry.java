@@ -43,7 +43,7 @@ public class SolDataRegistry {
 
     public static void addText(ResourceLocation target, Function<String, String> function, Supplier<Boolean> activationRule) {
         if (!INSTANCES.containsKey(target)) INSTANCES.put(target, new ArrayList<>());
-        INSTANCES.get(target).add(new RuntimeData(target, activationRule, function));
+        INSTANCES.get(target).add(new RuntimeData(activationRule, function));
     }
 
 
