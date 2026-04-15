@@ -1,14 +1,17 @@
 package net.lcc.sollib;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.ConfigEntry;
-import net.lcc.sollib.api.common.config.Configurable;
+import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
+import net.lcc.sollib.api.common.data.reload.IReloadListener;
+import net.lcc.sollib.api.common.data.reload.SolReloadRegistry;
+import net.minecraft.server.WorldLoader;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 public class SolTest {
-    public record Thing(double x, String name) implements Configurable {
+    public record Thing(double x, String name) implements IConfigurable {
         @Override
         public void toJson(JsonBuilder builder) {
             builder.add("name", name).add("x", x);
@@ -23,13 +26,27 @@ public class SolTest {
         }
     }
 
+    public static class TestReloader implements IReloadListener {
+        @Override
+        public void preload(ResourceManager manager) {
+            SolLib.LOG.info("preload");
+        }
+
+        @Override
+        public void reload(ResourceManager manager) {
+            SolLib.LOG.info("reload");
+        }
+    }
+
+    public static SolConfig CONFIG;
+
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
         ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
         ConfigEntry<Thing> another = new ConfigEntry<>(new Thing(-4, "error")).withProcessor(elm ->
                 new Thing(elm.getAsJsonObject().get("x").getAsDouble(), elm.getAsJsonObject().get("name").getAsString()));
 
-        Configurable builder = it -> it
+        IConfigurable builder = it -> it
                 .addCategory("test_category", a -> a
                         .comment("This is a comment")
                         .add("hello", "world")
@@ -48,14 +65,9 @@ public class SolTest {
                                         .add(12))))
                 .addCategory("thing", new Thing(3, "mario"))
                 .bind(another);
-        SolConfig config = new SolConfig("sollib/test", 1.0, builder) {
-            @Override
-            public void init() {
-                super.init();
-                SolLib.LOG.info(hello.get(), exists.get(), another.get().name(),
-                        new ConfigEntry<>("sollib/test", "test_category.another.michel", new JsonArray()).get());
-            }
-        };
-        config.init();
+        CONFIG = new SolConfig("sollib/test", 1.0, builder);
+        CONFIG.init();
+
+        SolReloadRegistry.register(new TestReloader());
     }
 }

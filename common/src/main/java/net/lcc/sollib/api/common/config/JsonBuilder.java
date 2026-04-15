@@ -143,7 +143,7 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addCategory(String key, Configurable consumer) {
+    public JsonBuilder addCategory(String key, IConfigurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
         this.currentValue = new JsonObject();
@@ -190,7 +190,7 @@ public class JsonBuilder {
                 if (v instanceof String it) self.add(it);
                 else if (v instanceof Number it) self.add(it);
                 else if (v instanceof Boolean it) self.add(it);
-                else if (v instanceof Configurable it) self.addCategory(it);
+                else if (v instanceof IConfigurable it) self.addCategory(it);
             }
         });
     }
@@ -218,7 +218,7 @@ public class JsonBuilder {
             return this;
         }
 
-        public ArrayBuilder addCategory(Configurable consumer) {
+        public ArrayBuilder addCategory(IConfigurable consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
@@ -254,7 +254,7 @@ public class JsonBuilder {
                     if (v instanceof String it) self.add(it);
                     else if (v instanceof Number it) self.add(it);
                     else if (v instanceof Boolean it) self.add(it);
-                    else if (v instanceof Configurable it) self.addCategory(it);
+                    else if (v instanceof IConfigurable it) self.addCategory(it);
                 }
             });
         }

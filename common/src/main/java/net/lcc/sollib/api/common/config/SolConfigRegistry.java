@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SolConfigRegistry {
-    protected static final Map<String, SolConfig> CONFIG_MAP = new HashMap<>();
+    protected static final Map<String, SolConfig> INSTANCES = new HashMap<>();
 
     /**
      * @param name The name of the config to get
@@ -15,7 +15,7 @@ public class SolConfigRegistry {
      */
     @Nullable
     public static SolConfig get(String name) {
-        return CONFIG_MAP.get(name);
+        return INSTANCES.get(name);
     }
 
     /**
@@ -23,7 +23,7 @@ public class SolConfigRegistry {
      * @param config The instance of SolConfig to register
      */
     public static void register(SolConfig config) {
-        CONFIG_MAP.put(config.getName(), config);
+        INSTANCES.put(config.getName(), config);
     }
 
     /**
@@ -31,8 +31,8 @@ public class SolConfigRegistry {
      * Automatically called on resource reload
      */
     public static void reload() {
-        SolLib.LOG.info("Loaded", CONFIG_MAP.size(), "configs");
-        for (SolConfig config : CONFIG_MAP.values())
+        SolLib.LOG.info("Loaded", INSTANCES.size(), "configs");
+        for (SolConfig config : INSTANCES.values())
             config.init();
     }
 }

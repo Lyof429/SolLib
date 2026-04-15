@@ -66,11 +66,11 @@ public class SolConfig {
 
     private final String name;
     private final double version;
-    private final Configurable contentBuilder;
+    private final IConfigurable contentBuilder;
     private JsonElement content;
     private final Map<String, ConfigEntry<?>> entries;
 
-    public SolConfig(String name, double version, Configurable contentBuilder) {
+    public SolConfig(String name, double version, IConfigurable contentBuilder) {
         this.name = name;
         this.version = version;
         this.contentBuilder = contentBuilder;
