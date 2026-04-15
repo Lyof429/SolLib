@@ -47,6 +47,8 @@ public class SolDataRegistry {
 
 
     public static Resource apply(ResourceLocation target, Resource original) {
+        if (original != null && original.source() instanceof RuntimeResourcePack) return original;
+
         SolLib.LOG.info("Applying configured data:", target);
 
         String result;
