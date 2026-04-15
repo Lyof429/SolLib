@@ -1,5 +1,6 @@
 package net.lcc.sollib;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.Configurable;
@@ -51,7 +52,8 @@ public class SolTest {
             @Override
             public void init() {
                 super.init();
-                SolLib.LOG.info(hello.get(), exists.get(), another.get().name());
+                SolLib.LOG.info(hello.get(), exists.get(), another.get().name(),
+                        new ConfigEntry<>("sollib/test", "test_category.another.michel", new JsonArray()).get());
             }
         };
         config.init();

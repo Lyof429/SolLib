@@ -3,7 +3,6 @@ package net.lcc.sollib.api.common.config;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.MalformedJsonException;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.platform.Services;
 import org.apache.commons.io.FileUtils;
@@ -139,7 +138,7 @@ public class SolConfig {
         }
 
         for (ConfigEntry<?> entry : this.entries.values())
-            entry.reload(this.content);
+            entry.withContent(this.content);
     }
 
     public String getName() {
@@ -150,7 +149,8 @@ public class SolConfig {
         return this.name + ".json";
     }
 
-    protected <T> void addEntry(String path, ConfigEntry<T> entry) {
+    protected void addEntry(String path, ConfigEntry<?> entry) {
+        entry = entry.withContent(this.content);
         this.entries.remove(path);
         this.entries.put(path, entry);
     }

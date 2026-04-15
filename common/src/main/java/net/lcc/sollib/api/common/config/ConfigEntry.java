@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ConfigEntry<T> implements Supplier<T> {
+    private JsonElement content;
     private String[] path;
     private T cache;
     private T fallback;
@@ -23,15 +24,16 @@ public class ConfigEntry<T> implements Supplier<T> {
     }
 
     public ConfigEntry(SolConfig config, String path, T fallback) {
+        this.content = null;
         this.set(config, path, fallback);
         this.fallback = fallback;
         this.processor = null;
     }
 
     protected void set(SolConfig config, String path, T fallback) {
-        if (config != null) config.addEntry(path, this);
+        if (config != null)
+            config.addEntry(path, this);
         this.path = path.split("\\.");
-        this.cache = null;
         /*this.fallback = fallback;*/
     }
 
@@ -40,9 +42,17 @@ public class ConfigEntry<T> implements Supplier<T> {
         return this;
     }
 
-    public T reload(JsonElement elm) {
+    public ConfigEntry<T> withContent(JsonElement elm) {
         this.cache = null;
+        this.content = elm;
+        return this;
+    }
 
+    public T get() {
+        if (this.cache != null) return this.cache;
+        if (this.content == null) return this.fallback;
+
+        JsonElement elm = this.content;
         JsonObject obj;
         for (String s : this.path) {
             if (!elm.isJsonObject())
@@ -57,10 +67,6 @@ public class ConfigEntry<T> implements Supplier<T> {
 
         this.convert(elm);
         return this.cache;
-    }
-
-    public T get() {
-        return this.cache == null ? this.fallback : this.cache;
     }
 
     @SuppressWarnings("unchecked")
