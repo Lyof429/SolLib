@@ -1,13 +1,14 @@
 package net.lcc.sollib;
 
-import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
 import net.lcc.sollib.api.common.data.reload.SolReloadRegistry;
-import net.minecraft.server.WorldLoader;
+import net.lcc.sollib.api.common.data.runtime.SolDataRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 public class SolTest {
@@ -35,6 +36,9 @@ public class SolTest {
         @Override
         public void reload(ResourceManager manager) {
             SolLib.LOG.info("reload");
+
+            ResourceLocation id = ResourceLocation.tryBuild("minecraft", "recipes/bucket.json");
+            SolDataRegistry.apply(id, manager.getResource(id).orElse(null));
         }
     }
 
@@ -69,5 +73,14 @@ public class SolTest {
         CONFIG.init();
 
         SolReloadRegistry.register(new TestReloader());
+
+        SolDataRegistry.addText(ResourceLocation.tryBuild("minecraft", "recipes/bucket.json"), SolLib.LOG::warn);
+        SolDataRegistry.addJson(ResourceLocation.tryBuild("minecraft", "recipes/bucket.json"), original -> {
+            if (original != null)
+                original.getAsJsonObject("key")
+                        .getAsJsonObject("#")
+                        .add("item", new JsonPrimitive("minecraft:gold_ingot"));
+            return original;
+        });
     }
 }

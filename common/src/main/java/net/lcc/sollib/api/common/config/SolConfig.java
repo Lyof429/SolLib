@@ -150,7 +150,7 @@ public class SolConfig {
     }
 
     protected void addEntry(String path, ConfigEntry<?> entry) {
-        entry = entry.withContent(this.content);
+        entry.withContent(this.content);
         this.entries.remove(path);
         this.entries.put(path, entry);
     }

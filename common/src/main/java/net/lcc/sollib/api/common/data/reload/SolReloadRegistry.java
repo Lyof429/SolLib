@@ -18,6 +18,10 @@ public class SolReloadRegistry {
         INSTANCES.add(listener);
     }
 
+    /**
+     * Calls preload on every registered IReloadListener <br/>
+     * Automatically called before resource reload
+     */
     public static void preload(ResourceManager manager) {
         for (IReloadListener listener : INSTANCES) {
             try {
@@ -28,6 +32,10 @@ public class SolReloadRegistry {
         }
     }
 
+    /**
+     * Calls reload on every registered IReloadListener <br/>
+     * Automatically called after resource reload
+     */
     public static void reload(ResourceManager manager) {
         for (IReloadListener listener : INSTANCES) {
             try {

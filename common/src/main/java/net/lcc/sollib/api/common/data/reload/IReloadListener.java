@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.data.reload;
 
-import net.lcc.sollib.api.common.data.runtime.IRuntimeData;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 /**
@@ -14,10 +13,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
  *         SolLib.LOGGER.info("Hello World!");
  *     });
  * }
- * </pre>
+ * </pre> <br/>
  *
  * {@link #preload(ResourceManager)} is called on every instance after config reloading but before vanilla reloading.
- * Typically, this is a safe place to set up your {@link IRuntimeData}. <br/>
+ * Typically, this is a safe place to set up your {@link IDataFunction}. <br/>
  * {@link #reload(ResourceManager)} is called on every instance after vanilla reloading.
  */
 @FunctionalInterface
