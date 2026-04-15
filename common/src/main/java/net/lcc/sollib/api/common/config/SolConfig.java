@@ -133,7 +133,7 @@ public class SolConfig {
 
         try {
             this.content = JsonBuilder.toJson(content);
-        } catch (MalformedJsonException e) {
+        } catch (Exception e) {
             SolLib.LOG.error(this.getName(), ": Error while reading config file\n", e);
             this.content = new JsonObject();
         }

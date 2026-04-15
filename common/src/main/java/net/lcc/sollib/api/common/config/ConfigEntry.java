@@ -23,12 +23,12 @@ public class ConfigEntry<T> implements Supplier<T> {
     }
 
     public ConfigEntry(SolConfig config, String path, T fallback) {
-        this.set(config, path/*, fallback*/);
+        this.set(config, path, fallback);
         this.fallback = fallback;
         this.processor = null;
     }
 
-    public void set(SolConfig config, String path/*, T fallback*/) {
+    protected void set(SolConfig config, String path, T fallback) {
         if (config != null) config.addEntry(path, this);
         this.path = path.split("\\.");
         this.cache = null;

@@ -112,7 +112,7 @@ public class JsonBuilder {
 
     public <T> JsonBuilder bind(ConfigEntry<T> entry) {
         if (this.config != null && entry != null)
-            entry.set(this.config, this.getCurrentPath());
+            entry.set(this.config, this.getCurrentPath(), (T) this.currentValue);
 
         return this;
     }
@@ -157,6 +157,7 @@ public class JsonBuilder {
         consumer.toJson(this);
 
         this.currentPath = String.join(".", this.path);
+        this.currentValue = new JsonObject();
         this.path.pop();
         this.indent--;
         this.jump(false);

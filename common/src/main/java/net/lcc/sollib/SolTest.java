@@ -38,9 +38,6 @@ public class SolTest {
                                 .add("exists", true)
                                 .bind(exists))
                         .addCategory("another", b -> b
-                                .bind(another)
-                                .add("x", 3.14)
-                                .add("name", "toad")
                                 .comment("Ah and lists of them too I forgot about that")
                                 .comment("  (Lists don't have to hold a single type btw)")
                                 .addList("michel", c -> c
@@ -48,12 +45,13 @@ public class SolTest {
                                         .add("this is a list, in case you didn't notice")
                                         .addCategory(new Thing(7, "luigi"))
                                         .add(12))))
-                .addCategory("thing", new Thing(3, "mario"));
+                .addCategory("thing", new Thing(3, "mario"))
+                .bind(another);
         SolConfig config = new SolConfig("sollib/test", 1.0, builder) {
             @Override
             public void init() {
                 super.init();
-                SolLib.LOG.info(hello.get(), exists.get(), another.get());
+                SolLib.LOG.info(hello.get(), exists.get(), another.get().name());
             }
         };
         config.init();
