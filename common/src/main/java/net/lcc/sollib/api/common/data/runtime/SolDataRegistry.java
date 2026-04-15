@@ -7,6 +7,7 @@ import net.lcc.sollib.SolLib;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import org.apache.commons.io.input.CharSequenceInputStream;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -46,6 +47,7 @@ public class SolDataRegistry {
     }
 
 
+    @ApiStatus.Internal
     public static Resource apply(ResourceLocation target, Resource original) {
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
 

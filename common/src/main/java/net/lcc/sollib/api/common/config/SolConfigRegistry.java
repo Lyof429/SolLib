@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.common.config;
 
 import net.lcc.sollib.SolLib;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class SolConfigRegistry {
      * Reloads every config registered, reading their file and fetching the required ConfigEntry <br/>
      * Automatically called on resource reload
      */
+    @ApiStatus.Internal
     public static void reload() {
         SolLib.LOG.info("Loaded", INSTANCES.size(), "configs");
         for (SolConfig config : INSTANCES.values())

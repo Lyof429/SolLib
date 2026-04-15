@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.TimeArgument;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +23,12 @@ public class SolWeatherCommandRegistry {
     public static void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
         WEATHER_TYPES.put(name, action);
     }
+
     /**
      * Internal method to inject all registered weather types into the builder
      * @since 1.0.0
      */
+    @ApiStatus.Internal
     public static void injectCustomWeather(LiteralArgumentBuilder<CommandSourceStack> builder) {
         for (Map.Entry<String, BiConsumer<CommandSourceStack, Integer>> entry : WEATHER_TYPES.entrySet()) {
             String name = entry.getKey();
@@ -49,6 +52,7 @@ public class SolWeatherCommandRegistry {
         }
     }
 
+    @ApiStatus.Internal
     public static Iterable<BiConsumer<CommandSourceStack, Integer>> getAllActions() {
         return WEATHER_TYPES.values();
     }

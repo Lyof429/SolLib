@@ -3,6 +3,7 @@ package net.lcc.sollib.api.common.data.reload;
 import com.google.common.collect.ImmutableList;
 import net.lcc.sollib.SolLib;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class SolReloadRegistry {
      * Calls preload on every registered IReloadListener <br/>
      * Automatically called before resource reload
      */
+    @ApiStatus.Internal
     public static void preload(ResourceManager manager) {
         for (IReloadListener listener : INSTANCES) {
             try {
@@ -36,6 +38,7 @@ public class SolReloadRegistry {
      * Calls reload on every registered IReloadListener <br/>
      * Automatically called after resource reload
      */
+    @ApiStatus.Internal
     public static void reload(ResourceManager manager) {
         for (IReloadListener listener : INSTANCES) {
             try {
