@@ -13,7 +13,7 @@
     "client.BossHealthOverlayMixin",
     "client.model.EntityModelMixin",
     "client.model.ModelPartMixin",
-    "client.render.BlockEntityWithoutLevelRendererMixin",
+    "client.render.ItemRendererMixin",
     "client.render.ItemMixin"
   ],
   "server": [
