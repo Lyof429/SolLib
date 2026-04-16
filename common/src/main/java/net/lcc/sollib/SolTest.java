@@ -83,5 +83,6 @@ public class SolTest {
         SolDataRegistry.addText(id, SolLib.LOG::warn);
 
         SolDataRegistry.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
+        SolDataRegistry.addRemoval(ResourceLocation.tryBuild("minecraft", "recipes/diamond_pickaxe.json"), () -> true);
     }
 }
