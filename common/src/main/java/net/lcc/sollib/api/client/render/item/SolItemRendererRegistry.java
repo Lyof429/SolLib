@@ -1,0 +1,44 @@
+package net.lcc.sollib.api.client.render.item;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Predicate;
+
+public class SolItemRendererRegistry {
+    private static final Map<Predicate<ItemStack>, IItemRenderer> INSTANCES = new LinkedHashMap<>();
+
+    /**
+     * Manages registration of item stack renderers introduced in SolLib
+     * @param condition Filters the actual item stack to be processed by {@link IItemRenderer}
+     * @param renderer  Management of how item stack should be rendered
+     * @since 1.0.0
+     */
+    public static void register(Predicate<ItemStack> condition, IItemRenderer renderer) {
+        INSTANCES.put(condition, renderer);
+    }
+
+    /**
+     * Processes custom renderers registered by {@link #register(Predicate, IItemRenderer)}
+     * @since 1.0.0
+     */
+    @ApiStatus.Internal
+    public static void apply(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
+                             int packedLight, int packedOverlay, EntityModelSet entityModelSet) {
+        if (stack == null) return;
+
+        for (Map.Entry<Predicate<ItemStack>, IItemRenderer> entry : INSTANCES.entrySet()) {
+            if (!entry.getKey().test(stack)) continue;
+
+            poseStack.pushPose();
+            entry.getValue().render(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, entityModelSet);
+            poseStack.popPose();
+        }
+    }
+}

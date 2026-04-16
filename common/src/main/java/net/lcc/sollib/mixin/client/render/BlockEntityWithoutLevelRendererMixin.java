@@ -1,7 +1,7 @@
 package net.lcc.sollib.mixin.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.lcc.sollib.api.client.render.item.SolBuiltinItemRenderRegistry;
+import net.lcc.sollib.api.client.render.item.SolItemRendererRegistry;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,12 +21,8 @@ public class BlockEntityWithoutLevelRendererMixin {
     private EntityModelSet entityModelSet;
 
     @Inject(method = "renderByItem", at = @At("TAIL"))
-    public void renderItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay, CallbackInfo ci) {
-        SolBuiltinItemRenderRegistry.SolItemRenderer renderer = SolBuiltinItemRenderRegistry.getRenderer(stack);
-        if (renderer != null) {
-            poseStack.pushPose();
-            renderer.render(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, entityModelSet);
-            poseStack.popPose();
-        }
+    public void renderItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
+                           int packedLight, int packedOverlay, CallbackInfo ci) {
+        SolItemRendererRegistry.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, this.entityModelSet);
     }
 }
