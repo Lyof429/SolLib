@@ -36,9 +36,6 @@ public class SolTest {
         @Override
         public void reload(ResourceManager manager) {
             SolLib.LOG.info("reload");
-
-            ResourceLocation id = ResourceLocation.tryBuild("minecraft", "recipes/bucket.json");
-            SolDataRegistry.apply(id, manager.getResource(id).orElse(null));
         }
     }
 
@@ -76,7 +73,6 @@ public class SolTest {
 
         ResourceLocation id = ResourceLocation.tryBuild("minecraft", "recipes/bucket.json");
         SolDataRegistry.addText(id, SolLib.LOG::warn);
-        SolDataRegistry.addRemoval(id, () -> true);
         SolDataRegistry.addJson(id, original -> {
             if (original != null)
                 original.getAsJsonObject("key")
@@ -85,5 +81,7 @@ public class SolTest {
             return original;
         });
         SolDataRegistry.addText(id, SolLib.LOG::warn);
+
+        SolDataRegistry.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
     }
 }

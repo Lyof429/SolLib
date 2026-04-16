@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SolDataRegistry {
@@ -49,6 +50,7 @@ public class SolDataRegistry {
 
     @ApiStatus.Internal
     public static Resource apply(ResourceLocation target, Resource original) {
+        if (!INSTANCES.containsKey(target)) return original;
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
 
         SolLib.LOG.info("Applying configured data:", target);
@@ -60,7 +62,7 @@ public class SolDataRegistry {
             result = null;
         }
 
-        for (RuntimeData data : INSTANCES.getOrDefault(target, List.of())) {
+        for (RuntimeData data : INSTANCES.get(target)) {
             try {
                 result = data.apply(result);
             } catch (Exception e) {
@@ -71,5 +73,15 @@ public class SolDataRegistry {
         final String finalResult = result;
         return finalResult == null ? null : new Resource(RuntimeResourcePack.INSTANCE,
                 () -> new CharSequenceInputStream(finalResult, Charset.defaultCharset()));
+    }
+
+    @ApiStatus.Internal
+    public static List<ResourceLocation> findMatching(String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
+        List<ResourceLocation> matching = new ArrayList<>();
+        for (ResourceLocation id : INSTANCES.keySet()) {
+            if (id.getPath().startsWith(startingPath + "/") && allowedPathPredicate.test(id))
+                matching.add(SolLib.LOG.info(id));
+        }
+        return matching;
     }
 }
