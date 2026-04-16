@@ -15,7 +15,8 @@ public class SolItemRendererRegistry {
     private static final Map<Predicate<ItemStack>, IItemRenderer> INSTANCES = new LinkedHashMap<>();
 
     /**
-     * Manages registration of item stack renderers introduced in SolLib
+     * Manages registration of item stack renderers introduced in SolLib <br/>
+     * Automatically called on Item subclasses that implement {@link IItemRenderer}
      * @param condition Filters the actual item stack to be processed by {@link IItemRenderer}
      * @param renderer  Management of how item stack should be rendered
      * @since 1.0.0
@@ -30,14 +31,14 @@ public class SolItemRendererRegistry {
      */
     @ApiStatus.Internal
     public static void apply(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
-                             int packedLight, int packedOverlay, EntityModelSet entityModelSet) {
+                             int packedLight, int packedOverlay) {
         if (stack == null) return;
 
         for (Map.Entry<Predicate<ItemStack>, IItemRenderer> entry : INSTANCES.entrySet()) {
             if (!entry.getKey().test(stack)) continue;
 
             poseStack.pushPose();
-            entry.getValue().render(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, entityModelSet);
+            entry.getValue().render(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
             poseStack.popPose();
         }
     }

@@ -9,5 +9,5 @@ import net.minecraft.world.item.ItemStack;
 @FunctionalInterface
 public interface IItemRenderer {
     void render(ItemStack stack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer,
-                int pPackedLight, int pPackedOverlay, EntityModelSet entityModelSet);
+                int pPackedLight, int pPackedOverlay);
 }

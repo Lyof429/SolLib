@@ -16,13 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockEntityWithoutLevelRenderer.class)
 public class BlockEntityWithoutLevelRendererMixin {
-    @Shadow
-    @Final
-    private EntityModelSet entityModelSet;
-
     @Inject(method = "renderByItem", at = @At("TAIL"))
     public void renderItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
                            int packedLight, int packedOverlay, CallbackInfo ci) {
-        SolItemRendererRegistry.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, this.entityModelSet);
+        SolItemRendererRegistry.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
     }
 }
