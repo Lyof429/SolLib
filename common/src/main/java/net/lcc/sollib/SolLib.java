@@ -7,6 +7,10 @@ public class SolLib {
     public static final SolLogger LOG = new SolLogger("SolLib");
 
     public static void init() {
+        LOG.info("Running tests for Lyof");
         SolTest.lyof();
+
+        LOG.info("Running tests for Sasha");
+        SolTest.sasha();
     }
 }

@@ -84,4 +84,8 @@ public class SolTest {
         SolRegistries.RUNTIME.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
         SolRegistries.RUNTIME.addRemoval(ResourceLocation.tryBuild("minecraft", "recipes/diamond_pickaxe.json"), () -> true);
     }
+
+
+    public static void sasha() {
+    }
 }
