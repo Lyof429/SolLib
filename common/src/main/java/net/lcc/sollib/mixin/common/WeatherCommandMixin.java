@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.lcc.sollib.api.common.weather.SolWeatherCommandRegistry;
+import net.lcc.sollib.api.SolRegistries;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.commands.WeatherCommand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,13 +27,12 @@ public class WeatherCommandMixin {
             LiteralArgumentBuilder<CommandSourceStack> builder,
             Operation<LiteralCommandNode<CommandSourceStack>> original
     ) {
-        SolWeatherCommandRegistry.injectCustomWeather(builder);
-
+        SolRegistries.WEATHER.apply(builder);
         return original.call(dispatcher, builder);
     }
 
     @Inject(method = "setClear", at = @At("TAIL"))
     private static void onClearWeather(CommandSourceStack source, int duration, CallbackInfoReturnable<Integer> cir) {
-        SolWeatherCommandRegistry.getAllActions().forEach(action -> action.accept(source, 0));
+        SolRegistries.WEATHER.clear(source);
     }
 }

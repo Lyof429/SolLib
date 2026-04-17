@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.platform.Services;
 import org.apache.commons.io.FileUtils;
 
@@ -77,7 +78,7 @@ public class SolConfig {
         this.content = new JsonObject();
         this.entries = new HashMap<>();
 
-        SolConfigRegistry.register(this);
+        SolRegistries.CONFIG.register(this);
     }
 
     public void init() {

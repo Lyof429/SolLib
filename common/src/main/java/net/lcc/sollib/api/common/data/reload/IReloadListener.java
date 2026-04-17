@@ -4,7 +4,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 /**
  * Interface for resource reload listeners. <br/>
- * All instances must be registered with {@link SolReloadRegistry#register(IReloadListener)} to have an effect. <br/>
+ * All instances must be registered with {@link SReloadRegistry#register(IReloadListener)} to have an effect. <br/>
  * This is a {@link FunctionalInterface} for the sake of syntax sugar, where calls such as this one are possible:
  *
  * <pre>

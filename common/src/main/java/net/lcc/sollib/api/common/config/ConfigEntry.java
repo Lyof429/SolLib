@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.SolRegistries;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -20,7 +21,7 @@ public class ConfigEntry<T> implements Supplier<T> {
     }
 
     public ConfigEntry(String configId, String path, T fallback) {
-        this(SolConfigRegistry.get(configId), path, fallback);
+        this(SolRegistries.CONFIG.get(configId), path, fallback);
     }
 
     public ConfigEntry(SolConfig config, String path, T fallback) {

@@ -1,13 +1,12 @@
 package net.lcc.sollib;
 
 import com.google.gson.JsonPrimitive;
+import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
-import net.lcc.sollib.api.common.data.reload.SolReloadRegistry;
-import net.lcc.sollib.api.common.data.runtime.SolDataRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -69,20 +68,20 @@ public class SolTest {
         CONFIG = new SolConfig("sollib/test", 1.0, builder);
         CONFIG.init();
 
-        SolReloadRegistry.register(new TestReloader());
+        SolRegistries.RELOADER.register(new TestReloader());
 
         ResourceLocation id = ResourceLocation.tryBuild("minecraft", "recipes/bucket.json");
-        SolDataRegistry.addText(id, SolLib.LOG::warn);
-        SolDataRegistry.addJson(id, original -> {
+        SolRegistries.RUNTIME.addText(id, SolLib.LOG::warn);
+        SolRegistries.RUNTIME.addJson(id, original -> {
             if (original != null)
                 original.getAsJsonObject("key")
                         .getAsJsonObject("#")
                         .add("item", new JsonPrimitive("minecraft:gold_ingot"));
             return original;
         });
-        SolDataRegistry.addText(id, SolLib.LOG::warn);
+        SolRegistries.RUNTIME.addText(id, SolLib.LOG::warn);
 
-        SolDataRegistry.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
-        SolDataRegistry.addRemoval(ResourceLocation.tryBuild("minecraft", "recipes/diamond_pickaxe.json"), () -> true);
+        SolRegistries.RUNTIME.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
+        SolRegistries.RUNTIME.addRemoval(ResourceLocation.tryBuild("minecraft", "recipes/diamond_pickaxe.json"), () -> true);
     }
 }

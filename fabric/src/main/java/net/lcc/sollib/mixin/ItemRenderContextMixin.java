@@ -2,7 +2,9 @@ package net.lcc.sollib.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
-import net.lcc.sollib.api.client.render.item.SolItemRendererRegistry;
+import net.lcc.sollib.api.SolClientRegistries;
+import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.client.render.item.SItemRendererRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -17,6 +19,6 @@ public class ItemRenderContextMixin {
     @Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;emitItemQuads(Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V"))
     public void renderItem(ItemStack stack, ItemDisplayContext displayContext, boolean invert, PoseStack poseStack,
                            MultiBufferSource buffer, int packedLight, int packedOverlay, BakedModel model, CallbackInfo ci) {
-        SolItemRendererRegistry.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
+        SolClientRegistries.ITEM_RENDERER.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
     }
 }

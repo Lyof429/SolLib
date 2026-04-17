@@ -7,15 +7,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SolConfigRegistry {
-    protected static final Map<String, SolConfig> INSTANCES = new HashMap<>();
+public class SConfigRegistry {
+    protected final Map<String, SolConfig> INSTANCES = new HashMap<>();
 
     /**
      * @param name The name of the config to get
      * @return The corresponding SolConfig instance, or null
      */
     @Nullable
-    public static SolConfig get(String name) {
+    public SolConfig get(String name) {
         return INSTANCES.get(name);
     }
 
@@ -23,7 +23,7 @@ public class SolConfigRegistry {
      * Automatically called by any SolConfig in its constructor
      * @param config The instance of SolConfig to register
      */
-    public static void register(SolConfig config) {
+    public void register(SolConfig config) {
         INSTANCES.put(config.getName(), config);
     }
 
@@ -32,7 +32,7 @@ public class SolConfigRegistry {
      * Automatically called on resource reload
      */
     @ApiStatus.Internal
-    public static void reload() {
+    public void reload() {
         SolLib.LOG.info("Loaded", INSTANCES.size(), "configs");
         for (SolConfig config : INSTANCES.values())
             config.init();

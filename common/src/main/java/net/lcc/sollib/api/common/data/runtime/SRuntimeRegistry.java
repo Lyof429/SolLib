@@ -16,40 +16,40 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class SolDataRegistry {
+public class SRuntimeRegistry {
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    protected static Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
+    protected Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
 
-    public static void addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
+    public void addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
         addText(target, original -> null, activationRule);
     }
 
-    public static void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function) {
+    public void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function) {
         addJson(target, function, () -> true);
     }
 
-    public static void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function, Supplier<Boolean> activationRule) {
+    public void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function, Supplier<Boolean> activationRule) {
         addText(target, original -> {
             try {
-                return function.apply(GSON.fromJson(original, JsonObject.class)).toString();
+                return GSON.toJson(function.apply(GSON.fromJson(original, JsonObject.class)));
             } catch (Exception ignored) {
                 return original;
             }
         }, activationRule);
     }
 
-    public static void addText(ResourceLocation target, Function<String, String> function) {
+    public void addText(ResourceLocation target, Function<String, String> function) {
         addText(target, function, () -> true);
     }
 
-    public static void addText(ResourceLocation target, Function<String, String> function, Supplier<Boolean> activationRule) {
+    public void addText(ResourceLocation target, Function<String, String> function, Supplier<Boolean> activationRule) {
         if (!INSTANCES.containsKey(target)) INSTANCES.put(target, new ArrayList<>());
         INSTANCES.get(target).add(new RuntimeData(activationRule, function));
     }
 
 
     @ApiStatus.Internal
-    public static Resource apply(ResourceLocation target, Resource original) {
+    public Resource apply(ResourceLocation target, Resource original) {
         if (!INSTANCES.containsKey(target)) return original;
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
 
@@ -76,7 +76,7 @@ public class SolDataRegistry {
     }
 
     @ApiStatus.Internal
-    public static List<ResourceLocation> findMatching(String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
+    public List<ResourceLocation> findMatching(String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
         List<ResourceLocation> matching = new ArrayList<>();
         for (ResourceLocation id : INSTANCES.keySet()) {
             if (id.getPath().startsWith(startingPath + "/") && allowedPathPredicate.test(id))

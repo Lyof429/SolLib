@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class SolWeatherCommandRegistry {
-    private static final Map<String, BiConsumer<CommandSourceStack, Integer>> WEATHER_TYPES = new HashMap<>();
+public class SWeatherCommandRegistry {
+    private final Map<String, BiConsumer<CommandSourceStack, Integer>> INSTANCES = new HashMap<>();
 
     /**
      * Registers a new weather type to the /weather command
@@ -20,8 +20,8 @@ public class SolWeatherCommandRegistry {
      * @param action A consumer taking the source and the duration (in ticks)
      * @since 1.0.0
      */
-    public static void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
-        WEATHER_TYPES.put(name, action);
+    public void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
+        INSTANCES.put(name, action);
     }
 
     /**
@@ -29,8 +29,8 @@ public class SolWeatherCommandRegistry {
      * @since 1.0.0
      */
     @ApiStatus.Internal
-    public static void injectCustomWeather(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        for (Map.Entry<String, BiConsumer<CommandSourceStack, Integer>> entry : WEATHER_TYPES.entrySet()) {
+    public void apply(LiteralArgumentBuilder<CommandSourceStack> builder) {
+        for (Map.Entry<String, BiConsumer<CommandSourceStack, Integer>> entry : INSTANCES.entrySet()) {
             String name = entry.getKey();
             BiConsumer<CommandSourceStack, Integer> action = entry.getValue();
 
@@ -53,7 +53,7 @@ public class SolWeatherCommandRegistry {
     }
 
     @ApiStatus.Internal
-    public static Iterable<BiConsumer<CommandSourceStack, Integer>> getAllActions() {
-        return WEATHER_TYPES.values();
+    public void clear(CommandSourceStack source) {
+        INSTANCES.values().forEach(action -> action.accept(source, 0));
     }
 }

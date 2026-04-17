@@ -1,7 +1,6 @@
 package net.lcc.sollib.api.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -11,8 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class SolItemRendererRegistry {
-    private static final Map<Predicate<ItemStack>, IItemRenderer> INSTANCES = new LinkedHashMap<>();
+public class SItemRendererRegistry {
+    private final Map<Predicate<ItemStack>, IItemRenderer> INSTANCES = new LinkedHashMap<>();
 
     /**
      * Manages registration of item stack renderers introduced in SolLib <br/>
@@ -21,7 +20,7 @@ public class SolItemRendererRegistry {
      * @param renderer  Management of how item stack should be rendered
      * @since 1.0.0
      */
-    public static void register(Predicate<ItemStack> condition, IItemRenderer renderer) {
+    public void register(Predicate<ItemStack> condition, IItemRenderer renderer) {
         INSTANCES.put(condition, renderer);
     }
 
@@ -30,7 +29,7 @@ public class SolItemRendererRegistry {
      * @since 1.0.0
      */
     @ApiStatus.Internal
-    public static void apply(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
+    public void apply(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer,
                              int packedLight, int packedOverlay) {
         if (stack == null) return;
 
