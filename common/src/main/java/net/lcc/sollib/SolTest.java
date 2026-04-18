@@ -7,8 +7,13 @@ import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
+import net.lcc.sollib.api.common.registry.ItemHolder;
+import net.lcc.sollib.api.common.registry.SolRegistrar;
+import net.lcc.sollib.api.common.registry.SRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
 
 public class SolTest {
     public record Thing(double x, String name) implements IConfigurable {
@@ -83,6 +88,12 @@ public class SolTest {
 
         SolRegistries.RUNTIME.addText(ResourceLocation.tryBuild("minecraft", "recipes/patrick.json"), original -> "{\"type\":\"minecraft:crafting_shaped\",\"category\":\"misc\",\"key\":{\"#\":{\"item\":\"minecraft:diamond\"}},\"pattern\":[\"# #\",\" # \"],\"result\":{\"item\":\"minecraft:bucket\"},\"show_notification\":true}");
         SolRegistries.RUNTIME.addRemoval(ResourceLocation.tryBuild("minecraft", "recipes/diamond_pickaxe.json"), () -> true);
+
+        SolRegistrar registrar = new SolRegistrar("sollib");
+        SRegistry<ItemHolder> items = registrar.create(Item.class);
+
+        ItemHolder x = items.register("test", new ItemHolder(() -> new Item(new Item.Properties())))
+                .withFuel(5);
     }
 
 
