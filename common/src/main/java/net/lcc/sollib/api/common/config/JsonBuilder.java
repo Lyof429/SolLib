@@ -143,7 +143,7 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addCategory(String key, IConfigurable consumer) {
+    public JsonBuilder addObject(String key, IConfigurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
         this.currentValue = new JsonObject();
@@ -166,7 +166,7 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addList(String key, Consumer<ArrayBuilder> consumer) {
+    public JsonBuilder addArray(String key, Consumer<ArrayBuilder> consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
         this.currentValue = new JsonArray();
@@ -184,8 +184,8 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addList(String key, Collection<?> value) {
-        return this.addList(key, self -> {
+    public JsonBuilder addArray(String key, Iterable<?> value) {
+        return this.addArray(key, self -> {
             for (Object v : value) {
                 if (v instanceof String it) self.add(it);
                 else if (v instanceof Number it) self.add(it);
