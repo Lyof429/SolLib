@@ -9,6 +9,7 @@ import net.minecraft.server.packs.resources.Resource;
 import org.apache.commons.io.input.CharSequenceInputStream;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -72,7 +73,7 @@ public class SRuntimeRegistry {
 
         final String finalResult = result;
         return finalResult == null ? null : new Resource(RuntimeResourcePack.INSTANCE,
-                () -> new CharSequenceInputStream(finalResult, Charset.defaultCharset()));
+                () -> new ByteArrayInputStream(finalResult.getBytes()));
     }
 
     @ApiStatus.Internal
