@@ -20,7 +20,8 @@ public class WeatherCommandMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;"
-            )
+            ),
+            remap = false
     )
     private static LiteralCommandNode<CommandSourceStack> injectAllCustomWeathers(
             CommandDispatcher<CommandSourceStack> dispatcher,

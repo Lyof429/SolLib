@@ -3,8 +3,6 @@ package net.lcc.sollib.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
 import net.lcc.sollib.api.SolClientRegistries;
-import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.client.render.item.SItemRendererRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
