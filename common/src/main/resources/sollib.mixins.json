@@ -14,6 +14,7 @@
     "client.model.EntityModelMixin",
     "client.model.ModelPartMixin",
     "client.render.ItemMixin",
+    "client.render.ItemRendererAccessor",
     "client.render.ItemRendererMixin"
   ],
   "server": [
