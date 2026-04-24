@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -36,7 +37,7 @@ public class MultiPackResourceManagerMixin {
     @Unique private static final Predicate<Map.Entry<ResourceLocation, Resource>> sol_isNull
             = entry -> entry.getValue() == null;
     @Unique private static final BiFunction<ResourceLocation, List<Resource>, List<Resource>> sol_replaceList
-            = (id, list) -> list.stream().map(resource -> SolRegistries.RUNTIME.apply(id, resource)).toList();
+            = (id, list) -> list.stream().map(resource -> SolRegistries.RUNTIME.apply(id, resource)).filter(Objects::nonNull).toList();
     @Unique private static final Predicate<Map.Entry<ResourceLocation, List<Resource>>> sol_isEmpty
             = entry -> entry.getValue().isEmpty();
 
@@ -64,7 +65,7 @@ public class MultiPackResourceManagerMixin {
     private Map<ResourceLocation, List<Resource>> listRuntimeResourceStacks(Map<ResourceLocation, List<Resource>> original,
                                                                           String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
         for (ResourceLocation id : SolRegistries.RUNTIME.findMatching(startingPath, allowedPathPredicate))
-            original.putIfAbsent(id, List.of());
+            original.putIfAbsent(id, List.of((Resource) null));
         original.replaceAll(sol_replaceList);
         original.entrySet().removeIf(sol_isEmpty);
         return original;

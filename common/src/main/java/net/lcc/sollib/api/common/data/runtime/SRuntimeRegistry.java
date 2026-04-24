@@ -81,7 +81,7 @@ public class SRuntimeRegistry {
         List<ResourceLocation> matching = new ArrayList<>();
         for (ResourceLocation id : INSTANCES.keySet()) {
             if (id.getPath().startsWith(startingPath + "/") && allowedPathPredicate.test(id))
-                matching.add(SolLib.LOG.info(id));
+                matching.add(id);
         }
         return matching;
     }

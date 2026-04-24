@@ -1,28 +1,42 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.minecraft.resources.ResourceLocation;
+
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
-public class SolRegistrar {
-    private final String modid;
-    private final Map<Class<?>, SRegistry<?>> registries;
+public class SolRegistrar<T extends Holder<?>> {
+    protected final Map<String, T> instances;
+    protected final String namespace;
+    protected final Constructor<T> constructor;
 
-    public SolRegistrar(String modid) {
-        this.modid = modid;
-        this.registries = new HashMap<>();
+    public SolRegistrar(String namespace, Class<T> clazz) {
+        Constructor<T> constructor = null;
+        try {
+            constructor = clazz.getConstructor(Supplier.class);
+        } catch (Exception ignored) {}
+
+        this.instances = new HashMap<>();
+        this.namespace = namespace;
+        this.constructor = constructor;
     }
 
-    public String getModID() {
-        return this.modid;
+    public T register(String name, Supplier<?> supplier) {
+        try {
+            return this.register(name, this.constructor.newInstance(supplier));
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
-    @SuppressWarnings("unchecked")
-    public <T, H extends Holder<T>> SRegistry<H> get(Class<H> clazz) {
-        if (this.registries.containsKey(clazz))
-            return (SRegistry<H>) this.registries.get(clazz);
+    public T register(String name, T holder) {
+        instances.putIfAbsent(name, holder);
+        return holder;
+    }
 
-        SRegistry<H> r = new SRegistry<>(clazz);
-        this.registries.put(clazz, r);
-        return r;
+    public T get(String name) {
+        return this.instances.getOrDefault(name, null);
     }
 }

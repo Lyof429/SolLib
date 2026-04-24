@@ -4,8 +4,8 @@ import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.ItemHolder;
+import net.lcc.sollib.api.SolModContainer;
 import net.lcc.sollib.api.common.registry.SolRegistrar;
-import net.lcc.sollib.api.common.registry.SRegistry;
 import net.minecraft.world.item.Item;
 
 public class SolTest {
@@ -34,12 +34,12 @@ public class SolTest {
         CONFIG = new SolConfig("sollib/test", 1.0, builder);
         CONFIG.init();
 
-        SolRegistrar registrar = new SolRegistrar("sollib");
-        SRegistry<ItemHolder> items = registrar.get(ItemHolder.class);
+        SolModContainer modContainer = new SolModContainer("sollib");
+        SolRegistrar<ItemHolder> items = modContainer.getRegistrar(ItemHolder.class);
 
         ItemHolder x = items.register("test", () -> new Item(new Item.Properties()))
                 .withFuel(5);
-        SolLib.LOG.info(x, registrar.get(ItemHolder.class).get("test"));
+        SolLib.LOG.info(x, modContainer.getRegistrar(ItemHolder.class).get("test"));
     }
 
 

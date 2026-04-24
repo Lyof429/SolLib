@@ -1,27 +1,28 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.api.SolModContainer;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * A holder class for item registry using a {@link SolRegistrar}
+ * A holder class for item registry using a {@link SolModContainer}
  * @author Cocreated by Hellion and Lyof
  */
 public class ItemHolder extends Holder<Item> {
-    private static final Map<TagKey<Item>, List<ItemHolder>> TAGS = new HashMap<>();
-
-    private ModelTemplate model;
     private int fuelDuration;
+    private List<TagKey<Item>> tags;
+    private ModelTemplate model;
 
     public ItemHolder(Supplier<Item> entrySupplier) {
         super(entrySupplier);
+
+        this.tags = null;
+        this.model = null;
+        this.fuelDuration = 0;
     }
 
     /**
@@ -47,16 +48,12 @@ public class ItemHolder extends Holder<Item> {
      */
     @SafeVarargs
     public final ItemHolder withTags(TagKey<Item>... tags) {
-        for (TagKey<Item> tag : tags) {
-            TAGS.putIfAbsent(tag, new ArrayList<>());
-            TAGS.get(tag).add(this);
-        }
-
+        this.tags = List.of(tags);
         return this;
     }
 
-    public static Map<TagKey<Item>, List<ItemHolder>> getTags() {
-        return TAGS;
+    public List<TagKey<Item>> getTags() {
+        return this.tags == null ? List.of() : this.tags;
     }
 
     /**
