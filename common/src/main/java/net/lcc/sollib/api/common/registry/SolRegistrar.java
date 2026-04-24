@@ -1,7 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.minecraft.resources.ResourceLocation;
-
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package net.lcc.sollib;
 
+import net.lcc.sollib.api.SolModContainer;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.ItemHolder;
-import net.lcc.sollib.api.SolModContainer;
 import net.lcc.sollib.api.common.registry.SolRegistrar;
 import net.minecraft.world.item.Item;
 
