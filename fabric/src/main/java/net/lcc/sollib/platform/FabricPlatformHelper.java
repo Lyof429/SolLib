@@ -1,7 +1,7 @@
 package net.lcc.sollib.platform;
 
-import net.lcc.sollib.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.lcc.sollib.platform.services.IPlatformHelper;
 
 import java.nio.file.Path;
 

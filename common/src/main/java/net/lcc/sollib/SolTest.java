@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 
 public class SolTest {
     public static SolConfig CONFIG;
+    public static SolModContainer MOD = new SolModContainer("sollib");
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
@@ -34,12 +35,11 @@ public class SolTest {
         CONFIG = new SolConfig("sollib/test", 1.0, builder);
         CONFIG.init();
 
-        SolModContainer modContainer = new SolModContainer("sollib");
-        SolRegistrar<ItemHolder> items = modContainer.getRegistrar(ItemHolder.class);
+
+        SolRegistrar<ItemHolder> items = MOD.getRegistrar(ItemHolder.class);
 
         ItemHolder x = items.register("test", () -> new Item(new Item.Properties()))
                 .withFuel(5);
-        SolLib.LOG.info(x, modContainer.getRegistrar(ItemHolder.class).get("test"));
     }
 
 
