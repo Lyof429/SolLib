@@ -27,6 +27,7 @@ public class SBossBarRegistry {
      */
     public void register(Predicate<BossEvent> condition, ResourceLocation texture) {
         INSTANCES.put(condition, ((guiGraphics, x, y, bossEvent) -> {
+            guiGraphics.blit(texture, x, y, 0, bossEvent.getColor().ordinal() * 5 * 2 + 5, (int)(bossEvent.getProgress() * 183.0F), 5);
             guiGraphics.blit(texture, x, y - 2, 0, 0, 183, 9, 183, 9);
 
             int progressWidth = (int) (bossEvent.getProgress() * 183.0F);

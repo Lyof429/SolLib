@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.stream.MalformedJsonException;
 
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;

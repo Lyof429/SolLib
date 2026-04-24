@@ -6,7 +6,6 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;

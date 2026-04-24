@@ -1,7 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.minecraft.data.models.model.ModelTemplate;
-
 import java.util.function.Supplier;
 
 public class Holder<T> implements Supplier<T> {

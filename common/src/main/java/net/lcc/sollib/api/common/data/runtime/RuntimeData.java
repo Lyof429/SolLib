@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.data.runtime;
 
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;

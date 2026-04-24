@@ -1,8 +1,8 @@
 package net.lcc.sollib.mixin.client.model;
 
 import net.lcc.sollib.SolLib;
-import net.lcc.sollib.api.client.model.inject.IModelPartsAccessor;
 import net.lcc.sollib.api.client.model.ModelPartUtils;
+import net.lcc.sollib.api.client.model.inject.IModelPartsAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
