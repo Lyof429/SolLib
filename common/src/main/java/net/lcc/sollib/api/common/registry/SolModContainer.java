@@ -2,6 +2,7 @@ package net.lcc.sollib.api.common.registry;
 
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;

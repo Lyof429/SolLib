@@ -1,12 +1,19 @@
-package net.lcc.sollib.api.common.registry;
+package net.lcc.sollib.api.common.registry.holder;
+
+import net.lcc.sollib.api.common.registry.SolModContainer;
 
 import java.util.function.Supplier;
 
 public class Holder<T> implements Supplier<T> {
+    protected final SolModContainer mod;
+    protected final String name;
+
     private T cachedEntry;
     private final Supplier<T> entrySupplier;
 
-    public Holder(Supplier<T> entrySupplier) {
+    public Holder(SolModContainer mod, String name, Supplier<T> entrySupplier) {
+        this.mod = mod;
+        this.name = name;
         this.entrySupplier = entrySupplier;
     }
 

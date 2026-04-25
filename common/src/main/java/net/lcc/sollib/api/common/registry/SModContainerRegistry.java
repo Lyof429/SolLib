@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.api.common.registry.holder.Holder;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class SModContainerRegistry {
     }
 
     @ApiStatus.Internal
-    public <T, H extends Holder<T>> void apply(Class<H> clazz, IRegistryConsumer<T> consumer) {
+    public <T, H extends Holder<T>> void apply(Class<H> clazz, IRegistryConsumer<T, H> consumer) {
         for (SolModContainer mod : INSTANCES)
             if (mod.hasRegistrar(clazz)) mod.getRegistrar(clazz).apply(consumer);
     }

@@ -1,12 +1,15 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.SolConfig;
-import net.lcc.sollib.api.common.registry.ItemHolder;
-import net.lcc.sollib.api.common.registry.SolRegistrar;
+import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class SolTest {
     public static SolConfig CONFIG;
@@ -36,10 +39,11 @@ public class SolTest {
         CONFIG.init();
 
 
-        SolRegistrar<Item, ItemHolder> items = MOD.getRegistrar(ItemHolder.class);
-
-        ItemHolder x = items.register("test", () -> new Item(new Item.Properties()))
+        ItemHolder x = MOD.getRegistrar(ItemHolder.class).register("test", () -> new Item(new Item.Properties()))
                 .withFuel(5);
+        BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()))
+                .withItem(it -> it.withFuel(100))
+                .withStripResult(() -> Blocks.ACACIA_LOG);
     }
 
 

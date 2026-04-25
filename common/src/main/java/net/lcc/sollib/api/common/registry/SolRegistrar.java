@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -17,7 +18,7 @@ public class SolRegistrar<T, H extends Holder<T>> {
     public SolRegistrar(SolModContainer mod, Class<H> clazz) {
         Constructor<H> constructor = null;
         try {
-            constructor = clazz.getConstructor(Supplier.class);
+            constructor = clazz.getConstructor(SolModContainer.class, String.class, Supplier.class);
         } catch (Exception ignored) {}
         Registry<T> registry = null;
         try {
@@ -32,7 +33,7 @@ public class SolRegistrar<T, H extends Holder<T>> {
 
     public H register(String name, Supplier<T> supplier) {
         try {
-            return this.register(name, this.constructor.newInstance(supplier));
+            return this.register(name, this.constructor.newInstance(this.mod, name, supplier));
         } catch (Exception ignored) {
             return null;
         }
@@ -48,7 +49,7 @@ public class SolRegistrar<T, H extends Holder<T>> {
     }
 
     @ApiStatus.Internal
-    public void apply(IRegistryConsumer<T> consumer) {
+    public void apply(IRegistryConsumer<T, H> consumer) {
         for (Map.Entry<String, H> entry : this.instances.entrySet())
             consumer.register(this.registry, this.mod.makeID(entry.getKey()), entry.getValue());
     }

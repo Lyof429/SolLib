@@ -1,9 +1,8 @@
 package net.lcc.sollib;
 
 import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.registry.ItemHolder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegisterEvent;
@@ -18,5 +17,6 @@ public class SolLibForge {
     @SubscribeEvent
     public static void register(RegisterEvent event) {
         SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> event.register(registry.key(), id, instance));
+        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> event.register(registry.key(), id, instance));
     }
 }

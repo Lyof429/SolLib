@@ -1,13 +1,7 @@
 package net.lcc.sollib.mixin;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.SolLibFabric;
-import net.lcc.sollib.SolTest;
-import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.registry.ItemHolder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

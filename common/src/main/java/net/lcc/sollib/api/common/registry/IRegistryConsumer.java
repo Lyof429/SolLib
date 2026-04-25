@@ -1,11 +1,10 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.Supplier;
-
 @FunctionalInterface
-public interface IRegistryConsumer<T> {
-    void register(Registry<T> registry, ResourceLocation id, Supplier<T> instance);
+public interface IRegistryConsumer<T, H extends Holder<T>> {
+    void register(Registry<T> registry, ResourceLocation id, H instance);
 }

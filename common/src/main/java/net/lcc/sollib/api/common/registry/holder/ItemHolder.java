@@ -1,5 +1,6 @@
-package net.lcc.sollib.api.common.registry;
+package net.lcc.sollib.api.common.registry.holder;
 
+import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.model.ModelTemplate;
@@ -18,10 +19,10 @@ public class ItemHolder extends Holder<Item> {
     private List<TagKey<Item>> tags;
     private ModelTemplate model;
 
-    public ItemHolder(Supplier<Item> entrySupplier) {
-        super(entrySupplier);
+    public ItemHolder(SolModContainer mod, String name, Supplier<Item> entrySupplier) {
+        super(mod, name, entrySupplier);
 
-        this.tags = null;
+        this.tags = List.of();
         this.model = null;
         this.fuelDuration = 0;
     }
@@ -58,7 +59,7 @@ public class ItemHolder extends Holder<Item> {
     }
 
     public List<TagKey<Item>> getTags() {
-        return this.tags == null ? List.of() : this.tags;
+        return this.tags;
     }
 
     /**
