@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.api.SolModContainer;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -23,6 +24,10 @@ public class ItemHolder extends Holder<Item> {
         this.tags = null;
         this.model = null;
         this.fuelDuration = 0;
+    }
+
+    public static Registry<?> getRegistryType() {
+        return BuiltInRegistries.ITEM;
     }
 
     /**

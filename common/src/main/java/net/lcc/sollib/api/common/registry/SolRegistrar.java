@@ -1,27 +1,36 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.minecraft.core.Registry;
+import org.jetbrains.annotations.ApiStatus;
+
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class SolRegistrar<T extends Holder<?>> {
-    protected final Map<String, T> instances;
-    protected final String namespace;
-    protected final Constructor<T> constructor;
+public class SolRegistrar<T, H extends Holder<T>> {
+    protected final SolModContainer mod;
+    protected final Map<String, H> instances;
+    protected final Constructor<H> constructor;
+    protected final Registry<T> registry;
 
-    public SolRegistrar(String namespace, Class<T> clazz) {
-        Constructor<T> constructor = null;
+    public SolRegistrar(SolModContainer mod, Class<H> clazz) {
+        Constructor<H> constructor = null;
         try {
             constructor = clazz.getConstructor(Supplier.class);
         } catch (Exception ignored) {}
+        Registry<T> registry = null;
+        try {
+            registry = (Registry<T>) clazz.getMethod("getRegistryType").invoke(null);
+        } catch (Exception ignored) {}
 
         this.instances = new HashMap<>();
-        this.namespace = namespace;
+        this.mod = mod;
         this.constructor = constructor;
+        this.registry = registry;
     }
 
-    public T register(String name, Supplier<?> supplier) {
+    public H register(String name, Supplier<T> supplier) {
         try {
             return this.register(name, this.constructor.newInstance(supplier));
         } catch (Exception ignored) {
@@ -29,12 +38,18 @@ public class SolRegistrar<T extends Holder<?>> {
         }
     }
 
-    public T register(String name, T holder) {
+    public H register(String name, H holder) {
         instances.putIfAbsent(name, holder);
         return holder;
     }
 
-    public T get(String name) {
+    public H get(String name) {
         return this.instances.getOrDefault(name, null);
+    }
+
+    @ApiStatus.Internal
+    public void apply(IRegistryConsumer<T> consumer) {
+        for (Map.Entry<String, H> entry : this.instances.entrySet())
+            consumer.register(this.registry, this.mod.makeID(entry.getKey()), entry.getValue());
     }
 }

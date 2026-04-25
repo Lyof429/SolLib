@@ -1,6 +1,6 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.SolModContainer;
+import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.config.SolConfig;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 
 public class SolTest {
     public static SolConfig CONFIG;
-    public static SolModContainer MOD = new SolModContainer("sollib");
+    public static SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
@@ -36,13 +36,12 @@ public class SolTest {
         CONFIG.init();
 
 
-        SolRegistrar<ItemHolder> items = MOD.getRegistrar(ItemHolder.class);
+        SolRegistrar<Item, ItemHolder> items = MOD.getRegistrar(ItemHolder.class);
 
         ItemHolder x = items.register("test", () -> new Item(new Item.Properties()))
                 .withFuel(5);
     }
 
 
-    public static void sasha() {
-    }
+    public static void sasha() {}
 }
