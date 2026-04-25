@@ -43,7 +43,8 @@ public class SolTest {
                 .withFuel(5);
         BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()))
                 .withItem(it -> it.withFuel(100))
-                .withStripResult(() -> Blocks.ACACIA_LOG);
+                .withStripResult(() -> Blocks.ACACIA_LOG)
+                .cutout();
     }
 
 

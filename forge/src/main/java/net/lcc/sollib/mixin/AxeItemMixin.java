@@ -18,8 +18,8 @@ public class AxeItemMixin {
 
         AxeStrippableEvent event = new AxeStrippableEvent(original.getBlock());
         MinecraftForge.EVENT_BUS.post(event);
-        cir.setReturnValue(event.hasStrippingResult()
-                ? event.getStrippingResult().defaultBlockState().setValue(RotatedPillarBlock.AXIS, original.getValue(RotatedPillarBlock.AXIS))
-                : null);
+
+        if (event.hasStrippingResult())
+            cir.setReturnValue(event.getStrippingResult().defaultBlockState().setValue(RotatedPillarBlock.AXIS, original.getValue(RotatedPillarBlock.AXIS)));
     }
 }
