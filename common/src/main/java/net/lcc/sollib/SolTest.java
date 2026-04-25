@@ -6,7 +6,9 @@ import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -40,10 +42,12 @@ public class SolTest {
 
 
         ItemHolder x = MOD.getRegistrar(ItemHolder.class).register("test", () -> new Item(new Item.Properties()))
-                .withFuel(5);
-        BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()))
+                .withFuel(5).withModel(ModelTemplates.FLAT_ITEM);
+        BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new Block(BlockBehaviour.Properties.of()))
                 .withItem(it -> it.withFuel(100))
-                .withStripResult(() -> Blocks.ACACIA_LOG)
+                .withSlab()
+                .withStairs()
+                .withFence()
                 .cutout();
     }
 

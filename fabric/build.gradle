@@ -2,6 +2,7 @@ plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
 }
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
@@ -12,6 +13,9 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":common")
+
+    // EMI
+    modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
 }
 
 loom {
@@ -37,12 +41,14 @@ loom {
             inherit server
             name "Data Generation"
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("common/src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}"
             vmArg "-Dfabric-api.datagen.modid=sollib"
             runDir("build/datagen")
         }
     }
 }
+
+sourceSets.main.resources.srcDirs += project(":common").file("src/main/generated")
 
 publishMods {
     file = tasks.named("remapJar").flatMap { it.archiveFile }

@@ -3,3 +3,12 @@ plugins {
     id 'net.neoforged.moddev.legacyforge' version '2.0.137' apply false
     id 'me.modmuss50.mod-publish-plugin' version '1.1.0' apply false
 }
+
+subprojects {
+    repositories {
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/"
+        }
+    }
+}

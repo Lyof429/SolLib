@@ -6,5 +6,5 @@ import net.minecraft.resources.ResourceLocation;
 
 @FunctionalInterface
 public interface IRegistryConsumer<T, H extends Holder<T>> {
-    void register(Registry<T> registry, ResourceLocation id, H instance);
+    void apply(Registry<T> registry, ResourceLocation id, H instance);
 }

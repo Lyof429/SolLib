@@ -51,6 +51,6 @@ public class SolRegistrar<T, H extends Holder<T>> {
     @ApiStatus.Internal
     public void apply(IRegistryConsumer<T, H> consumer) {
         for (Map.Entry<String, H> entry : this.instances.entrySet())
-            consumer.register(this.registry, this.mod.makeID(entry.getKey()), entry.getValue());
+            consumer.apply(this.registry, this.mod.makeID(entry.getKey()), entry.getValue());
     }
 }

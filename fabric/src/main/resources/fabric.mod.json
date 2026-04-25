@@ -16,13 +16,16 @@
     "environment": "*",
     "entrypoints": {
         "preLaunch": [
-          "net.lcc.sollib.SolLibFabric"
+            "net.lcc.sollib.SolLibFabric"
         ],
         "main": [
-          "net.lcc.sollib.SolLibFabric"
+            "net.lcc.sollib.SolLibFabric"
         ],
         "client": [
             "net.lcc.sollib.SolLibFabric"
+        ],
+        "fabric-datagen": [
+            "net.lcc.sollib.SolLibDatagen"
         ]
     },
     "mixins": [

@@ -23,6 +23,9 @@ dependencies {
     compileOnly group: 'org.ow2.asm', name: 'asm-tree', version: '9.6'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+
+    // EMI
+    modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
 }
 
 configurations {
