@@ -143,6 +143,10 @@ public class BlockHolder extends Holder<Block> {
         return this;
     }
 
+    public boolean isFlammable() {
+        return this.flammability != null;
+    }
+
     public Flammability getFlammability() {
         return this.flammability;
     }

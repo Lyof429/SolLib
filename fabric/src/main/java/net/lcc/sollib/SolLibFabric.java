@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
@@ -48,6 +49,10 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer, PreLa
         SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
             if (instance.hasStripResult())
                 StrippableBlockRegistry.register(instance.get(), instance.getStripResult().get());
+        });
+        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
+            if (instance.isFlammable())
+                FlammableBlockRegistry.getDefaultInstance().add(instance.get(), instance.getFlammability().ignite(), instance.getFlammability().spread());
         });
     }
 
