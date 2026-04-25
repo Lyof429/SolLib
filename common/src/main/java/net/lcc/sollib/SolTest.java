@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class SolTest {
     public static SolConfig CONFIG;
-    public static SolModContainer MOD = new SolModContainer("SolLib", "sollib");
+    public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
@@ -42,7 +42,8 @@ public class SolTest {
 
 
         ItemHolder x = MOD.getRegistrar(ItemHolder.class).register("test", () -> new Item(new Item.Properties()))
-                .withFuel(5).withModel(ModelTemplates.FLAT_ITEM);
+                .withFuel(5)
+                .withModel(ModelTemplates.FLAT_ITEM);
         BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new Block(BlockBehaviour.Properties.of()))
                 .withItem(it -> it.withFuel(100))
                 .withSlab()
