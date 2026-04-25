@@ -28,38 +28,12 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer, PreLa
     @Override
     public void onInitialize() {
         SolLib.init();
-        SolLibFabric.register();
+        SolLibFabricHandlers.register();
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public void onInitializeClient() {
-        SolLibFabric.registerClient();
-    }
-
-    private static void register() {
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));
-
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> {
-            if (instance.isFuel())
-                FuelRegistry.INSTANCE.add(instance.get(), instance.getFuelDuration());
-        });
-
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.hasStripResult())
-                StrippableBlockRegistry.register(instance.get(), instance.getStripResult().get());
-        });
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.isFlammable())
-                FlammableBlockRegistry.getDefaultInstance().add(instance.get(), instance.getFlammability().ignite(), instance.getFlammability().spread());
-        });
-    }
-
-    @Environment(EnvType.CLIENT)
-    private static void registerClient() {
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.isCutout()) BlockRenderLayerMap.INSTANCE.putBlock(instance.get(), RenderType.cutout());
-        });
+        SolLibFabricHandlers.registerClient();
     }
 }
