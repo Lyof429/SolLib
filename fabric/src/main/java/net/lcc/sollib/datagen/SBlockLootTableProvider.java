@@ -7,7 +7,6 @@ import net.lcc.sollib.api.common.registry.data.BlockModel;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class SBlockLootTableProvider extends FabricBlockLootTableProvider {
     public SBlockLootTableProvider(FabricDataOutput dataOutput) {

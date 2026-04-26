@@ -8,7 +8,6 @@ import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.platform.Services;
 import org.apache.commons.io.FileUtils;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

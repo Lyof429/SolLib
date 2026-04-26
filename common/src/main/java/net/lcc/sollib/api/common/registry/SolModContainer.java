@@ -65,7 +65,7 @@ public class SolModContainer {
         return c;
     }
 
-    public Map<String, SolConfig> getConfigs() {
-        return this.configs;
+    public Iterable<SolConfig> getConfigs() {
+        return this.configs.values();
     }
 }

@@ -4,11 +4,8 @@ import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.core.registries.Registries;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.client.gui.ModListScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(SolLib.MOD_ID)

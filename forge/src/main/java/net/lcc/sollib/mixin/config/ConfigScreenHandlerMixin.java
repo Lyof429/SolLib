@@ -1,6 +1,5 @@
 package net.lcc.sollib.mixin.config;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.client.ui.config.SolConfigScreen;
 import net.lcc.sollib.api.common.registry.SolModContainer;

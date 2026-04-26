@@ -1,12 +1,10 @@
 package net.lcc.sollib;
 
-import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.util.SystemProperties;
 import net.lcc.sollib.core.SolFabricCore;
 
