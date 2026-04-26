@@ -11,31 +11,32 @@ import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class SolFabricCore {
     public static void register() {
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));
+        SolRegistries.MOD.apply(ItemHolder.class, holder -> Registry.register(BuiltInRegistries.ITEM, holder.getID(), holder.get()));
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> Registry.register(BuiltInRegistries.BLOCK, holder.getID(), holder.get()));
 
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> {
-            if (instance.isFuel())
-                FuelRegistry.INSTANCE.add(instance.get(), instance.getFuelDuration());
+        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
+            if (holder.isFuel())
+                FuelRegistry.INSTANCE.add(holder.get(), holder.getFuelDuration());
         });
 
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.hasStripResult())
-                StrippableBlockRegistry.register(instance.get(), instance.getStripResult().get());
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            if (holder.hasStripResult())
+                StrippableBlockRegistry.register(holder.get(), holder.getStripResult().get());
         });
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.isFlammable())
-                FlammableBlockRegistry.getDefaultInstance().add(instance.get(), instance.getFlammability().ignite(), instance.getFlammability().spread());
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            if (holder.isFlammable())
+                FlammableBlockRegistry.getDefaultInstance().add(holder.get(), holder.getFlammability().ignite(), holder.getFlammability().spread());
         });
     }
 
     @Environment(EnvType.CLIENT)
     public static void registerClient() {
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> {
-            if (instance.isCutout()) BlockRenderLayerMap.INSTANCE.putBlock(instance.get(), RenderType.cutout());
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            if (holder.isCutout()) BlockRenderLayerMap.INSTANCE.putBlock(holder.get(), RenderType.cutout());
         });
     }
 }

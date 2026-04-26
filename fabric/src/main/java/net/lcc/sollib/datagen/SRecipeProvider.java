@@ -28,29 +28,29 @@ public class SRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, it) -> {
-            if (it.getStairs() != null) {
-                stairBuilder(it.getStairs().get(), Ingredient.of(it.get()))
-                        .group(getName(it.getStairs().get()))
-                        .unlockedBy(getHasName(it.get()), has(it.get()))
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            if (holder.getStairs() != null) {
+                stairBuilder(holder.getStairs().get(), Ingredient.of(holder.get()))
+                        .group(getName(holder.getStairs().get()))
+                        .unlockedBy(getHasName(holder.get()), has(holder.get()))
                         .save(exporter);
             }
-            if (it.getSlab() != null) {
-                slabBuilder(RecipeCategory.BUILDING_BLOCKS, it.getSlab().get(), Ingredient.of(it.get()))
-                        .group(getName(it.getSlab().get()))
-                        .unlockedBy(getHasName(it.get()), has(it.get()))
+            if (holder.getSlab() != null) {
+                slabBuilder(RecipeCategory.BUILDING_BLOCKS, holder.getSlab().get(), Ingredient.of(holder.get()))
+                        .group(getName(holder.getSlab().get()))
+                        .unlockedBy(getHasName(holder.get()), has(holder.get()))
                         .save(exporter);
             }
-            if (it.getButton() != null) {
-                buttonBuilder(it.getButton().get(), Ingredient.of(it.get()))
-                        .group(getName(it.getButton().get()))
-                        .unlockedBy(getHasName(it.get()), has(it.get()))
+            if (holder.getButton() != null) {
+                buttonBuilder(holder.getButton().get(), Ingredient.of(holder.get()))
+                        .group(getName(holder.getButton().get()))
+                        .unlockedBy(getHasName(holder.get()), has(holder.get()))
                         .save(exporter);
             }
-            if (it.getPressurePlate() != null) {
-                pressurePlateBuilder(RecipeCategory.REDSTONE, it.getPressurePlate().get(), Ingredient.of(it.get()))
-                        .group(getName(it.getPressurePlate().get()))
-                        .unlockedBy(getHasName(it.get()), has(it.get()))
+            if (holder.getPressurePlate() != null) {
+                pressurePlateBuilder(RecipeCategory.REDSTONE, holder.getPressurePlate().get(), Ingredient.of(holder.get()))
+                        .group(getName(holder.getPressurePlate().get()))
+                        .unlockedBy(getHasName(holder.get()), has(holder.get()))
                         .save(exporter);
             }
         });

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class SolRegistrar<T, H extends Holder<T>> {
@@ -49,8 +50,8 @@ public class SolRegistrar<T, H extends Holder<T>> {
     }
 
     @ApiStatus.Internal
-    public void apply(IRegistryConsumer<T, H> consumer) {
-        for (Map.Entry<String, H> entry : this.instances.entrySet())
-            consumer.apply(this.registry, this.mod.makeID(entry.getKey()), entry.getValue());
+    public void apply(Consumer<H> consumer) {
+        for (H entry : this.instances.values())
+            consumer.accept(entry);
     }
 }

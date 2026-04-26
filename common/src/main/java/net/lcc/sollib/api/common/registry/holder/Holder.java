@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.common.registry.holder;
 
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
@@ -28,5 +29,9 @@ public class Holder<T> implements Supplier<T> {
         this.cachedEntry = entry;
 
         return entry;
+    }
+
+    public ResourceLocation getID() {
+        return this.mod.makeID(this.name);
     }
 }

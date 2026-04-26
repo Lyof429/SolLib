@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SModContainerRegistry {
     protected final Map<String, SolModContainer> INSTANCES = new HashMap<>();
@@ -26,7 +27,7 @@ public class SModContainerRegistry {
     }
 
     @ApiStatus.Internal
-    public <T, H extends Holder<T>> void apply(Class<H> clazz, IRegistryConsumer<T, H> consumer) {
+    public <T, H extends Holder<T>> void apply(Class<H> clazz, Consumer<H> consumer) {
         for (SolModContainer mod : INSTANCES.values())
             if (mod.hasRegistrar(clazz)) mod.getRegistrar(clazz).apply(consumer);
     }

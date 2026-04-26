@@ -18,23 +18,23 @@ public class SModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators generator) {
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, it) -> {
-            if (it.getBlockSet().isEmpty() && it.hasModel()) {
-                switch (it.getModel()) {
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            if (holder.getBlockSet().isEmpty() && holder.hasModel()) {
+                switch (holder.getModel()) {
                     case CUBE -> {
-                        generator.createTrivialCube(it.get());
+                        generator.createTrivialCube(holder.get());
                     }
                     case PILLAR -> {
-                        generator.woodProvider(it.get()).log(it.get());
+                        generator.woodProvider(holder.get()).log(holder.get());
                     }
-                    case ROTATABLE -> generator.createRotatedVariantBlock(it.get());
-                    case CROSS -> generator.createCrossBlockWithDefaultItem(it.get(), BlockModelGenerators.TintState.NOT_TINTED);
-                    case DOOR -> generator.createDoor(it.get());
-                    case TRAPDOOR -> generator.createTrapdoor(it.get());
+                    case ROTATABLE -> generator.createRotatedVariantBlock(holder.get());
+                    case CROSS -> generator.createCrossBlockWithDefaultItem(holder.get(), BlockModelGenerators.TintState.NOT_TINTED);
+                    case DOOR -> generator.createDoor(holder.get());
+                    case TRAPDOOR -> generator.createTrapdoor(holder.get());
                 }
             } else {
-                BlockModelGenerators.BlockFamilyProvider familyProvider = generator.family(it.get());
-                for (Map.Entry<BlockModel, BlockHolder> entry : it.getBlockSet().entrySet()) {
+                BlockModelGenerators.BlockFamilyProvider familyProvider = generator.family(holder.get());
+                for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                     switch (entry.getKey()) {
                         case STAIRS -> familyProvider.stairs(entry.getValue().get());
                         case SLAB -> familyProvider.slab(entry.getValue().get());
@@ -51,9 +51,9 @@ public class SModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators generator) {
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, it) -> {
-            if (it.hasModel())
-                generator.generateFlatItem(it.get(), it.getModel());
+        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
+            if (holder.hasModel())
+                generator.generateFlatItem(holder.get(), holder.getModel());
         });
     }
 }

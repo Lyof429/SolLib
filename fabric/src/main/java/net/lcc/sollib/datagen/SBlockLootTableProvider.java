@@ -16,8 +16,8 @@ public class SBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        SolRegistries.MOD.apply(BlockHolder.class, (registry, id, it) -> {
-            for (Map.Entry<BlockModel, BlockHolder> entry : it.getBlockSet().entrySet()) {
+        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+            for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                 if (entry.getValue().hasDrop()) continue;
 
                 switch (entry.getKey()) {
@@ -33,11 +33,11 @@ public class SBlockLootTableProvider extends FabricBlockLootTableProvider {
                 }
             }
 
-            if (it.hasDrop()) {
-                if (it.getDropCount() == null)
-                    add(it.get(), createSilkTouchOnlyTable(it.getDrop().get()));
+            if (holder.hasDrop()) {
+                if (holder.getDropCount() == null)
+                    add(holder.get(), createSilkTouchOnlyTable(holder.getDrop().get()));
                 else
-                    add(it.get(), createSingleItemTable(it.getDrop().get(), it.getDropCount()));
+                    add(holder.get(), createSingleItemTable(holder.getDrop().get(), holder.getDropCount()));
             }
         });
     }

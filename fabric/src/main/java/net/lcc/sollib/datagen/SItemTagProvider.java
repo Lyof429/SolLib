@@ -19,9 +19,9 @@ public class SItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> {
-            for (TagKey<Item> tag : instance.getTags())
-                getOrCreateTagBuilder(tag).add(instance.get());
+        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
+            for (TagKey<Item> tag : holder.getTags())
+                getOrCreateTagBuilder(tag).add(holder.get());
         });
     }
 }
