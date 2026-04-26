@@ -1,6 +1,6 @@
-package net.lcc.sollib.mixin;
+package net.lcc.sollib.mixin.registry;
 
-import net.lcc.sollib.event.BlockFlammabilityEvent;
+import net.lcc.sollib.event.SBlockFlammabilityEvent;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -19,7 +19,7 @@ public class FireBlockMixin {
             return;
         }
 
-        BlockFlammabilityEvent event = new BlockFlammabilityEvent(state.getBlock());
+        SBlockFlammabilityEvent event = new SBlockFlammabilityEvent(state.getBlock());
         MinecraftForge.EVENT_BUS.post(event);
 
         if (event.isFlammable())
@@ -33,7 +33,7 @@ public class FireBlockMixin {
             return;
         }
 
-        BlockFlammabilityEvent event = new BlockFlammabilityEvent(state.getBlock());
+        SBlockFlammabilityEvent event = new SBlockFlammabilityEvent(state.getBlock());
         MinecraftForge.EVENT_BUS.post(event);
 
         if (event.isFlammable())

@@ -1,6 +1,6 @@
 package net.lcc.sollib.event;
 
-import net.lcc.sollib.mixin.AxeItemMixin;
+import net.lcc.sollib.mixin.registry.AxeItemMixin;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * {@link AxeStrippableEvent} is fired when determining the stripping result for a Block. <br>
+ * {@link SAxeStrippableEvent} is fired when determining the stripping result for a Block. <br>
  * <br>
  * This event is fired from {@link AxeItemMixin#getSolStrippingState(BlockState, CallbackInfoReturnable)}.<br>
  * <br>
@@ -22,11 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
  **/
 @Cancelable
-public class AxeStrippableEvent extends Event {
+public class SAxeStrippableEvent extends Event {
     @NotNull private final Block block;
     private Block result;
 
-    public AxeStrippableEvent(@NotNull Block block) {
+    public SAxeStrippableEvent(@NotNull Block block) {
         this.block = block;
         this.result = null;
     }

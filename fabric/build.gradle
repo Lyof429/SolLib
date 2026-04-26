@@ -16,6 +16,8 @@ dependencies {
 
     // EMI
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
+    // ModMenu
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 loom {

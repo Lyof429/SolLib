@@ -1,4 +1,4 @@
-package net.lcc.sollib;
+package net.lcc.sollib.core;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +12,7 @@ import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 
-public class SolLibFabricHandlers {
+public class SolFabricCore {
     public static void register() {
         SolRegistries.MOD.apply(ItemHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));
         SolRegistries.MOD.apply(BlockHolder.class, (registry, id, instance) -> Registry.register(registry, id, instance.get()));

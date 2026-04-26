@@ -4,21 +4,30 @@ import net.lcc.sollib.api.common.registry.holder.Holder;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SModContainerRegistry {
-    protected final List<SolModContainer> INSTANCES = new ArrayList<>();
+    protected final Map<String, SolModContainer> INSTANCES = new HashMap<>();
 
     /**
      * Stores a SolModContainer for automatic registry. Called automatically in {@link SolModContainer#SolModContainer(String name, String namespace)}
      */
     public void register(SolModContainer mod) {
-        INSTANCES.add(mod);
+        INSTANCES.putIfAbsent(mod.getNamespace(), mod);
+    }
+
+    /**
+     * @return The SolModContainer for the given namespace, or null if none exists
+     */
+    public SolModContainer get(String id) {
+        return INSTANCES.get(id);
     }
 
     @ApiStatus.Internal
     public <T, H extends Holder<T>> void apply(Class<H> clazz, IRegistryConsumer<T, H> consumer) {
-        for (SolModContainer mod : INSTANCES)
+        for (SolModContainer mod : INSTANCES.values())
             if (mod.hasRegistrar(clazz)) mod.getRegistrar(clazz).apply(consumer);
     }
 }

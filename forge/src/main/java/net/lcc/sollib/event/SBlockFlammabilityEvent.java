@@ -1,18 +1,16 @@
 package net.lcc.sollib.event;
 
 import net.lcc.sollib.api.common.registry.data.Flammability;
-import net.lcc.sollib.mixin.FireBlockMixin;
+import net.lcc.sollib.mixin.registry.FireBlockMixin;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * {@link BlockFlammabilityEvent} is fired when determining the flammability for a Block. <br>
+ * {@link SBlockFlammabilityEvent} is fired when determining the flammability for a Block. <br>
  * <br>
  * This event is fired from {@link FireBlockMixin}.<br>
  * <br>
@@ -23,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
  **/
 @Cancelable
-public class BlockFlammabilityEvent extends Event {
+public class SBlockFlammabilityEvent extends Event {
     @NotNull private final Block block;
     private Flammability result;
 
-    public BlockFlammabilityEvent(@NotNull Block block) {
+    public SBlockFlammabilityEvent(@NotNull Block block) {
         this.block = block;
         this.result = null;
     }

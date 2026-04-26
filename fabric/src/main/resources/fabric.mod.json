@@ -9,7 +9,7 @@
     ],
     "contact": {
         "homepage": "https://fabricmc.net/",
-        "sources": "https://github.com/FabricMC/fabric-example-mod"
+        "sources": "https://github.com/Lyof429/SolLib"
     },
     "license": "${license}",
     "icon": "assets/modid/${mod_id}.png",
@@ -37,6 +37,15 @@
         "fabric": "*",
         "minecraft": "${minecraft_version}",
         "java": ">=17"
+    },
+
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "https://discord.gg/khZnX8TRHU"
+            },
+            "badges": [ "library" ]
+        }
     }
 }
   

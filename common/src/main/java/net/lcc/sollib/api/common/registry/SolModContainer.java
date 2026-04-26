@@ -1,6 +1,8 @@
 package net.lcc.sollib.api.common.registry;
 
 import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.config.IConfigurable;
+import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +16,7 @@ public class SolModContainer {
 
     private final SolLogger logger;
     private final Map<Class<?>, SolRegistrar<?, ?>> registrars;
+    private final Map<String, SolConfig> configs;
 
     public SolModContainer(String name, String namespace) {
         this.name = name;
@@ -21,8 +24,13 @@ public class SolModContainer {
 
         this.logger = new SolLogger(this.name);
         this.registrars = new HashMap<>();
+        this.configs = new HashMap<>();
 
         SolRegistries.MOD.register(this);
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public String getNamespace() {
@@ -49,5 +57,15 @@ public class SolModContainer {
         SolRegistrar<T, H> r = new SolRegistrar<>(this, clazz);
         this.registrars.put(clazz, r);
         return r;
+    }
+
+    public SolConfig createConfig(String name, double version, IConfigurable contentBuilder) {
+        SolConfig c = new SolConfig(name, version, contentBuilder);
+        this.configs.putIfAbsent(name, c);
+        return c;
+    }
+
+    public Map<String, SolConfig> getConfigs() {
+        return this.configs;
     }
 }

@@ -9,8 +9,6 @@ import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class SolTest {
@@ -37,7 +35,7 @@ public class SolTest {
                                         .add(2)
                                         .add("this is a list, in case you didn't notice")
                                         .add(12))));
-        CONFIG = new SolConfig("sollib/test", 1.0, builder);
+        CONFIG = MOD.createConfig("sollib/test", 1.0, builder);
         CONFIG.init();
 
 

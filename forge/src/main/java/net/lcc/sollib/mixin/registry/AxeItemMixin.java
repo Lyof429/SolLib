@@ -1,6 +1,6 @@
-package net.lcc.sollib.mixin;
+package net.lcc.sollib.mixin.registry;
 
-import net.lcc.sollib.event.AxeStrippableEvent;
+import net.lcc.sollib.event.SAxeStrippableEvent;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +16,7 @@ public class AxeItemMixin {
     private static void getSolStrippingState(BlockState original, CallbackInfoReturnable<BlockState> cir) {
         if (cir.getReturnValue() != null) return;
 
-        AxeStrippableEvent event = new AxeStrippableEvent(original.getBlock());
+        SAxeStrippableEvent event = new SAxeStrippableEvent(original.getBlock());
         MinecraftForge.EVENT_BUS.post(event);
 
         if (event.hasStrippingResult())
