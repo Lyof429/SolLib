@@ -7,7 +7,7 @@
   "mixins": [
   ],
   "client": [
-    "ItemRenderContextMixin",
+    "render.ItemRenderContextMixin",
     "config.ModMenuMixin"
   ],
   "server": [

@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin;
+package net.lcc.sollib.mixin.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
