@@ -14,25 +14,22 @@ import net.minecraftforge.fml.common.Mod;
 public class SolForgeCore {
     @SubscribeEvent
     public static void register(FurnaceFuelBurnTimeEvent event) {
-        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
-            if (event.getItemStack().is(holder.get()) && holder.isFuel())
-                event.setBurnTime(holder.getFuelDuration());
-        });
+        ItemHolder holder = SolRegistries.MOD.find(ItemHolder.class,
+                it -> event.getItemStack().is(it.get()) && it.isFuel());
+        if (holder != null) event.setBurnTime(holder.getFuelDuration());
     }
 
     @SubscribeEvent
     public static void register(SAxeStrippableEvent event) {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
-            if (event.getBlock() == holder.get() && holder.hasStripResult())
-                event.setStrippingResult(holder.getStripResult().get());
-        });
+        BlockHolder holder = SolRegistries.MOD.find(BlockHolder.class,
+                it -> event.getBlock() == it.get() && it.hasStripResult());
+        if (holder != null) event.setStrippingResult(holder.getStripResult().get());
     }
 
     @SubscribeEvent
     public static void register(SBlockFlammabilityEvent event) {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
-            if (event.getBlock() == holder.get() && holder.isFlammable())
-                event.setFlammability(holder.getFlammability());
-        });
+        BlockHolder holder = SolRegistries.MOD.find(BlockHolder.class,
+                it -> event.getBlock() == it.get() && it.isFlammable());
+        if (holder != null) event.setFlammability(holder.getFlammability());
     }
 }

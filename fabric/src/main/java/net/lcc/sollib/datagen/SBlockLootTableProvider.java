@@ -16,7 +16,7 @@ public class SBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                 if (entry.getValue().hasDrop()) continue;
 

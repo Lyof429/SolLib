@@ -28,7 +28,7 @@ public class SRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.getStairs() != null) {
                 stairBuilder(holder.getStairs().get(), Ingredient.of(holder.get()))
                         .group(getName(holder.getStairs().get()))

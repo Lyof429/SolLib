@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SolRegistrar<T, H extends Holder<T>> {
@@ -50,8 +51,15 @@ public class SolRegistrar<T, H extends Holder<T>> {
     }
 
     @ApiStatus.Internal
-    public void apply(Consumer<H> consumer) {
+    public void iterate(Consumer<H> consumer) {
         for (H entry : this.instances.values())
             consumer.accept(entry);
+    }
+
+    @ApiStatus.Internal
+    public H find(Predicate<H> predicate) {
+        for (H entry : this.instances.values())
+            if (predicate.test(entry)) return entry;
+        return null;
     }
 }

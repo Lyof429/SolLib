@@ -17,7 +17,7 @@ public class SBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             for (TagKey<Block> tag : holder.getTags())
                 getOrCreateTagBuilder(tag).add(holder.get());
         });

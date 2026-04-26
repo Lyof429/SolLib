@@ -18,7 +18,7 @@ public class SModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators generator) {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.getBlockSet().isEmpty() && holder.hasModel()) {
                 switch (holder.getModel()) {
                     case CUBE -> {
@@ -51,7 +51,7 @@ public class SModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators generator) {
-        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
+        SolRegistries.MOD.iterate(ItemHolder.class, holder -> {
             if (holder.hasModel())
                 generator.generateFlatItem(holder.get(), holder.getModel());
         });

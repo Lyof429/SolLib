@@ -21,7 +21,7 @@ public class SolLibForge {
 
     @SubscribeEvent
     public static void register(RegisterEvent event) {
-        SolRegistries.MOD.apply(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
+        SolRegistries.MOD.iterate(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
     }
 }

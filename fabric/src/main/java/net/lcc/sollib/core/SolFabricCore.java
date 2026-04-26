@@ -15,19 +15,19 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 public class SolFabricCore {
     public static void register() {
-        SolRegistries.MOD.apply(ItemHolder.class, holder -> Registry.register(BuiltInRegistries.ITEM, holder.getID(), holder.get()));
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> Registry.register(BuiltInRegistries.BLOCK, holder.getID(), holder.get()));
+        SolRegistries.MOD.iterate(ItemHolder.class, holder -> Registry.register(BuiltInRegistries.ITEM, holder.getID(), holder.get()));
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> Registry.register(BuiltInRegistries.BLOCK, holder.getID(), holder.get()));
 
-        SolRegistries.MOD.apply(ItemHolder.class, holder -> {
+        SolRegistries.MOD.iterate(ItemHolder.class, holder -> {
             if (holder.isFuel())
                 FuelRegistry.INSTANCE.add(holder.get(), holder.getFuelDuration());
         });
 
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.hasStripResult())
                 StrippableBlockRegistry.register(holder.get(), holder.getStripResult().get());
         });
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.isFlammable())
                 FlammableBlockRegistry.getDefaultInstance().add(holder.get(), holder.getFlammability().ignite(), holder.getFlammability().spread());
         });
@@ -35,7 +35,7 @@ public class SolFabricCore {
 
     @Environment(EnvType.CLIENT)
     public static void registerClient() {
-        SolRegistries.MOD.apply(BlockHolder.class, holder -> {
+        SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.isCutout()) BlockRenderLayerMap.INSTANCE.putBlock(holder.get(), RenderType.cutout());
         });
     }
