@@ -68,6 +68,7 @@ public class SolConfig {
 
     private final String name;
     private final double version;
+    private double contentVersion;
     private final IConfigurable contentBuilder;
     private JsonElement content;
     private final Map<String, ConfigEntry<?>> entries;
@@ -131,6 +132,10 @@ public class SolConfig {
         }
 
         if (reset.get()) this.init(true);
+        this.contentVersion = version.get();
+
+        if (this.isOutdated())
+            SolLib.LOG.warn(this.getName(), ": Outdated config! Consider resetting it!");
 
         try {
             this.content = JsonBuilder.toJson(content);
@@ -160,14 +165,11 @@ public class SolConfig {
     }
 
     public String getSuffixName() {
-        return this.name + ".json";
+        return this.name + ".sol.json";
     }
 
-    @Override
-    public String toString() {
-        return "SolConfig{" +
-                "name='" + name + '\'' +
-                '}';
+    public boolean isOutdated() {
+        return this.contentVersion < this.version;
     }
 
     protected void addEntry(String path, ConfigEntry<?> entry) {

@@ -21,9 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SolConfigScreen extends Screen {
-    private SolModContainer modContainer;
-    private Screen previous;
+    private final SolModContainer modContainer;
+    private final Screen previous;
+
     private ConfigListWidget configList;
+    private Button edit;
+    private Button reset;
 
     public SolConfigScreen(SolModContainer modContainer, Screen previous) {
         super(Component.literal(modContainer.getName()));
@@ -35,25 +38,35 @@ public class SolConfigScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.configList = this.addRenderableWidget(new ConfigListWidget(this.width * 0.25, this.height * 0.25,
-                this.width * 0.5, this.height * 0.25,
-                Component.literal("Configs"), this.modContainer.getConfigs()));
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onClose())
-                .pos(this.width / 2 - 130, this.height - 27).size(80, 20).build());
-        this.addRenderableWidget(Button.builder(Component.literal("Edit"),
-                        (button) -> this.editSelected())
-                .pos(this.width / 2 - 40, this.height - 27).size(80, 20).build());
-        this.addRenderableWidget(Button.builder(Component.literal("Reset").withStyle(ChatFormatting.DARK_RED),
-                        (button) -> this.resetSelected())
-                .pos(this.width / 2 + 50, this.height - 27).size(80, 20).build());
+        this.configList = this.addRenderableWidget(new ConfigListWidget(this.width / 4, this.height / 4,
+                this.width / 2, this.height / 2,
+                Component.literal("Configs"), this.modContainer.getConfigs(), this::updateSelected));
+
+        int buttonSize = (this.width / 2 - 20) / 3;
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE,
+                        button -> this.onClose())
+                .pos(this.width / 4, this.height - 27).size(buttonSize, 20).build());
+        this.edit = this.addRenderableWidget(Button.builder(Component.literal("Edit"),
+                        this::editSelected)
+                .pos(this.width / 4 + buttonSize + 10, this.height - 27).size(buttonSize, 20).build());
+        this.reset = this.addRenderableWidget(Button.builder(Component.literal("Reset").withStyle(ChatFormatting.DARK_RED),
+                        this::resetSelected)
+                .pos(3*this.width / 4 - buttonSize, this.height - 27).size(buttonSize, 20).build());
+        this.edit.active = false;
+        this.reset.active = false;
     }
 
-    protected void editSelected() {
+    protected void updateSelected() {
+        this.edit.active = this.configList.getSelected() != null;
+        this.reset.active = this.configList.getSelected() != null;
+    }
+
+    protected void editSelected(Button button) {
         SolConfig config = this.configList.getSelected();
         if (config != null) config.openFile();
     }
 
-    protected void resetSelected() {
+    protected void resetSelected(Button button) {
         SolConfig config = this.configList.getSelected();
         if (config != null) config.init(true);
     }
