@@ -86,7 +86,7 @@ public class SolConfig {
         this.init(false);
     }
 
-    protected void init(boolean force) {
+    public void init(boolean force) {
         Path path = Services.PLATFORM.getConfigDirectory();
 
         for (String dir : this.getSuffixName().split("/")) {
@@ -161,6 +161,13 @@ public class SolConfig {
 
     public String getSuffixName() {
         return this.name + ".json";
+    }
+
+    @Override
+    public String toString() {
+        return "SolConfig{" +
+                "name='" + name + '\'' +
+                '}';
     }
 
     protected void addEntry(String path, ConfigEntry<?> entry) {

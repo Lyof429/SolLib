@@ -5,6 +5,7 @@ import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.platform.Services;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -22,6 +23,7 @@ import java.util.List;
 public class SolConfigScreen extends Screen {
     private SolModContainer modContainer;
     private Screen previous;
+    private ConfigListWidget configList;
 
     public SolConfigScreen(SolModContainer modContainer, Screen previous) {
         super(Component.literal(modContainer.getName()));
@@ -33,11 +35,27 @@ public class SolConfigScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new ConfigListWidget(this.width * 0.25, this.height * 0.25,
+        this.configList = this.addRenderableWidget(new ConfigListWidget(this.width * 0.25, this.height * 0.25,
                 this.width * 0.5, this.height * 0.25,
                 Component.literal("Configs"), this.modContainer.getConfigs()));
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onClose())
-                .pos(this.width / 2 - 100, this.height - 27).size(200, 20).build());
+                .pos(this.width / 2 - 130, this.height - 27).size(80, 20).build());
+        this.addRenderableWidget(Button.builder(Component.literal("Edit"),
+                        (button) -> this.editSelected())
+                .pos(this.width / 2 - 40, this.height - 27).size(80, 20).build());
+        this.addRenderableWidget(Button.builder(Component.literal("Reset").withStyle(ChatFormatting.DARK_RED),
+                        (button) -> this.resetSelected())
+                .pos(this.width / 2 + 50, this.height - 27).size(80, 20).build());
+    }
+
+    protected void editSelected() {
+        SolConfig config = this.configList.getSelected();
+        if (config != null) config.openFile();
+    }
+
+    protected void resetSelected() {
+        SolConfig config = this.configList.getSelected();
+        if (config != null) config.init(true);
     }
 
     @Override
@@ -57,4 +75,6 @@ public class SolConfigScreen extends Screen {
         SolRegistries.CONFIG.reload();
         this.minecraft.setScreen(this.previous);
     }
+
+
 }

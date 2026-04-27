@@ -1,11 +1,14 @@
 package net.lcc.sollib.api.client.ui.config;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,19 +16,43 @@ import java.util.List;
 
 public class ConfigListWidget extends AbstractScrollWidget {
     public class ScrollingButton extends Button {
-        public ScrollingButton(int x, int y, int width, int height, Component message, OnPress onPress) {
-            super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
+        private final SolConfig config;
+        private GuiGraphics guiGraphics;
+        
+        public ScrollingButton(int x, int y, int width, int height, SolConfig config) {
+            super(x, y, width, height, Component.literal(config.getName()),
+                    it -> ConfigListWidget.this.selected = config, Button.DEFAULT_NARRATION);
+            this.config = config;
         }
 
         @Override
         public int getY() {
             return super.getY() - (int) ConfigListWidget.this.scrollAmount();
         }
+
+        @Override
+        public boolean isFocused() {
+            return this.config == ConfigListWidget.this.selected;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            this.guiGraphics = guiGraphics;
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        @Override
+        public boolean isHoveredOrFocused() {
+            if (this.isFocused())
+                guiGraphics.setColor(0.7f, 0.7f, 1, this.alpha);
+            return super.isHoveredOrFocused();
+        }
     }
 
     private static final int BUTTON_SIZE = 24;
 
     private final List<AbstractButton> buttons;
+    private SolConfig selected;
 
     public ConfigListWidget(double x, double y, double width, double height, Component message, Iterable<SolConfig> configs) {
         super((int) x, (int) y, (int) width, (int) height, message);
@@ -33,10 +60,10 @@ public class ConfigListWidget extends AbstractScrollWidget {
         int offset = (int) y;
         this.buttons = new ArrayList<>();
         for (SolConfig config : configs) {
-            this.buttons.add(new ScrollingButton((int) x + 1, offset, (int) width - 2, BUTTON_SIZE,
-                    Component.literal(config.getName()), button -> config.openFile()));
+            this.buttons.add(new ScrollingButton((int) x + 1, offset, (int) width - 2, BUTTON_SIZE, config));
             offset += BUTTON_SIZE;
         }
+        this.selected = null;
     }
 
     @Override
@@ -83,4 +110,8 @@ public class ConfigListWidget extends AbstractScrollWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public SolConfig getSelected() {
+        return this.selected;
+    }
 }
