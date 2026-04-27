@@ -12,31 +12,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class SolTest {
-    public static SolConfig CONFIG;
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
     public static void lyof() {
-        ConfigEntry<String> hello = new ConfigEntry<>("world");
-        ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
-
-        IConfigurable builder = it -> it
-                .addObject("test_category", a -> a
-                        .comment("This is a comment")
-                        .add("hello", "world")
-                        .bind(hello)
-                        .addObject("nested", b -> b
-                                .comment("Supports string, number and boolean values by default")
-                                .add("exists", true)
-                                .bind(exists))
-                        .addObject("another", b -> b
-                                .comment("Ah and lists of them too I forgot about that")
-                                .comment("  (Lists don't have to hold a single type btw)")
-                                .addArray("michel", c -> c
-                                        .add(2)
-                                        .add("this is a list, in case you didn't notice")
-                                        .add(12))));
-        CONFIG = MOD.createConfig("sollib/test", 1.0, builder);
-        CONFIG.init();
+        IConfigurable builder = it -> it.add("hello", "world");
+        for (int i = 0; i < 10; i++)
+            MOD.createConfig("sollib/test_" + i, 1.0, builder);
 
 
         ItemHolder x = MOD.getRegistrar(ItemHolder.class).register("test", () -> new Item(new Item.Properties()))

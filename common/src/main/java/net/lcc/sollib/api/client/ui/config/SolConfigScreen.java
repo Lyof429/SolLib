@@ -7,9 +7,12 @@ import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlainTextButton;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.nio.file.Path;
@@ -20,47 +23,32 @@ public class SolConfigScreen extends Screen {
     private SolModContainer modContainer;
     private Screen previous;
 
-    private final List<Button> buttons;
-
     public SolConfigScreen(SolModContainer modContainer, Screen previous) {
         super(Component.literal(modContainer.getName()));
         this.modContainer = modContainer;
         this.previous = previous;
-
-        this.buttons = new ArrayList<>();
-    }
-
-    public static void openFile(SolConfig config) {
-        try {
-            Path path = Services.PLATFORM.getConfigDirectory();
-            for (String dir : config.getSuffixName().split("/"))
-                path = path.resolve(dir);
-
-            Util.getPlatform().openFile(path.toFile());
-        } catch (Exception e) {
-            SolLib.LOG.error(config.getName(), ": Error while opening config file\n", e);
-        }
     }
 
     @Override
     protected void init() {
         super.init();
 
-        int y = 0;
-        for (SolConfig config : this.modContainer.getConfigs()) {
-            this.buttons.add(this.addWidget(new PlainTextButton(0, y, 16, 64, Component.literal(config.getName()),
-                    button -> openFile(config), this.minecraft.font)));
-            y += 24;
-        }
+        this.addRenderableWidget(new ConfigListWidget(this.width * 0.25, this.height * 0.25,
+                this.width * 0.5, this.height * 0.25,
+                Component.literal("Configs"), this.modContainer.getConfigs()));
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onClose())
+                .pos(this.width / 2 - 100, this.height - 27).size(200, 20).build());
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-
         this.renderDirtBackground(guiGraphics);
-        for (Button button : this.buttons)
-            button.render(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.setColor(0.15f, 0.15f, 0.15f, 1);
+        guiGraphics.blit(BACKGROUND_LOCATION, 0, 35, 0, 0.0F, 0.0F, this.width, this.height - 70, 32, 32);
+        guiGraphics.setColor(1, 1, 1, 1);
+
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 16777215);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

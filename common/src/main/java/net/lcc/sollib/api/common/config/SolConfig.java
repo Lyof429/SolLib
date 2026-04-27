@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.platform.Services;
+import net.minecraft.Util;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -140,6 +141,18 @@ public class SolConfig {
 
         for (ConfigEntry<?> entry : this.entries.values())
             entry.withContent(this.content);
+    }
+
+    public void openFile() {
+        try {
+            Path path = Services.PLATFORM.getConfigDirectory();
+            for (String dir : this.getSuffixName().split("/"))
+                path = path.resolve(dir);
+
+            Util.getPlatform().openFile(path.toFile());
+        } catch (Exception e) {
+            SolLib.LOG.error(this.getName(), ": Error while opening config file\n", e);
+        }
     }
 
     public String getName() {

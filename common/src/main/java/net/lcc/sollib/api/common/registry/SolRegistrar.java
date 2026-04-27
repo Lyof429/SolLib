@@ -15,22 +15,16 @@ public class SolRegistrar<T, H extends Holder<T>> {
     protected final SolModContainer mod;
     protected final Map<String, H> instances;
     protected final Constructor<H> constructor;
-    protected final Registry<T> registry;
 
     public SolRegistrar(SolModContainer mod, Class<H> clazz) {
         Constructor<H> constructor = null;
         try {
             constructor = clazz.getConstructor(SolModContainer.class, String.class, Supplier.class);
         } catch (Exception ignored) {}
-        Registry<T> registry = null;
-        try {
-            registry = (Registry<T>) clazz.getMethod("getRegistryType").invoke(null);
-        } catch (Exception ignored) {}
 
         this.instances = new HashMap<>();
         this.mod = mod;
         this.constructor = constructor;
-        this.registry = registry;
     }
 
     public H register(String name, Supplier<T> supplier) {

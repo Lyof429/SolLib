@@ -7,7 +7,9 @@ import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SolModContainer {
@@ -63,6 +65,10 @@ public class SolModContainer {
         SolConfig c = new SolConfig(name, version, contentBuilder);
         this.configs.putIfAbsent(name, c);
         return c;
+    }
+
+    public SolConfig getConfig(String name) {
+        return this.configs.get(name);
     }
 
     public Iterable<SolConfig> getConfigs() {

@@ -85,7 +85,10 @@ public class JsonBuilder {
     }
 
     protected void jump(boolean comma) {
-        if (this.first) comma = false;
+        if (this.first) {
+            if (this.config != null) this.comment("");
+            comma = false;
+        }
         this.first = false;
 
         if (!this.builder.isEmpty()) {
@@ -148,7 +151,7 @@ public class JsonBuilder {
         this.currentValue = new JsonObject();
 
         if (this.indent == 0 && this.config != null)
-            this.comment("").comment(key.toUpperCase().replace('_', ' '));
+            this.comment(key.toUpperCase().replace('_', ' '));
         this.jump(true);
 
         this.indent++;
