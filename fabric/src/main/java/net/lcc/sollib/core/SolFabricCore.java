@@ -3,6 +3,7 @@ package net.lcc.sollib.core;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -15,6 +16,8 @@ import net.lcc.sollib.platform.Services;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 
 public class SolFabricCore {
     public static void register() {
@@ -30,6 +33,11 @@ public class SolFabricCore {
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.isFlammable())
                 FlammableBlockRegistry.getDefaultInstance().add(holder.get(), holder.getFlammability().ignite(), holder.getFlammability().spread());
+        });
+
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            if (holder.hasAttributes())
+                FabricDefaultAttributeRegistry.register((EntityType<? extends LivingEntity>) holder.get(), holder.getAttributes());
         });
     }
 

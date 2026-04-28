@@ -1,5 +1,6 @@
 package net.lcc.sollib;
 
+import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
@@ -8,6 +9,7 @@ import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -17,13 +19,14 @@ public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
     public static void lyof() {
-        IConfigurable builder = it -> it.add("hello", "world");
-        for (int i = 0; i < 2; i++)
-            MOD.createConfig("sollib/test_" + i, 1.0, builder);
+        ConfigEntry<Integer> fuelValue = new ConfigEntry<>(5);
 
+        IConfigurable builder = it -> it.addObject("test", a -> a
+                .add("fuel", 5).bind(fuelValue));
+        MOD.createConfig("sollib/test", 1.0, builder);
 
         ItemHolder x = MOD.getRegistrar(ItemHolder.class).register("test", () -> new Item(new Item.Properties()))
-                .withFuel(5)
+                .withFuel(fuelValue.get())
                 .withModel(ModelTemplates.FLAT_ITEM);
         BlockHolder y = MOD.getRegistrar(BlockHolder.class).register("thing", () -> new Block(BlockBehaviour.Properties.of()))
                 .withItem(it -> it.withFuel(100))
@@ -31,6 +34,11 @@ public class SolTest {
                 .withStairs()
                 .withFence()
                 .cutout();
+
+        EntityHolder e = MOD.getRegistrar(EntityHolder.class).register("creature", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
+                .sized(1f, 1f)
+                .build("creature"))
+                .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1));
     }
 
 

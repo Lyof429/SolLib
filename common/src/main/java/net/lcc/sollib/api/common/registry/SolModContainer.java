@@ -61,6 +61,7 @@ public class SolModContainer {
 
     public SolConfig createConfig(String name, double version, IConfigurable contentBuilder) {
         SolConfig c = new SolConfig(name, version, contentBuilder);
+        c.init();
         this.configs.putIfAbsent(name, c);
         return c;
     }

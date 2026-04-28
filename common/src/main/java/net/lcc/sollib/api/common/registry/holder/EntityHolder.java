@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.List;
@@ -13,11 +14,13 @@ import java.util.function.Supplier;
 public class EntityHolder extends Holder<EntityType<?>> {
     private List<TagKey<EntityType<?>>> tags;
     private Supplier<LootTable.Builder> drop;
+    private AttributeSupplier.Builder attributesBuilder;
 
     public EntityHolder(SolModContainer mod, String name, Supplier<EntityType<?>> entrySupplier) {
         super(mod, name, entrySupplier);
         this.tags = List.of();
         this.drop = null;
+        this.attributesBuilder = null;
     }
 
     @Override
@@ -53,4 +56,24 @@ public class EntityHolder extends Holder<EntityType<?>> {
     public boolean hasDrop() {
         return this.drop != null;
     }
+
+    public EntityHolder withAttributes(AttributeSupplier.Builder builder) {
+        this.attributesBuilder = builder;
+        return this;
+    }
+
+    public AttributeSupplier getAttributes() {
+        return this.attributesBuilder.build();
+    }
+
+    public boolean hasAttributes() {
+        return this.attributesBuilder != null;
+    }
+
+    /* Explodes because the class doesn't exist on servers...
+    public <T extends Entity> EntityHolder withRenderer(EntityRendererProvider<T> renderer) {
+        this.renderer = renderer;
+        return this;
+    }
+     */
 }
