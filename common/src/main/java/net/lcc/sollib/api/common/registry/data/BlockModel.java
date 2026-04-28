@@ -3,6 +3,8 @@ package net.lcc.sollib.api.common.registry.data;
 public enum BlockModel {
     CUBE,
     CROSS,
+    CROSS_POTTED,
+    CROSS_DIRECTIONAL,
     PILLAR,
     WOOD,
     STAIRS,
@@ -11,6 +13,7 @@ public enum BlockModel {
     PRESSURE_PLATE,
     FENCE,
     FENCE_GATE,
+    FLUID,
     DOOR,
     TRAPDOOR,
     SIGN,
