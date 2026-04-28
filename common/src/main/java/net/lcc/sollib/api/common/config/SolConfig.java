@@ -68,9 +68,9 @@ public class SolConfig {
 
     private final String name;
     private final double version;
-    private double contentVersion;
     private final IConfigurable contentBuilder;
     private JsonElement content;
+    private LoadType loadResult;
     private final Map<String, ConfigEntry<?>> entries;
 
     public SolConfig(String name, double version, IConfigurable contentBuilder) {
@@ -78,6 +78,7 @@ public class SolConfig {
         this.version = version;
         this.contentBuilder = contentBuilder;
         this.content = new JsonObject();
+        this.loadResult = LoadType.GOOD;
         this.entries = new HashMap<>();
 
         SolRegistries.CONFIG.register(this);
@@ -88,6 +89,9 @@ public class SolConfig {
     }
 
     public void init(boolean force) {
+        this.content = new JsonObject();
+        this.loadResult = LoadType.GOOD;
+
         Path path = Services.PLATFORM.getConfigDirectory();
 
         for (String dir : this.getSuffixName().split("/")) {
@@ -98,13 +102,10 @@ public class SolConfig {
                     Files.createDirectory(path);
                 } catch (IOException e) {
                     SolLib.LOG.error(this.getName(), ": Error while accessing config file\n", e);
-                    return;
+                    this.loadResult = LoadType.ERROR;
                 }
             }
         }
-
-        File file = path.toFile();
-        boolean create = !file.isFile();
 
         JsonBuilder builder = new JsonBuilder(this);
         this.contentBuilder.toJson(builder);
@@ -112,37 +113,45 @@ public class SolConfig {
         AtomicDouble version = new AtomicDouble(this.version);
         AtomicBoolean reset = new AtomicBoolean(false);
 
-        try {
-            if (create || force) {
-                file.delete();
-                file.createNewFile();
+        // Only continue processing if the file was accessed correctly
+        if (this.loadResult == LoadType.GOOD) {
+            File file = path.toFile();
+            boolean create = !file.isFile();
 
-                FileWriter writer = new FileWriter(file);
-                writer.write(SolConfig.fromJson(content, this.version));
-                writer.close();
+            try {
+                if (create || force) {
+                    file.delete();
+                    file.createNewFile();
 
-                SolLib.LOG.debug(this.getName(), ": Config file created");
+                    FileWriter writer = new FileWriter(file);
+                    writer.write(SolConfig.fromJson(content, this.version));
+                    writer.close();
+
+                    SolLib.LOG.debug(this.getName(), ": Config file created");
+                }
+
+                content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), version, reset);
+
+            } catch (IOException e) {
+                SolLib.LOG.error(this.getName(), ": Error while creating config file\n", e);
+                this.loadResult = LoadType.ERROR;
             }
 
-            content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), version, reset);
+            if (reset.get()) this.init(true);
 
-        } catch (IOException e) {
-            SolLib.LOG.error(this.getName(), ": Error while creating config file\n", e);
-            return;
+            if (this.loadResult == LoadType.GOOD && this.version > version.get())
+                this.loadResult = LoadType.OUTDATED;
         }
-
-        if (reset.get()) this.init(true);
-        this.contentVersion = version.get();
-
-        if (this.isOutdated())
-            SolLib.LOG.warn(this.getName(), ": Outdated config! Consider resetting it!");
 
         try {
             this.content = JsonBuilder.toJson(content);
         } catch (Exception e) {
             SolLib.LOG.error(this.getName(), ": Error while reading config file\n", e);
-            this.content = new JsonObject();
+            this.loadResult = LoadType.ERROR;
         }
+
+        if (this.loadResult.message != null)
+            SolLib.LOG.warn(this.getName(), ":", this.loadResult.message);
 
         for (ConfigEntry<?> entry : this.entries.values())
             entry.withContent(this.content);
@@ -168,8 +177,8 @@ public class SolConfig {
         return this.name + ".sol.json";
     }
 
-    public boolean isOutdated() {
-        return this.contentVersion < this.version;
+    public LoadType getLoadResult() {
+        return this.loadResult;
     }
 
     protected void addEntry(String path, ConfigEntry<?> entry) {

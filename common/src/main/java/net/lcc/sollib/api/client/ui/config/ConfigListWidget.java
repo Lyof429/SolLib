@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.client.ui.config;
 
+import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -10,28 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigListWidget extends AbstractScrollWidget {
-    @FunctionalInterface
-    public interface IAction {
-        void call();
-    }
     public static final int BUTTON_SIZE = 24;
 
-    private final List<AbstractButton> buttons;
+    private final List<ConfigWidget> widgets;
     private SolConfig selected;
-    private final IAction onClicked;
 
-    public ConfigListWidget(int x, int y, int width, int height, Component message, Iterable<SolConfig> configs,
-                            IAction onClicked) {
+    public ConfigListWidget(int x, int y, int width, int height, Component message, Iterable<SolConfig> configs) {
         super(x, y, width, height, message);
 
         y += 1;
-        this.buttons = new ArrayList<>();
+        this.widgets = new ArrayList<>();
         for (SolConfig config : configs) {
-            this.buttons.add(new ConfigButton(this, x + 1, y, width - 2, BUTTON_SIZE, config));
+            this.widgets.add(new ConfigWidget(this, x + 1, y, width - 2, BUTTON_SIZE, config));
             y += BUTTON_SIZE;
         }
         this.selected = null;
-        this.onClicked = onClicked;
     }
 
     @Override
@@ -44,7 +38,7 @@ public class ConfigListWidget extends AbstractScrollWidget {
 
     @Override
     protected int getInnerHeight() {
-        return this.buttons.size() * BUTTON_SIZE;
+        return this.widgets.size() * BUTTON_SIZE;
     }
 
     @Override
@@ -64,7 +58,7 @@ public class ConfigListWidget extends AbstractScrollWidget {
         if (!r) return false;
 
         r = false;
-        for (AbstractButton b : this.buttons) {
+        for (ConfigWidget b : this.widgets) {
             if (b.isHovered()) {
                 b.mouseClicked(mouseX, mouseY, button);
                 r = true;
@@ -72,22 +66,20 @@ public class ConfigListWidget extends AbstractScrollWidget {
             }
         }
 
-        if (r) this.onClicked.call();
         return true;
     }
 
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        for (AbstractButton button : this.buttons)
+        for (ConfigWidget button : this.widgets)
             button.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    public SolConfig getSelected() {
-        return this.selected;
-    }
-
-    public void setSelected(SolConfig selected) {
-        this.selected =  this.selected == selected ? null : selected;
+    public void reload() {
+        for (ConfigWidget widget : this.widgets) {
+            widget.getConfig().init();
+            widget.reload();
+        }
     }
 
     protected int getScrollAmount() {
