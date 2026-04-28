@@ -18,7 +18,7 @@ public class SolTest {
 
     public static void lyof() {
         IConfigurable builder = it -> it.add("hello", "world");
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
             MOD.createConfig("sollib/test_" + i, 1.0, builder);
 
 

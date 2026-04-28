@@ -47,8 +47,10 @@ public class ConfigWidget extends AbstractWidget {
                 button -> this.config.openFile());
         this.reset = new ScrollingButton(this.getX() + this.width - buttonSize - 4, super.getY() + 4,
                 buttonSize, this.getHeight() - 8,
-                Component.literal("Reset").withStyle(ChatFormatting.DARK_RED),
-                button -> this.config.init(true));
+                Component.literal("Reset").withStyle(ChatFormatting.DARK_RED), button -> {
+            this.config.init(true);
+            this.reload();
+        });
     }
 
     @Override

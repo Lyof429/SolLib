@@ -31,6 +31,9 @@ public class Holder<T> implements Supplier<T> {
         return entry;
     }
 
+    /**
+     * @return This entry's identifier, built from its name and mod container
+     */
     public ResourceLocation getID() {
         return this.mod.makeID(this.name);
     }
