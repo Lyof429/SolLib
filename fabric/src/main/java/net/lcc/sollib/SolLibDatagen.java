@@ -11,7 +11,9 @@ public class SolLibDatagen implements DataGeneratorEntrypoint {
 
         pack.addProvider(SBlockTagProvider::new);
         pack.addProvider(SItemTagProvider::new);
+        pack.addProvider(SEntityTagProvider::new);
         pack.addProvider(SBlockLootTableProvider::new);
+        pack.addProvider(SEntityLootTableProvider::new);
         pack.addProvider(SModelProvider::new);
         pack.addProvider(SRecipeProvider::new);
     }

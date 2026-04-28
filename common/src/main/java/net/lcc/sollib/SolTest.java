@@ -3,8 +3,12 @@ package net.lcc.sollib;
 import net.lcc.sollib.api.common.config.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,5 +34,10 @@ public class SolTest {
     }
 
 
-    public static void sasha() {}
+    public static void sasha() {
+        EntityHolder e = MOD.getRegistrar(EntityHolder.class).register("khto_yoho_zna_sho", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
+                .sized(1f, 1f)
+                .build("khto_yoho_zna_sho")
+        );
+    }
 }

@@ -2,6 +2,7 @@ package net.lcc.sollib;
 
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,12 +14,12 @@ import net.minecraftforge.registries.RegisterEvent;
 public class SolLibForge {
     public SolLibForge() {
         SolLib.init();
-
     }
 
     @SubscribeEvent
     public static void register(RegisterEvent event) {
         SolRegistries.MOD.iterate(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> event.register(Registries.ENTITY_TYPE, holder.getID(), holder));
     }
 }
