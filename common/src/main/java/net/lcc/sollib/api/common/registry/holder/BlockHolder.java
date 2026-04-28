@@ -52,7 +52,8 @@ public class BlockHolder extends Holder<Block> {
         this.blockset = new HashMap<>();
     }
 
-    public static Registry<?> getRegistryType() {
+    @Override
+    protected Registry<Block> getRegistry() {
         return BuiltInRegistries.BLOCK;
     }
 

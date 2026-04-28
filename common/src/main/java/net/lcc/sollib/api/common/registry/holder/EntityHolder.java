@@ -20,7 +20,8 @@ public class EntityHolder extends Holder<EntityType<?>> {
         this.drop = null;
     }
 
-    public static Registry<?> getRegistryType() {
+    @Override
+    protected Registry<EntityType<?>> getRegistry() {
         return BuiltInRegistries.ENTITY_TYPE;
     }
 

@@ -15,9 +15,6 @@
     "icon": "assets/modid/${mod_id}.png",
     "environment": "*",
     "entrypoints": {
-        "preLaunch": [
-            "net.lcc.sollib.SolLibFabric"
-        ],
         "main": [
             "net.lcc.sollib.SolLibFabric"
         ],

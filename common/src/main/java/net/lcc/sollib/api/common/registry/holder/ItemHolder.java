@@ -27,7 +27,8 @@ public class ItemHolder extends Holder<Item> {
         this.fuelDuration = 0;
     }
 
-    public static Registry<?> getRegistryType() {
+    @Override
+    protected Registry<Item> getRegistry() {
         return BuiltInRegistries.ITEM;
     }
 
