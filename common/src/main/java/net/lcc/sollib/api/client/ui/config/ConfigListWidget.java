@@ -1,9 +1,8 @@
 package net.lcc.sollib.api.client.ui.config;
 
-import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
@@ -57,12 +56,10 @@ public class ConfigListWidget extends AbstractScrollWidget {
         boolean r = super.mouseClicked(mouseX, mouseY, button);
         if (!r) return false;
 
-        r = false;
         for (ConfigWidget b : this.widgets) {
             if (b.isHovered()) {
                 b.mouseClicked(mouseX, mouseY, button);
-                r = true;
-                break;
+                return true;
             }
         }
 

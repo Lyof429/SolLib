@@ -1,7 +1,6 @@
 package net.lcc.sollib.api.common.registry;
 
 import net.lcc.sollib.api.common.registry.holder.Holder;
-import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Constructor;

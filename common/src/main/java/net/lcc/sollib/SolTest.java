@@ -1,8 +1,6 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.IConfigurable;
-import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;

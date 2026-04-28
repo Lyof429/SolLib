@@ -7,9 +7,7 @@ import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.holder.Holder;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SolModContainer {

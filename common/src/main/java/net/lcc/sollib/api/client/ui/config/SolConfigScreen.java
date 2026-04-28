@@ -1,24 +1,12 @@
 package net.lcc.sollib.api.client.ui.config;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.platform.Services;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.PlainTextButton;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SolConfigScreen extends Screen {
     private final SolModContainer modContainer;

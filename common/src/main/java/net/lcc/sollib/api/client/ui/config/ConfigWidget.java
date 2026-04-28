@@ -56,7 +56,7 @@ public class ConfigWidget extends AbstractWidget {
         return super.getY() - self.getScrollAmount();
     }
 
-    public SolConfig getConfig() {
+    protected SolConfig getConfig() {
         return this.config;
     }
 
@@ -84,7 +84,7 @@ public class ConfigWidget extends AbstractWidget {
         this.reset.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    public void renderString(GuiGraphics guiGraphics, Font font, int color) {
+    protected void renderString(GuiGraphics guiGraphics, Font font, int color) {
         int minX = this.getX() + 4, minY = this.getY(),
                 maxX = this.getX() + this.width / 2 - 2, maxY = this.getY() + this.getHeight();
         int j = (minY + maxY - 9) / 2 + 1;
