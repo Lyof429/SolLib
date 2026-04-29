@@ -9,11 +9,13 @@ import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
@@ -21,7 +23,9 @@ public class SolTest {
     public static EntityHolder E = MOD.getRegistrar(EntityHolder.class).register("creature", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
             .sized(1f, 1f)
                 .build("creature"))
-            .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1));
+            .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1))
+            .withSpawnRestrictions(SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Pig::checkAnimalSpawnRules)
+            .withSpawn(biome -> true, MobCategory.MISC, 50, 5, 5);
 
     public static void lyof() {
         ConfigEntry<Integer> fuelValue = new ConfigEntry<>(5);

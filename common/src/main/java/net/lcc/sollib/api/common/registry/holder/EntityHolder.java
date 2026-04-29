@@ -1,26 +1,32 @@
 package net.lcc.sollib.api.common.registry.holder;
 
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.api.common.registry.data.SpawnRestrictions;
+import net.lcc.sollib.api.common.registry.data.SpawnRules;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class EntityHolder extends Holder<EntityType<?>> {
     private List<TagKey<EntityType<?>>> tags;
     private Supplier<LootTable.Builder> drop;
     private AttributeSupplier.Builder attributesBuilder;
+    private SpawnRestrictions<?> spawnRestrictions;
+    private SpawnRules spawnRules;
     // Client
     private EntityRendererProvider<?> renderer = null;
     private final Map<ModelLayerLocation, Supplier<LayerDefinition>> layers = new HashMap<>();
@@ -30,6 +36,8 @@ public class EntityHolder extends Holder<EntityType<?>> {
         this.tags = List.of();
         this.drop = null;
         this.attributesBuilder = null;
+        this.spawnRestrictions = null;
+        this.spawnRules = null;
     }
 
     @Override
@@ -79,8 +87,34 @@ public class EntityHolder extends Holder<EntityType<?>> {
         return this.attributesBuilder != null;
     }
 
-    // Client
+    public <T extends Mob> EntityHolder withSpawnRestrictions(SpawnPlacements.Type location, Heightmap.Types heightmap,
+                                                                 SpawnPlacements.SpawnPredicate<T> predicate) {
+        this.spawnRestrictions = new SpawnRestrictions<>(location, heightmap, predicate);
+        return this;
+    }
 
+    public <T extends Mob> SpawnRestrictions<T> getSpawnRestrictions() {
+        return (SpawnRestrictions<T>) this.spawnRestrictions;
+    }
+
+    public boolean hasSpawnRestrictions() {
+        return this.spawnRestrictions != null;
+    }
+
+    public EntityHolder withSpawn(Predicate<Biome> biomes, MobCategory category, int weight, int min, int max) {
+        this.spawnRules = new SpawnRules(biomes, category, weight, min, max);
+        return this;
+    }
+
+    public SpawnRules getSpawn() {
+        return this.spawnRules;
+    }
+
+    public boolean shouldSpawn() {
+        return this.spawnRules != null;
+    }
+
+    // Client
     /**
      * Registers the renderer for this entity type. <br/>
      * <b>Must only be called on the client</b>

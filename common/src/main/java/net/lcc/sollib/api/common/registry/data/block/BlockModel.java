@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.common.registry.data;
+package net.lcc.sollib.api.common.registry.data.block;
 
 public enum BlockModel {
     CUBE,

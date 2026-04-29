@@ -2,6 +2,7 @@ package net.lcc.sollib.core;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -20,8 +21,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -45,6 +45,17 @@ public class SolFabricCore {
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.hasAttributes())
                 FabricDefaultAttributeRegistry.register((EntityType<? extends LivingEntity>) holder.get(), holder.getAttributes());
+        });
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            if (holder.hasSpawnRestrictions())
+                SpawnPlacements.register((EntityType<Mob>) holder.get(), holder.getSpawnRestrictions().location(),
+                        holder.getSpawnRestrictions().heightmap(), holder.getSpawnRestrictions().predicate());
+        });
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            if (holder.shouldSpawn())
+                BiomeModifications.addSpawn(context -> holder.getSpawn().biomes().test(context.getBiome()),
+                        holder.getSpawn().category(), holder.get(),
+                        holder.getSpawn().weight(), holder.getSpawn().min(), holder.getSpawn().max());
         });
     }
 

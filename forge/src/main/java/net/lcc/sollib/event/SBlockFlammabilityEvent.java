@@ -1,6 +1,6 @@
 package net.lcc.sollib.event;
 
-import net.lcc.sollib.api.common.registry.data.Flammability;
+import net.lcc.sollib.api.common.registry.data.block.Flammability;
 import net.lcc.sollib.mixin.registry.FireBlockMixin;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;

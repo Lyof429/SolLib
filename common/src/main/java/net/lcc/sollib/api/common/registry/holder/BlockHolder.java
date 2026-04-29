@@ -1,8 +1,8 @@
 package net.lcc.sollib.api.common.registry.holder;
 
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.api.common.registry.data.BlockModel;
-import net.lcc.sollib.api.common.registry.data.Flammability;
+import net.lcc.sollib.api.common.registry.data.block.BlockModel;
+import net.lcc.sollib.api.common.registry.data.block.Flammability;
 import net.lcc.sollib.mixin.access.ButtonBlockAccessor;
 import net.lcc.sollib.mixin.access.PressurePlateBlockAccessor;
 import net.lcc.sollib.mixin.access.StairBlockAccessor;

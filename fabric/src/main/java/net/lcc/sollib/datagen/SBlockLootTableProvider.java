@@ -3,7 +3,7 @@ package net.lcc.sollib.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.registry.data.BlockModel;
+import net.lcc.sollib.api.common.registry.data.block.BlockModel;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 
 import java.util.Map;
