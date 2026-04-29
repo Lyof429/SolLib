@@ -1,7 +1,5 @@
 package net.lcc.sollib.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.lcc.sollib.core.SolFabricCore;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.spongepowered.asm.mixin.Mixin;
