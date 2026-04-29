@@ -7,12 +7,18 @@ import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.event.SAxeStrippableEvent;
 import net.lcc.sollib.event.SBlockFlammabilityEvent;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = SolLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SolForgeCore {
@@ -42,6 +48,22 @@ public class SolForgeCore {
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.hasAttributes())
                 event.put((EntityType<? extends LivingEntity>) holder.get(), holder.getAttributes());
+        });
+    }
+
+    @SubscribeEvent
+    public static void register(EntityRenderersEvent.RegisterRenderers event) {
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            if (holder.hasRenderer())
+                event.registerEntityRenderer(holder.get(), holder.getRenderer());
+        });
+    }
+
+    @SubscribeEvent
+    public static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            for (Map.Entry<ModelLayerLocation, Supplier<LayerDefinition>> entry : holder.getModelLayers())
+                event.registerLayerDefinition(entry.getKey(), entry.getValue());
         });
     }
 }

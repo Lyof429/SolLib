@@ -4,8 +4,11 @@ import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.core.registries.Registries;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegisterEvent;
 
@@ -14,6 +17,10 @@ import net.minecraftforge.registries.RegisterEvent;
 public class SolLibForge {
     public SolLibForge() {
         SolLib.init();
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            SolTest.E.addRenderer(PigRenderer::new);
+        });
     }
 
     @SubscribeEvent

@@ -3,6 +3,8 @@ package net.lcc.sollib.core;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -13,11 +15,16 @@ import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.platform.Services;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class SolFabricCore {
     public static void register() {
@@ -45,6 +52,16 @@ public class SolFabricCore {
     public static void registerClient() {
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.isCutout()) BlockRenderLayerMap.INSTANCE.putBlock(holder.get(), RenderType.cutout());
+        });
+
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            if (holder.hasRenderer())
+                EntityRendererRegistry.register(holder.get(), holder.getRenderer());
+        });
+
+        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
+            for (Map.Entry<ModelLayerLocation, Supplier<LayerDefinition>> entry : holder.getModelLayers())
+                EntityModelLayerRegistry.registerModelLayer(entry.getKey(), () -> entry.getValue().get());
         });
     }
 }

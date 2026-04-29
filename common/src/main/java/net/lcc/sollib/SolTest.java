@@ -18,6 +18,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
+    public static EntityHolder E = MOD.getRegistrar(EntityHolder.class).register("creature", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
+            .sized(1f, 1f)
+                .build("creature"))
+            .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1));
+
     public static void lyof() {
         ConfigEntry<Integer> fuelValue = new ConfigEntry<>(5);
 
@@ -34,11 +39,6 @@ public class SolTest {
                 .withStairs()
                 .withFence()
                 .cutout();
-
-        EntityHolder e = MOD.getRegistrar(EntityHolder.class).register("creature", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
-                .sized(1f, 1f)
-                .build("creature"))
-                .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1));
     }
 
 

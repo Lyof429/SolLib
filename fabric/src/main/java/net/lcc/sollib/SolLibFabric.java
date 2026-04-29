@@ -8,6 +8,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.impl.util.SystemProperties;
 import net.lcc.sollib.core.SolFabricCore;
+import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.server.MinecraftServer;
 
 public class SolLibFabric implements ModInitializer, ClientModInitializer {
@@ -19,6 +20,6 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Environment(EnvType.CLIENT)
     @Override
     public void onInitializeClient() {
-        SolFabricCore.registerClient();
+        SolTest.E.addRenderer(PigRenderer::new);
     }
 }
