@@ -7,6 +7,7 @@ import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.Heightmap;
 
+import java.util.List;
+
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
@@ -25,7 +28,7 @@ public class SolTest {
                 .build("creature"))
             .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1))
             .withSpawnRestrictions(SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Pig::checkAnimalSpawnRules)
-            .withSpawn(biome -> true, MobCategory.MISC, 50, 5, 5);
+            .withSpawn(List.of(), List.of(BiomeTags.IS_OVERWORLD), MobCategory.MONSTER, 50, 5, 5);
 
     public static void lyof() {
         ConfigEntry<Integer> fuelValue = new ConfigEntry<>(5);

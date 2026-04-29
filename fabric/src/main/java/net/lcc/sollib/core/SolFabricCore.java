@@ -53,7 +53,8 @@ public class SolFabricCore {
         });
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.shouldSpawn())
-                BiomeModifications.addSpawn(context -> holder.getSpawn().biomes().test(context.getBiome()),
+                BiomeModifications.addSpawn(context ->
+                        holder.getSpawn().matchesBiome(key -> context.getBiomeKey().equals(key), context::hasTag),
                         holder.getSpawn().category(), holder.get(),
                         holder.getSpawn().weight(), holder.getSpawn().min(), holder.getSpawn().max());
         });

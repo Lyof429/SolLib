@@ -7,7 +7,9 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -101,8 +103,14 @@ public class EntityHolder extends Holder<EntityType<?>> {
         return this.spawnRestrictions != null;
     }
 
-    public EntityHolder withSpawn(Predicate<Biome> biomes, MobCategory category, int weight, int min, int max) {
-        this.spawnRules = new SpawnRules(biomes, category, weight, min, max);
+    public EntityHolder withSpawn(List<String> biomes, MobCategory category, int weight, int min, int max) {
+        this.spawnRules = SpawnRules.create(biomes, category, weight, min, max);
+        return this;
+    }
+
+    public EntityHolder withSpawn(List<ResourceKey<Biome>> biomeKeys, List<TagKey<Biome>> biomeTags,
+                                  MobCategory category, int weight, int min, int max) {
+        this.spawnRules = new SpawnRules(biomeKeys, biomeTags, category, weight, min, max);
         return this;
     }
 
