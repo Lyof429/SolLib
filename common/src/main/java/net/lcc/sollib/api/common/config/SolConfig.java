@@ -186,4 +186,22 @@ public class SolConfig {
         this.entries.remove(path);
         this.entries.put(path, entry);
     }
+
+    public <T> T get(String path, T fallback) {
+        if (this.entries.containsKey(path))
+            return (T) this.entries.get(path).get();
+
+        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content);
+        this.addEntry(path, entry);
+        return entry.get();
+    }
+
+    public <T> JsonElement getRaw(String path, T fallback) {
+        if (this.entries.containsKey(path))
+            return this.entries.get(path).getRaw();
+
+        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content);
+        this.addEntry(path, entry);
+        return entry.getRaw();
+    }
 }

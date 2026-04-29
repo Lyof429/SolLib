@@ -15,6 +15,5 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Environment(EnvType.CLIENT)
     @Override
     public void onInitializeClient() {
-        SolTest.E.addRenderer(PigRenderer::new);
     }
 }

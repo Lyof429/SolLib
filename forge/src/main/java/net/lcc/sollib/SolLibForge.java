@@ -29,10 +29,6 @@ import java.util.function.Supplier;
 public class SolLibForge {
     public SolLibForge() {
         SolLib.init();
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            SolTest.E.addRenderer(PigRenderer::new);
-        });
     }
 
     @SubscribeEvent

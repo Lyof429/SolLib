@@ -12,9 +12,11 @@ import java.util.function.Supplier;
 public class ConfigEntry<T> implements Supplier<T> {
     private JsonElement content;
     private String[] path;
+    private JsonElement jsoncache;
     private T cache;
     private T fallback;
     private Function<JsonElement, T> processor;
+    private boolean shouldLog;
 
     public ConfigEntry(T fallback) {
         this((SolConfig) null, "", fallback);
@@ -29,6 +31,7 @@ public class ConfigEntry<T> implements Supplier<T> {
         this.set(config, path, fallback);
         this.fallback = fallback;
         this.processor = null;
+        this.shouldLog = false;
     }
 
     protected void set(SolConfig config, String path, T fallback) {
@@ -44,14 +47,30 @@ public class ConfigEntry<T> implements Supplier<T> {
     }
 
     public ConfigEntry<T> withContent(JsonElement elm) {
+        this.jsoncache = null;
         this.cache = null;
         this.content = elm;
+        return this;
+    }
+
+    public ConfigEntry<T> withLogging(boolean shouldLog) {
+        this.shouldLog = shouldLog;
         return this;
     }
 
     public T get() {
         if (this.cache != null) return this.cache;
         if (this.content == null) return this.fallback;
+
+        this.jsoncache = this.getRaw();
+
+        this.convert(this.jsoncache);
+        return this.cache;
+    }
+
+    public JsonElement getRaw() {
+        if (this.jsoncache != null) return this.jsoncache;
+        if (this.content == null) return null;
 
         JsonElement elm = this.content;
         JsonObject obj;
@@ -66,8 +85,7 @@ public class ConfigEntry<T> implements Supplier<T> {
             elm = obj.get(s);
         }
 
-        this.convert(elm);
-        return this.cache;
+        return elm;
     }
 
     @SuppressWarnings("unchecked")
@@ -81,14 +99,16 @@ public class ConfigEntry<T> implements Supplier<T> {
             else if (this.fallback instanceof String) this.cache = (T) result.getAsString();
             else if (this.fallback instanceof JsonObject) this.cache = (T) result.getAsJsonObject();
             else if (this.fallback instanceof JsonArray) this.cache = (T) result.getAsJsonArray();
+
+            else this.cache = this.fallback;
         } catch (Exception ignored) {
             this.fail();
         }
     }
 
-    protected T fail() {
-        this.cache = this.fallback;
-        SolLib.LOG.info("Could not find config value for path:", String.join(".", this.path));
-        return this.cache;
+    protected JsonElement fail() {
+        if (this.shouldLog)
+            SolLib.LOG.info("Could not find config value for path:", String.join(".", this.path));
+        return null;
     }
 }

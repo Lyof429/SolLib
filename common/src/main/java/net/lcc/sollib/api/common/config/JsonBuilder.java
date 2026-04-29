@@ -114,7 +114,7 @@ public class JsonBuilder {
 
     public <T> JsonBuilder bind(ConfigEntry<T> entry) {
         if (this.config != null && entry != null)
-            entry.set(this.config, this.getCurrentPath(), (T) this.currentValue);
+            entry.withLogging(true).set(this.config, this.getCurrentPath(), (T) this.currentValue);
 
         return this;
     }

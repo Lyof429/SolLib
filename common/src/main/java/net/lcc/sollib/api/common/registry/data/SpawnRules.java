@@ -29,7 +29,6 @@ public record SpawnRules(List<ResourceKey<Biome>> biomeKeys, List<TagKey<Biome>>
     }
 
     public boolean matchesBiome(Predicate<ResourceKey<Biome>> isBiome, Predicate<TagKey<Biome>> isTag) {
-        SolLib.LOG.info("attempting to spawn");
         for (ResourceKey<Biome> key : this.biomeKeys())
             if (isBiome.test(key)) return true;
         for (TagKey<Biome> key : this.biomeTags())

@@ -8,9 +8,10 @@
     "access.ButtonBlockAccessor",
     "access.PressurePlateBlockAccessor",
     "access.StairBlockAccessor",
-    "common.WeatherCommandMixin",
+    "common.config.GsonHelperMixin",
     "common.data.MultiPackResourceManagerMixin",
-    "common.data.ReloadableServerResourcesMixin"
+    "common.data.ReloadableServerResourcesMixin",
+    "common.weather.WeatherCommandMixin"
   ],
   "client": [
     "client.BossHealthOverlayMixin",
