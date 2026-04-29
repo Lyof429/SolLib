@@ -11,7 +11,9 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,29 +43,5 @@ public class SolForgeCore {
         BlockHolder holder = SolRegistries.MOD.find(BlockHolder.class,
                 it -> event.getBlock() == it.get() && it.isFlammable());
         if (holder != null) event.setFlammability(holder.getFlammability());
-    }
-
-    @SubscribeEvent
-    public static void register(EntityAttributeCreationEvent event) {
-        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
-            if (holder.hasAttributes())
-                event.put((EntityType<? extends LivingEntity>) holder.get(), holder.getAttributes());
-        });
-    }
-
-    @SubscribeEvent
-    public static void register(EntityRenderersEvent.RegisterRenderers event) {
-        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
-            if (holder.hasRenderer())
-                event.registerEntityRenderer(holder.get(), holder.getRenderer());
-        });
-    }
-
-    @SubscribeEvent
-    public static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
-            for (Map.Entry<ModelLayerLocation, Supplier<LayerDefinition>> entry : holder.getModelLayers())
-                event.registerLayerDefinition(entry.getKey(), entry.getValue());
-        });
     }
 }

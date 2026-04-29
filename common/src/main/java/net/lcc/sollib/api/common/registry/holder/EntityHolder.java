@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 public class EntityHolder extends Holder<EntityType<?>> {
     private List<TagKey<EntityType<?>>> tags;
     private Supplier<LootTable.Builder> drop;
-    private AttributeSupplier.Builder attributesBuilder;
+    private Supplier<AttributeSupplier.Builder> attributesBuilder;
     private SpawnRestrictions<?> spawnRestrictions;
     private SpawnRules spawnRules;
     // Client
@@ -76,13 +76,13 @@ public class EntityHolder extends Holder<EntityType<?>> {
         return this.drop != null;
     }
 
-    public EntityHolder withAttributes(AttributeSupplier.Builder builder) {
+    public EntityHolder withAttributes(Supplier<AttributeSupplier.Builder> builder) {
         this.attributesBuilder = builder;
         return this;
     }
 
-    public AttributeSupplier getAttributes() {
-        return this.attributesBuilder.build();
+    public AttributeSupplier.Builder getAttributes() {
+        return this.attributesBuilder.get();
     }
 
     public boolean hasAttributes() {

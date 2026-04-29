@@ -26,7 +26,7 @@ public class SolTest {
     public static EntityHolder E = MOD.getRegistrar(EntityHolder.class).register("creature", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
             .sized(1f, 1f)
                 .build("creature"))
-            .withAttributes(Pig.createAttributes().add(Attributes.MAX_HEALTH, 1))
+            .withAttributes(() -> Pig.createAttributes().add(Attributes.MAX_HEALTH, 1))
             .withSpawnRestrictions(SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Pig::checkAnimalSpawnRules)
             .withSpawn(List.of(), List.of(BiomeTags.IS_OVERWORLD), MobCategory.MONSTER, 50, 5, 5);
 

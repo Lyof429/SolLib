@@ -1,6 +1,8 @@
 package net.lcc.sollib.api.common.registry.data;
 
+import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.config.JsonBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,12 +37,32 @@ public record SpawnRules(List<ResourceKey<Biome>> biomeKeys, List<TagKey<Biome>>
         return false;
     }
 
-    public Iterable<String> iterateBiomes() {
-        List<String> r = new ArrayList<>();
-        for (ResourceKey<Biome> key : this.biomeKeys())
-            r.add("#" + key.location());
-        for (TagKey<Biome> key : this.biomeTags())
-            r.add(key.location().toString());
-        return r;
+    public JsonObject createBiomeModifier(JsonObject json, ResourceLocation entity) {
+        // Not modifying spawns if they already exist
+        if (json != null) return json;
+
+        // Generating the biome modifier file
+        return new JsonBuilder()
+                .add("type", "forge:add_spawns")
+                .add("biomes", "#" + entity + "_can_spawn")
+                .addObject("spawners", spawners -> spawners
+                        .add("type", entity.toString())
+                        .add("weight", this.weight())
+                        .add("minCount", this.min())
+                        .add("maxCount", this.max())
+                ).toJson().getAsJsonObject();
+    }
+
+    public JsonObject createTag(JsonObject json, ResourceLocation entity) {
+        if (json != null) return json;
+
+        return new JsonBuilder()
+                .add("replace", false)
+                .addArray("values", biomes -> {
+                    for (ResourceKey<Biome> key : this.biomeKeys())
+                        biomes.add(key.location().toString());
+                    for (TagKey<Biome> key : this.biomeTags())
+                        biomes.add("#" + key.location());
+                }).toJson().getAsJsonObject();
     }
 }

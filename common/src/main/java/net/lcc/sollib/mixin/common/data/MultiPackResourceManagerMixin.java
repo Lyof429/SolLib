@@ -14,10 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -65,7 +62,7 @@ public class MultiPackResourceManagerMixin {
     private Map<ResourceLocation, List<Resource>> listRuntimeResourceStacks(Map<ResourceLocation, List<Resource>> original,
                                                                           String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
         for (ResourceLocation id : SolRegistries.RUNTIME.findMatching(startingPath, allowedPathPredicate))
-            original.putIfAbsent(id, List.of((Resource) null));
+            original.putIfAbsent(id, Collections.singletonList(null));
         original.replaceAll(sol_replaceList);
         original.entrySet().removeIf(sol_isEmpty);
         return original;
