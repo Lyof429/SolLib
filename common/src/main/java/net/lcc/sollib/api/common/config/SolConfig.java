@@ -5,6 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.config.builder.IConfigurable;
+import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
+import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.Util;
 import org.apache.commons.io.FileUtils;
@@ -107,7 +110,7 @@ public class SolConfig {
             }
         }
 
-        JsonBuilder builder = new JsonBuilder(this);
+        IJsonBuilder builder = new JsonBuilder(this);
         this.contentBuilder.toJson(builder);
         String content = builder.toString();
         AtomicDouble version = new AtomicDouble(this.version);

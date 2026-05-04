@@ -1,14 +1,16 @@
-package net.lcc.sollib.api.common.config;
+package net.lcc.sollib.api.common.config.builder;
 
 import com.google.gson.*;
 import com.google.gson.stream.MalformedJsonException;
+import net.lcc.sollib.api.common.config.ConfigEntry;
+import net.lcc.sollib.api.common.config.SolConfig;
 
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-public class JsonBuilder {
+public class JsonBuilder implements IJsonBuilder {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
@@ -61,6 +63,7 @@ public class JsonBuilder {
     /**
      * @return A String representation of the JSON this built, with pretty printing
      */
+    @Override
     public String toString() {
         return "{\n" + this.builder + "\n}";
     }
@@ -68,9 +71,10 @@ public class JsonBuilder {
     /**
      * @return The JSON this built
      */
-    public JsonElement toJson() {
+    @Override
+    public JsonObject toJson() {
         try {
-            return JsonBuilder.toJson(this.toString());
+            return JsonBuilder.toJson(this.toString()).getAsJsonObject();
         } catch (MalformedJsonException e) {
             return new JsonObject();
         }
@@ -80,6 +84,7 @@ public class JsonBuilder {
      * {@link #bind(ConfigEntry)} should instead be used to directly bind a ConfigEntry to this path
      * @return The current config path this builder is at
      */
+    @Override
     public String getCurrentPath() {
         return this.currentPath;
     }
@@ -107,12 +112,14 @@ public class JsonBuilder {
         }
     }
 
-    public JsonBuilder comment(String comment) {
+    @Override
+    public IJsonBuilder comment(String comment) {
         this.comments.addLast(comment);
         return this;
     }
 
-    public <T> JsonBuilder bind(ConfigEntry<T> entry) {
+    @Override
+    public <T> IJsonBuilder bind(ConfigEntry<T> entry) {
         if (this.config != null && entry != null)
             entry.withLogging(true).set(this.config, this.getCurrentPath(), (T) this.currentValue);
 
@@ -127,25 +134,29 @@ public class JsonBuilder {
         this.path.pop();
     }
 
-    public JsonBuilder add(String key, String value) {
+    @Override
+    public IJsonBuilder add(String key, String value) {
         this.append(key, "\"" + value + "\"");
         this.currentValue = value;
         return this;
     }
 
-    public JsonBuilder add(String key, Number value) {
+    @Override
+    public IJsonBuilder add(String key, Number value) {
         this.append(key, value.toString());
         this.currentValue = value;
         return this;
     }
 
-    public JsonBuilder add(String key, Boolean value) {
-        this.append(key, value.toString());
+    @Override
+    public IJsonBuilder add(String key, boolean value) {
+        this.append(key, String.valueOf(value));
         this.currentValue = value;
         return this;
     }
 
-    public JsonBuilder addObject(String key, IConfigurable consumer) {
+    @Override
+    public IJsonBuilder addObject(String key, IConfigurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
         this.currentValue = new JsonObject();
@@ -168,7 +179,27 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addArray(String key, Consumer<ArrayBuilder> consumer) {
+    @Override
+    public IJsonBuilder addObject(String key, JsonObject value) {
+        return this.addObject(key, self -> {
+            for (String k : value.keySet()) {
+                JsonElement v = value.get(k);
+                if (v.isJsonPrimitive()) {
+                    JsonPrimitive p = v.getAsJsonPrimitive();
+
+                    if (p.isString()) self.add(k, p.getAsString());
+                    else if (p.isNumber()) self.add(k, p.getAsDouble());
+                    else if (p.isBoolean()) self.add(k, p.getAsBoolean());
+                } else if (v.isJsonObject())
+                    self.addObject(k, v.getAsJsonObject());
+                else if (v.isJsonArray())
+                    self.addArray(k, v.getAsJsonArray());
+            }
+        });
+    }
+
+    @Override
+    public IJsonBuilder addArray(String key, Consumer<IArrayBuilder> consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
         this.currentValue = new JsonArray();
@@ -186,18 +217,19 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addArray(String key, Iterable<?> value) {
+    @Override
+    public IJsonBuilder addArray(String key, Iterable<?> value) {
         return this.addArray(key, self -> {
             for (Object v : value) {
                 if (v instanceof String it) self.add(it);
                 else if (v instanceof Number it) self.add(it);
                 else if (v instanceof Boolean it) self.add(it);
-                else if (v instanceof IConfigurable it) self.addCategory(it);
+                else if (v instanceof IConfigurable it) self.addObject(it);
             }
         });
     }
 
-    public class ArrayBuilder {
+    public class ArrayBuilder implements IArrayBuilder {
         protected void append(String value) {
             JsonBuilder self = JsonBuilder.this;
 
@@ -205,22 +237,26 @@ public class JsonBuilder {
             self.builder.append(value);
         }
 
-        public ArrayBuilder add(String value) {
+        @Override
+        public IArrayBuilder add(String value) {
             this.append("\"" + value + "\"");
             return this;
         }
 
-        public ArrayBuilder add(Number value) {
+        @Override
+        public IArrayBuilder add(Number value) {
             this.append(value.toString());
             return this;
         }
 
-        public ArrayBuilder add(Boolean value) {
+        @Override
+        public IArrayBuilder add(Boolean value) {
             this.append(value.toString());
             return this;
         }
 
-        public ArrayBuilder addCategory(IConfigurable consumer) {
+        @Override
+        public IArrayBuilder addObject(IConfigurable consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
@@ -235,7 +271,27 @@ public class JsonBuilder {
             return this;
         }
 
-        public ArrayBuilder addList(Consumer<ArrayBuilder> consumer) {
+        @Override
+        public IArrayBuilder addObject(JsonObject value) {
+            return this.addObject(self -> {
+                for (String k : value.keySet()) {
+                    JsonElement v = value.get(k);
+                    if (v.isJsonPrimitive()) {
+                        JsonPrimitive p = v.getAsJsonPrimitive();
+
+                        if (p.isString()) self.add(k, p.getAsString());
+                        else if (p.isNumber()) self.add(k, p.getAsDouble());
+                        else if (p.isBoolean()) self.add(k, p.getAsBoolean());
+                    } else if (v.isJsonObject())
+                        self.addObject(k, v.getAsJsonObject());
+                    else if (v.isJsonArray())
+                        self.addArray(k, v.getAsJsonArray());
+                }
+            });
+        }
+
+        @Override
+        public IArrayBuilder addArray(Consumer<IArrayBuilder> consumer) {
             JsonBuilder self = JsonBuilder.this;
 
             self.jump(true);
@@ -250,13 +306,14 @@ public class JsonBuilder {
             return this;
         }
 
-        public <T> ArrayBuilder addList(List<T> value) {
-            return this.addList(self -> {
-                for (T v : value) {
+        @Override
+        public IArrayBuilder addArray(Iterable<?> value) {
+            return this.addArray(self -> {
+                for (Object v : value) {
                     if (v instanceof String it) self.add(it);
                     else if (v instanceof Number it) self.add(it);
                     else if (v instanceof Boolean it) self.add(it);
-                    else if (v instanceof IConfigurable it) self.addCategory(it);
+                    else if (v instanceof IConfigurable it) self.addObject(it);
                 }
             });
         }

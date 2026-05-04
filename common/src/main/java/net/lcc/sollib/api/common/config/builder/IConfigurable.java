@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.common.config;
+package net.lcc.sollib.api.common.config.builder;
 
 /**
  * Technically not fully a FunctionalInterface, but marking it as one because it is used this way for code cleaning <br/>
@@ -6,5 +6,5 @@ package net.lcc.sollib.api.common.config;
  */
 @FunctionalInterface
 public interface IConfigurable {
-    void toJson(JsonBuilder builder);
+    void toJson(IJsonBuilder builder);
 }

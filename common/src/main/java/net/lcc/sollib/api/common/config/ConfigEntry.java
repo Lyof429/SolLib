@@ -34,7 +34,7 @@ public class ConfigEntry<T> implements Supplier<T> {
         this.shouldLog = false;
     }
 
-    protected void set(SolConfig config, String path, T fallback) {
+    public void set(SolConfig config, String path, T fallback) {
         if (config != null)
             config.addEntry(path, this);
         this.path = path.split("\\.");
