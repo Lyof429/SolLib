@@ -90,10 +90,7 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     protected void jump(boolean comma) {
-        if (this.first) {
-            if (this.config != null) this.comment("");
-            comma = false;
-        }
+        if (this.first) comma = false;
         this.first = false;
 
         if (!this.builder.isEmpty()) {
@@ -162,7 +159,7 @@ public class JsonBuilder implements IJsonBuilder {
         this.currentValue = new JsonObject();
 
         if (this.indent == 0 && this.config != null)
-            this.comment(key.toUpperCase().replace('_', ' '));
+            this.comment("").comment(key.toUpperCase().replace('_', ' '));
         this.jump(true);
 
         this.indent++;
