@@ -15,7 +15,8 @@
     " # "
   ],
   "result": {
-    "item": "config@sollib/test:test_category.hello"
+    "item": "minecraft:diamond_pickaxe",
+    "item/config": "sollib/test:test_category.craft"
   },
   "show_notification": true
 }

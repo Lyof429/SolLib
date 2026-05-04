@@ -26,13 +26,13 @@ import java.util.function.Function;
 public class GsonHelperMixin {
     @Unique private static <T> void sol_apply(JsonObject obj, String member, T fallback, Consumer<JsonElement> action) {
         if (!obj.has(member)) return;
+        member += "/config";
+        if (!obj.has(member)) return;
 
         JsonElement json = obj.get(member);
         if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
             String key = json.getAsString();
-            if (key.matches("config@[a-z_/]+:[a-z_.]+")) {
-
-                key = key.substring(7);
+            if (key.matches("[a-z_/]+:[a-z_.]+")) {
                 JsonElement value = SolRegistries.CONFIG.getRaw(key, fallback);
                 if (value != null) action.accept(value);
             }
