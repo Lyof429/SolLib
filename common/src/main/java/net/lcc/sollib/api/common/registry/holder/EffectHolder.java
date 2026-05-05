@@ -29,10 +29,9 @@ public class EffectHolder extends Holder<MobEffect> {
 
     private Supplier<Potion> craftingBase;
     private Supplier<ItemLike> craftingIngredient;
-    private Supplier<Potion> potion;
-    private Supplier<Potion> longPotion;
-    private Supplier<Potion> strongPotion;
-    private int potionDuration;
+    private Holder<Potion> potion;
+    private Holder<Potion> longPotion;
+    private Holder<Potion> strongPotion;
 
     public EffectHolder(SolModContainer mod, String name, Supplier<MobEffect> entrySupplier) {
         super(mod, name, entrySupplier);
@@ -42,7 +41,6 @@ public class EffectHolder extends Holder<MobEffect> {
         this.potion = null;
         this.longPotion = null;
         this.strongPotion = null;
-        this.potionDuration = 0;
     }
 
     @Override
@@ -89,16 +87,17 @@ public class EffectHolder extends Holder<MobEffect> {
                                    boolean hasLong, boolean hasStrong) {
         this.craftingBase = base;
         this.craftingIngredient = ingredient;
-        this.potion = () -> new Potion(new MobEffectInstance(this.get(), this.potionDuration));
+
         String name = this.getID().getPath();
-        this.longPotion = hasLong ? () -> new Potion(name, new MobEffectInstance(this.get(),
-                this.potionDuration * 8 / 3)) : null;
-        this.strongPotion = hasStrong ? () -> new Potion(name, new MobEffectInstance(this.get(),
-                this.potionDuration / 2, 1)) : null;
-        this.potionDuration = duration;
+
+        this.potion = new Holder<>(this.mod, name, () -> new Potion(new MobEffectInstance(this.get(), duration)));
+        this.longPotion = hasLong ? new Holder<>(this.mod, "long_" + name,
+                () -> new Potion(name, new MobEffectInstance(this.get(), duration * 8 / 3))) : null;
+        this.strongPotion = hasStrong ? new Holder<>(this.mod, "strong_" + name,
+                () -> new Potion(name, new MobEffectInstance(this.get(), duration / 2, 1))) : null;
 
         if (Services.PLATFORM.getPlatformName().equals("Fabric"))
-            this.registerPotion((id, potion) -> Registry.register(BuiltInRegistries.POTION, id, potion.get()));
+            this.registerPotion(holder -> Registry.register(BuiltInRegistries.POTION, holder.getID(), holder.get()));
 
         return this;
     }
@@ -136,13 +135,11 @@ public class EffectHolder extends Holder<MobEffect> {
     }
 
     @ApiStatus.Internal
-    public void registerPotion(BiConsumer<ResourceLocation, Supplier<Potion>> registrar) {
-        registrar.accept(this.getID(), this.potion);
-
-        String name = this.getID().getPath();
+    public void registerPotion(Consumer<Holder<Potion>> registrar) {
+        registrar.accept(this.potion);
         if (this.longPotion != null)
-            registrar.accept(this.mod.makeID("long_" + name), this.longPotion);
+            registrar.accept(this.longPotion);
         if (this.strongPotion != null)
-            registrar.accept(this.mod.makeID("strong_" + name), this.strongPotion);
+            registrar.accept(this.strongPotion);
     }
 }

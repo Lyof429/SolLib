@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
-public abstract class Holder<T> implements Supplier<T> {
+public class Holder<T> implements Supplier<T> {
     protected final SolModContainer mod;
     protected final String name;
 
@@ -43,5 +43,7 @@ public abstract class Holder<T> implements Supplier<T> {
         return this.mod.makeID(this.name);
     }
 
-    protected abstract Registry<T> getRegistry();
+    protected Registry<T> getRegistry() {
+        return null;
+    }
 }
