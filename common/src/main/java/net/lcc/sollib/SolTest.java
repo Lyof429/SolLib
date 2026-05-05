@@ -1,14 +1,17 @@
 package net.lcc.sollib;
 
 import com.google.gson.JsonObject;
-import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
+import net.lcc.sollib.mixin.access.MobEffectAccessor;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.item.Items;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
@@ -38,7 +41,8 @@ public class SolTest {
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
 
-        SolRegistries.RELOADER.register(manager -> SolLib.LOG.info("AYA", hello.getRaw(), hello.get(), exists.getRaw(), exists.get()));
+        MOD.getRegistrar(EffectHolder.class).register("meth", () -> MobEffectAccessor.create(MobEffectCategory.BENEFICIAL, 0x00ff00))
+                .withPotion(() -> Items.ANDESITE);
     }
 
 

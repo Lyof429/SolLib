@@ -185,7 +185,7 @@ public class BlockHolder extends Holder<Block> {
 
     public BlockHolder withStairs() {
         BlockHolder stairs = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_stairs",
-                        () -> StairBlockAccessor.createStairBlock(this.get().defaultBlockState(), BlockBehaviour.Properties.copy(this.get())))
+                        () -> StairBlockAccessor.create(this.get().defaultBlockState(), BlockBehaviour.Properties.copy(this.get())))
                 .withModel(BlockModel.STAIRS)
                 .withItem(it -> it.withTags(ItemTags.STAIRS))
                 .withTags(BlockTags.STAIRS);
@@ -245,7 +245,7 @@ public class BlockHolder extends Holder<Block> {
 
     public BlockHolder withButton(BlockSetType type, int ticksPressed, boolean arrowCanPress) {
         BlockHolder button = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_button", 
-                        () -> ButtonBlockAccessor.createButtonBlock(BlockBehaviour.Properties.copy(this.get()), type, ticksPressed, arrowCanPress))
+                        () -> ButtonBlockAccessor.create(BlockBehaviour.Properties.copy(this.get()), type, ticksPressed, arrowCanPress))
                 .withModel(BlockModel.BUTTON)
                 .withItem(it -> it.withTags(ItemTags.BUTTONS))
                 .withTags(BlockTags.BUTTONS);
@@ -264,7 +264,7 @@ public class BlockHolder extends Holder<Block> {
 
     public BlockHolder withPressurePlate(PressurePlateBlock.Sensitivity sensitivity, BlockSetType type) {
         BlockHolder pressurePlate = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_pressure_plate",
-                        () -> PressurePlateBlockAccessor.createPressurePlateBlock(sensitivity, BlockBehaviour.Properties.copy(this.get()), type))
+                        () -> PressurePlateBlockAccessor.create(sensitivity, BlockBehaviour.Properties.copy(this.get()), type))
                 .withModel(BlockModel.PRESSURE_PLATE)
                 .withItem()
                 .withTags(BlockTags.PRESSURE_PLATES);

@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "access.ButtonBlockAccessor",
+    "access.MobEffectAccessor",
     "access.PressurePlateBlockAccessor",
     "access.StairBlockAccessor",
     "common.config.GsonHelperMixin",
@@ -14,11 +15,11 @@
     "common.weather.WeatherCommandMixin"
   ],
   "client": [
+    "access.ItemRendererAccessor",
     "client.BossHealthOverlayMixin",
     "client.model.EntityModelMixin",
     "client.model.ModelPartMixin",
     "client.render.ItemMixin",
-    "client.render.ItemRendererAccessor",
     "client.render.ItemRendererMixin"
   ],
   "server": [

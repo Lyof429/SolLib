@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -56,6 +59,17 @@ public class SolFabricCore {
                         holder.getSpawn().matchesBiome(key -> context.getBiomeKey().equals(key), context::hasTag),
                         holder.getSpawn().category(), holder.get(),
                         holder.getSpawn().weight(), holder.getSpawn().min(), holder.getSpawn().max());
+        });
+
+        SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
+            if (holder.hasPotion()) {
+                PotionBrewing.addMix(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get());
+
+                if (holder.hasLongPotion())
+                    PotionBrewing.addMix(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get());
+                if (holder.hasStrongPotion())
+                    PotionBrewing.addMix(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get());
+            }
         });
     }
 

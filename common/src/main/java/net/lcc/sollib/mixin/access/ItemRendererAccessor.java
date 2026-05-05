@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin.client.render;
+package net.lcc.sollib.mixin.access;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ItemRenderer.class)
 public interface ItemRendererAccessor {
-    @Invoker("renderModelLists")
-    void onRenderModelLists(BakedModel model, ItemStack stack, int light, int overlay, PoseStack poseStack, VertexConsumer buffer);
+    @Invoker
+    void invokeRenderModelLists(BakedModel model, ItemStack stack, int light, int overlay, PoseStack poseStack, VertexConsumer buffer);
 }
