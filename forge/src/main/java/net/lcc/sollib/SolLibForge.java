@@ -2,8 +2,10 @@ package net.lcc.sollib;
 
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.lcc.sollib.core.PotionRecipe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.PigRenderer;
@@ -12,13 +14,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
@@ -37,6 +42,10 @@ public class SolLibForge {
         SolRegistries.MOD.iterate(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> event.register(Registries.ENTITY_TYPE, holder.getID(), holder));
+        SolRegistries.MOD.iterate(EffectHolder.class, holder -> event.register(Registries.MOB_EFFECT, holder.getID(), holder));
+        SolRegistries.MOD.iterate(EffectHolder.class, holder -> holder.registerPotion(
+                potion -> event.register(Registries.POTION, potion.getID(), potion)
+        ));
 
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.shouldSpawn()) {
@@ -78,6 +87,20 @@ public class SolLibForge {
                         .add(ForgeMod.NAMETAG_DISTANCE.get())
                         .add(ForgeMod.ENTITY_GRAVITY.get());
                 event.put((EntityType<? extends LivingEntity>) holder.get(), builder.build());
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void register(FMLCommonSetupEvent event) {
+        SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
+            if (holder.hasPotion()) {
+                BrewingRecipeRegistry.addRecipe(new PotionRecipe(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get()));
+
+                if (holder.hasLongPotion())
+                    BrewingRecipeRegistry.addRecipe(new PotionRecipe(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get()));
+                if (holder.hasStrongPotion())
+                    BrewingRecipeRegistry.addRecipe(new PotionRecipe(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get()));
             }
         });
     }

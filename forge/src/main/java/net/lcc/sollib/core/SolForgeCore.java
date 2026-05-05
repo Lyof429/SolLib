@@ -38,18 +38,4 @@ public class SolForgeCore {
                 it -> event.getBlock() == it.get() && it.isFlammable());
         if (holder != null) event.setFlammability(holder.getFlammability());
     }
-
-    @SubscribeEvent
-    public static void register(FMLCommonSetupEvent event) {
-        SolRegistries.MOD.iterate(EffectHolder.class, holder -> {/*
-            if (holder.hasPotion()) {
-                BrewingRecipeRegistry.addRecipe(IBrewingRecipe holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get());
-
-                if (holder.hasLongPotion())
-                    PotionBrewing.addMix(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get());
-                if (holder.hasStrongPotion())
-                    PotionBrewing.addMix(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get());
-            }*/
-        });
-    }
 }
