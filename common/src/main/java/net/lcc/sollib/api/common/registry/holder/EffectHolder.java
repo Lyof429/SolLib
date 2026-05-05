@@ -88,12 +88,10 @@ public class EffectHolder extends Holder<MobEffect> {
         this.craftingBase = base;
         this.craftingIngredient = ingredient;
 
-        String name = this.getID().getPath();
-
-        this.potion = new Holder<>(this.mod, name, () -> new Potion(new MobEffectInstance(this.get(), duration)));
-        this.longPotion = hasLong ? new Holder<>(this.mod, "long_" + name,
+        this.potion = new Holder<>(this.mod, this.name, () -> new Potion(new MobEffectInstance(this.get(), duration)));
+        this.longPotion = hasLong ? new Holder<>(this.mod, "long_" + this.name,
                 () -> new Potion(name, new MobEffectInstance(this.get(), duration * 8 / 3))) : null;
-        this.strongPotion = hasStrong ? new Holder<>(this.mod, "strong_" + name,
+        this.strongPotion = hasStrong ? new Holder<>(this.mod, "strong_" + this.name,
                 () -> new Potion(name, new MobEffectInstance(this.get(), duration / 2, 1))) : null;
 
         if (Services.PLATFORM.getPlatformName().equals("Fabric"))
