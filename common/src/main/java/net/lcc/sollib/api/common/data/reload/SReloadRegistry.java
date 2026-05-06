@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.common.data.reload;
 
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SReloadRegistry {
+    protected static final SolLogger LOG = new SolLogger("SolLib/Data/Reload");
+
     protected List<IReloadListener> INSTANCES = new ArrayList<>();
 
     /**
@@ -28,7 +31,7 @@ public class SReloadRegistry {
             try {
                 listener.preload(manager);
             } catch (Exception e) {
-                SolLib.LOG.error(listener, ": Error while running preload", e);
+                LOG.error(listener, ": Error while running preload", e);
             }
         }
     }
@@ -43,7 +46,7 @@ public class SReloadRegistry {
             try {
                 listener.reload(manager);
             } catch (Exception e) {
-                SolLib.LOG.error(listener, ": Error while running reload", e);
+                LOG.error(listener, ": Error while running reload", e);
             }
         }
     }

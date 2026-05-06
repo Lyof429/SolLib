@@ -104,7 +104,7 @@ public class SolConfig {
                 try {
                     Files.createDirectory(path);
                 } catch (IOException e) {
-                    SolLib.LOG.error(this.getName(), ": Error while accessing config file\n", e);
+                    SConfigRegistry.LOG.error(this.getName(), ": Error while accessing config file\n", e);
                     this.loadResult = LoadType.ERROR;
                 }
             }
@@ -130,13 +130,13 @@ public class SolConfig {
                     writer.write(SolConfig.fromJson(content, this.version));
                     writer.close();
 
-                    SolLib.LOG.debug(this.getName(), ": Config file created");
+                    SConfigRegistry.LOG.debug(this.getName(), ": Config file created");
                 }
 
                 content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), version, reset);
 
             } catch (IOException e) {
-                SolLib.LOG.error(this.getName(), ": Error while creating config file\n", e);
+                SConfigRegistry.LOG.error(this.getName(), ": Error while creating config file\n", e);
                 this.loadResult = LoadType.ERROR;
             }
 
@@ -149,12 +149,12 @@ public class SolConfig {
         try {
             this.content = JsonBuilder.toJson(content);
         } catch (Exception e) {
-            SolLib.LOG.error(this.getName(), ": Error while reading config file\n", e);
+            SConfigRegistry.LOG.error(this.getName(), ": Error while reading config file\n", e);
             this.loadResult = LoadType.ERROR;
         }
 
         if (this.loadResult.message != null)
-            SolLib.LOG.warn(this.getName(), ":", this.loadResult.message);
+            SConfigRegistry.LOG.warn(this.getName(), ":", this.loadResult.message);
 
         for (ConfigEntry<?> entry : this.entries.values())
             entry.withContent(this.content);
@@ -168,7 +168,7 @@ public class SolConfig {
 
             Util.getPlatform().openFile(path.toFile());
         } catch (Exception e) {
-            SolLib.LOG.error(this.getName(), ": Error while opening config file\n", e);
+            SConfigRegistry.LOG.error(this.getName(), ": Error while opening config file\n", e);
         }
     }
 

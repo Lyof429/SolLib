@@ -2,6 +2,7 @@ package net.lcc.sollib.api.common.config;
 
 import com.google.gson.JsonElement;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.logger.SolLogger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SConfigRegistry {
+    protected static final SolLogger LOG = new SolLogger("SolLib/Config");
+
     protected final Map<String, SolConfig> INSTANCES = new HashMap<>();
 
     /**
@@ -57,7 +60,7 @@ public class SConfigRegistry {
      */
     @ApiStatus.Internal
     public void reload() {
-        SolLib.LOG.info("Loaded", INSTANCES.size(), "configs");
+        LOG.info("Loaded", INSTANCES.size(), "configs");
         for (SolConfig config : INSTANCES.values())
             config.init();
     }

@@ -108,7 +108,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 
     protected JsonElement fail() {
         if (this.shouldLog)
-            SolLib.LOG.info("Could not find config value for path:", String.join(".", this.path));
+            SConfigRegistry.LOG.info("Could not find config value for path:", String.join(".", this.path));
         return null;
     }
 }

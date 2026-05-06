@@ -1,6 +1,5 @@
 package net.lcc.sollib.mixin.client.model;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.client.model.ModelPartUtils;
 import net.lcc.sollib.api.client.model.inject.IModelPartsAccessor;
 import net.minecraft.client.model.EntityModel;
@@ -18,30 +17,26 @@ import java.util.List;
 
 @Mixin(EntityModel.class)
 public class EntityModelMixin implements IModelPartsAccessor {
-    @Unique
-    private List<ModelPart> modelParts;
-    @Unique
-    private boolean triedCollect = false;
-    @Unique
-    private boolean usedStatic;
-    @Unique
-    private String staticMethodName;
+    @Unique private List<ModelPart> sol_modelParts;
+    @Unique private boolean sol_triedCollect = false;
+    @Unique private boolean sol_usedStatic;
+    @Unique private String sol_staticMethodName;
 
     @Override
     public List<ModelPart> getAllModelParts() {
-        if (!triedCollect) {
-            triedCollect = true;
-            SolLib.LOG.debug("[ModelParts] Start collecting for %s".formatted(this.getClass().getSimpleName()));
-            collectParts();
-            SolLib.LOG.debug("[ModelParts] Done. Path=%s, count=%d".formatted(
-                    (modelParts != null && !modelParts.isEmpty()) ? (usedStatic ? ("static:" + staticMethodName + "()") : "fields") : "NONE",
-                    modelParts == null ? 0 : modelParts.size()));
+        if (!sol_triedCollect) {
+            sol_triedCollect = true;
+            ModelPartUtils.LOG.debug("[ModelParts] Start collecting for %s".formatted(this.getClass().getSimpleName()));
+            sol_collectParts();
+            ModelPartUtils.LOG.debug("[ModelParts] Done. Path=%s, count=%d".formatted(
+                    (sol_modelParts != null && !sol_modelParts.isEmpty()) ? (sol_usedStatic ? ("static:" + sol_staticMethodName + "()") : "fields") : "NONE",
+                    sol_modelParts == null ? 0 : sol_modelParts.size()));
         }
-        return modelParts != null ? modelParts : List.of();
+        return sol_modelParts != null ? sol_modelParts : List.of();
     }
 
     @Unique
-    private void collectParts() {
+    private void sol_collectParts() {
         Class<?> cls = this.getClass();
         for (Method m : cls.getDeclaredMethods()) {
             if (Modifier.isStatic(m.getModifiers())
@@ -50,17 +45,17 @@ public class EntityModelMixin implements IModelPartsAccessor {
                 try {
                     m.setAccessible(true);
                     LayerDefinition data = (LayerDefinition) m.invoke(null);
-                    modelParts = ModelPartUtils.collectAllModelParts(data);
-                    usedStatic = true;
-                    staticMethodName = m.getName();
+                    sol_modelParts = ModelPartUtils.collectAllModelParts(data);
+                    sol_usedStatic = true;
+                    sol_staticMethodName = m.getName();
                     return;
                 } catch (IllegalAccessException | InvocationTargetException ignored) {
                 }
             }
         }
-        usedStatic = false;
-        staticMethodName = null;
-        modelParts = new ArrayList<>();
+        sol_usedStatic = false;
+        sol_staticMethodName = null;
+        sol_modelParts = new ArrayList<>();
         Class<?> walk = cls;
         while (walk != null && EntityModel.class.isAssignableFrom(walk)) {
             for (Field f : walk.getDeclaredFields()) {
@@ -68,8 +63,8 @@ public class EntityModelMixin implements IModelPartsAccessor {
                     try {
                         f.setAccessible(true);
                         ModelPart p = (ModelPart) f.get(this);
-                        if (p != null && !modelParts.contains(p)) {
-                            modelParts.add(p);
+                        if (p != null && !sol_modelParts.contains(p)) {
+                            sol_modelParts.add(p);
                         }
                     } catch (IllegalAccessException ignored) {
                     }

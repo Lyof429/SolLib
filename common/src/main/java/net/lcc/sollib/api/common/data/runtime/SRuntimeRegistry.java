@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import org.jetbrains.annotations.ApiStatus;
@@ -19,7 +20,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SRuntimeRegistry {
+    protected static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     protected Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
 
     public void addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
@@ -55,7 +58,7 @@ public class SRuntimeRegistry {
         if (!INSTANCES.containsKey(target)) return original;
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
 
-        SolLib.LOG.info("Applying configured data:", target);
+        LOG.info("Applying configured data:", target);
 
         String result;
         try {
@@ -68,7 +71,7 @@ public class SRuntimeRegistry {
             try {
                 result = data.apply(result);
             } catch (Exception e) {
-                SolLib.LOG.error(e);
+                LOG.error(e);
             }
         }
 

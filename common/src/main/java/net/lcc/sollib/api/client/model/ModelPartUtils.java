@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.client.model;
 
 import net.lcc.sollib.api.client.model.inject.IModelPartExtension;
+import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import org.apache.commons.lang3.tuple.Triple;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModelPartUtils {
+    public static final SolLogger LOG = new SolLogger("SolLib/Model");
+
     /**
      * @param texturedData LayerDefinition to extract model parts from
      * @return {@code List<ModelPart>}

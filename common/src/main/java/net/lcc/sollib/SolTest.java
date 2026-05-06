@@ -36,8 +36,6 @@ public class SolTest {
                                         .add("this is a list, in case you didn't notice")
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
-
-        MOD.register(DensityFunctionHolder.class, "progression", () -> ProgressionDensityFunction.CODEC);
     }
 
 

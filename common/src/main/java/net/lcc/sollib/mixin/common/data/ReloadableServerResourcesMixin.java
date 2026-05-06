@@ -14,6 +14,6 @@ public class ReloadableServerResourcesMixin {
     @ModifyReturnValue(method = "loadResources", at = @At("RETURN"))
     private static CompletableFuture<ReloadableServerResources> returnLoadResources(CompletableFuture<ReloadableServerResources> original,
                                                                                     ResourceManager manager) {
-        return original.whenComplete((a, b) -> SolRegistries.Data.RELOADER.reload(manager));
+        return original.whenComplete((a, b) -> SolRegistries.Data.RELOAD.reload(manager));
     }
 }

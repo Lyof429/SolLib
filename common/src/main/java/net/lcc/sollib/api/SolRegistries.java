@@ -9,7 +9,7 @@ import net.lcc.sollib.api.common.weather.SWeatherCommandRegistry;
 public class SolRegistries {
     public static final SConfigRegistry CONFIG = new SConfigRegistry();
     public static class Data {
-        public static final SReloadRegistry RELOADER = new SReloadRegistry();
+        public static final SReloadRegistry RELOAD = new SReloadRegistry();
         public static final SRuntimeRegistry RUNTIME = new SRuntimeRegistry();
     }
     public static final SModContainerRegistry MOD = new SModContainerRegistry();

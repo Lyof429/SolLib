@@ -12,7 +12,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        SolLib.LOG.debug("Loaded", loadedService, "for service", clazz);
+        SolLib.MOD.getLogger().debug("Loaded", loadedService, "for service", clazz);
         return loadedService;
     }
 }

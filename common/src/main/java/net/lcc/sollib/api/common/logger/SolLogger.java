@@ -13,7 +13,7 @@ public class SolLogger {
      * @param name The logger's name
      */
     public SolLogger(String name) {
-         this.logger = LoggerFactory.getLogger(name);
+         this.logger = LoggerFactory.getLogger(name.split("/")[0]);
          this.name = name;
     }
 

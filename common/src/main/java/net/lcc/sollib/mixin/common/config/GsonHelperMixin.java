@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.Consumer;
 
+@SuppressWarnings("deprecation")
 @Mixin(GsonHelper.class)
 public class GsonHelperMixin {
     @Unique private static <T> void sol_apply(JsonObject obj, String member, T fallback, Consumer<JsonElement> action) {

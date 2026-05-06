@@ -1,13 +1,16 @@
 {
-  "type": "sollib:progression",
-  "points": [
-    {
-      "value": -1,
-      "advancement": "minecraft:story/root"
-    },
-    {
-      "value": 1,
-      "advancement": "minecraft:end/kill_dragon"
-    }
-  ]
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "sollib:progression",
+    "points": [
+      {
+        "value": -1,
+        "advancement": "minecraft:story/root"
+      },
+      {
+        "value": 1,
+        "advancement": "minecraft:end/kill_dragon"
+      }
+    ]
+  }
 }

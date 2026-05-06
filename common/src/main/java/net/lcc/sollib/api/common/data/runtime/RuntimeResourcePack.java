@@ -16,27 +16,27 @@ public class RuntimeResourcePack implements PackResources {
     protected static final RuntimeResourcePack INSTANCE = new RuntimeResourcePack();
 
     @Override
-    public @Nullable IoSupplier<InputStream> getRootResource(String... strings) {
+    public @Nullable IoSupplier<InputStream> getRootResource(String... elements) {
         return null;
     }
 
     @Override
-    public @Nullable IoSupplier<InputStream> getResource(PackType packType, ResourceLocation resourceLocation) {
+    public @Nullable IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
         return null;
     }
 
     @Override
-    public void listResources(PackType packType, String s, String s1, ResourceOutput resourceOutput) {
+    public void listResources(PackType type, String namespace, String path, ResourceOutput resourceOutput) {
 
     }
 
     @Override
-    public Set<String> getNamespaces(PackType packType) {
+    public Set<String> getNamespaces(PackType type) {
         return Set.of();
     }
 
     @Override
-    public @Nullable <T> T getMetadataSection(MetadataSectionSerializer<T> metadataSectionSerializer) throws IOException {
+    public @Nullable <T> T getMetadataSection(MetadataSectionSerializer<T> serializer) throws IOException {
         return null;
     }
 

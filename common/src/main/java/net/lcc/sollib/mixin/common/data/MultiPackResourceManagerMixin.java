@@ -26,7 +26,7 @@ public class MultiPackResourceManagerMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void tailInit(PackType type, List<PackResources> packs, CallbackInfo ci) {
         SolRegistries.CONFIG.reload();
-        SolRegistries.Data.RELOADER.preload((ResourceManager) (Object) this);
+        SolRegistries.Data.RELOAD.preload((ResourceManager) (Object) this);
     }
 
 

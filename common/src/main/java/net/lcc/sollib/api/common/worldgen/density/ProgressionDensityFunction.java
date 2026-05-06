@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.DensityFunction;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +35,7 @@ import java.util.List;
  * </pre>
  */
 public class ProgressionDensityFunction implements DensityFunction.SimpleFunction {
-    public record ProgressionPoint(float value, ResourceLocation advancement) {
-        @Override
-        public String toString() {
-            return "ProgressionPoint{" +
-                    "value=" + value +
-                    ", advancement=" + advancement +
-                    '}';
-        }
-    }
+    public record ProgressionPoint(float value, ResourceLocation advancement) {}
 
     public static final Codec<ProgressionPoint> POINT_CODEC = RecordCodecBuilder.create(point ->
             point.group(
@@ -55,7 +48,7 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
                     ExtraCodecs.nonEmptyList(POINT_CODEC.listOf()).fieldOf("points")
                             .forGetter(ProgressionDensityFunction::getPoints)
             ).apply(instance, ProgressionDensityFunction::new));
-    public static final KeyDispatchDataCodec<ProgressionDensityFunction> CODEC_HOLDER = KeyDispatchDataCodec.of(CODEC);
+    private static final KeyDispatchDataCodec<ProgressionDensityFunction> CODEC_HOLDER = KeyDispatchDataCodec.of(CODEC);
 
     private static final List<ProgressionDensityFunction> INSTANCES = new ArrayList<>();
 
@@ -83,11 +76,13 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
         return this.points;
     }
 
+    @ApiStatus.Internal
     public static void reloadAll(MinecraftServer server) {
         for (ProgressionDensityFunction density : INSTANCES)
             density.reload(server);
     }
 
+    @ApiStatus.Internal
     protected void reload(MinecraftServer server) {
         this.value = this.points.get(0).value();
         if (server == null) return;
@@ -95,10 +90,8 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
         Advancement advancement;
         iterate : for (ProgressionPoint point : this.points) {
             advancement = server.getAdvancements().getAdvancement(point.advancement());
-            if (advancement == null) {
-                SolLib.LOG.info("Skipping advancement", point.advancement(), "as it does not exist");
+            if (advancement == null)
                 continue;
-            }
 
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 if (player.getAdvancements().getOrStartProgress(advancement).isDone()) {
@@ -107,8 +100,6 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
                 }
             }
         }
-
-        SolLib.LOG.info("Selected value:", value, this.points);
     }
 
     @Override
