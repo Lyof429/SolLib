@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.common.registry.data;
+package net.lcc.sollib.api.common.registry.data.entity;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;

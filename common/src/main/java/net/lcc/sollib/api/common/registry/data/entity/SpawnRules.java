@@ -1,4 +1,4 @@
-package net.lcc.sollib.api.common.registry.data;
+package net.lcc.sollib.api.common.registry.data.entity;
 
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;

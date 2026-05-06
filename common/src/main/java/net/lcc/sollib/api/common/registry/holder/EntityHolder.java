@@ -1,8 +1,8 @@
 package net.lcc.sollib.api.common.registry.holder;
 
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.api.common.registry.data.SpawnRestrictions;
-import net.lcc.sollib.api.common.registry.data.SpawnRules;
+import net.lcc.sollib.api.common.registry.data.entity.SpawnRestrictions;
+import net.lcc.sollib.api.common.registry.data.entity.SpawnRules;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
