@@ -4,8 +4,10 @@ import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
 import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
+import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
 import net.lcc.sollib.mixin.access.MobEffectAccessor;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
@@ -41,8 +43,7 @@ public class SolTest {
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
 
-        MOD.register(EffectHolder.class, "meth", () -> MobEffectAccessor.create(MobEffectCategory.BENEFICIAL, 0x00ff00))
-                .withPotion(() -> Items.ANDESITE);
+        MOD.register(DensityFunctionHolder.class, "progression", () -> ProgressionDensityFunction.CODEC);
     }
 
 

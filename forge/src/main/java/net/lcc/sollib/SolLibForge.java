@@ -1,10 +1,7 @@
 package net.lcc.sollib;
 
 import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.registry.holder.BlockHolder;
-import net.lcc.sollib.api.common.registry.holder.EffectHolder;
-import net.lcc.sollib.api.common.registry.holder.EntityHolder;
-import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.lcc.sollib.api.common.registry.holder.*;
 import net.lcc.sollib.core.PotionRecipe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -46,6 +43,7 @@ public class SolLibForge {
         SolRegistries.MOD.iterate(EffectHolder.class, holder -> holder.registerPotion(
                 potion -> event.register(Registries.POTION, potion.getID(), potion)
         ));
+        SolRegistries.MOD.iterate(DensityFunctionHolder.class, holder -> event.register(Registries.DENSITY_FUNCTION_TYPE, holder.getID(), holder));
 
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.shouldSpawn()) {
