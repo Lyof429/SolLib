@@ -5,23 +5,19 @@ import net.lcc.sollib.api.common.registry.holder.*;
 import net.lcc.sollib.core.PotionRecipe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.Map;
@@ -49,10 +45,10 @@ public class SolLibForge {
             if (holder.shouldSpawn()) {
                 ResourceLocation id = holder.getID();
 
-                SolRegistries.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
+                SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
                                 "tags/worldgen/biome/" + id.getPath() + "_can_spawn.json"),
                         json -> holder.getSpawn().createTag(json, id));
-                SolRegistries.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
+                SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
                                 "forge/biome_modifier/" + id.getPath() + ".json"),
                         json -> holder.getSpawn().createBiomeModifier(json, id));
             }

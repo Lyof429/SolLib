@@ -6,7 +6,6 @@ import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.SolConfig;
 
 import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 

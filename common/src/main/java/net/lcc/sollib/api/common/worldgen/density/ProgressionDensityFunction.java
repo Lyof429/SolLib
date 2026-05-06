@@ -9,14 +9,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.KeyDispatchDataCodec;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.DensityFunctions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * {@link DensityFunction} implementation that dynamically changes with connected players' advancements <br/>
@@ -36,7 +32,6 @@ import java.util.Map;
  *   ]
  * }
  * </pre>
- *
  */
 public class ProgressionDensityFunction implements DensityFunction.SimpleFunction {
     public record ProgressionPoint(float value, ResourceLocation advancement) {

@@ -20,7 +20,7 @@ public class BossHealthOverlayMixin {
             )
     )
     private void wrapDrawBar(BossHealthOverlay instance, GuiGraphics guiGraphics, int x, int y, BossEvent bossEvent, Operation<Void> original) {
-        IBossBarRenderer renderer = SolClientRegistries.BOSS_BAR.getRenderer(bossEvent);
+        IBossBarRenderer renderer = SolClientRegistries.BossBar.getRenderer(bossEvent);
 
         if (renderer != null) renderer.render(guiGraphics, x, y, bossEvent);
         else original.call(instance, guiGraphics, x, y, bossEvent);

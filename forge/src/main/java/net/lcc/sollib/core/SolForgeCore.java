@@ -3,18 +3,12 @@ package net.lcc.sollib.core;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
-import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.event.SAxeStrippableEvent;
 import net.lcc.sollib.event.SBlockFlammabilityEvent;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod.EventBusSubscriber(modid = SolLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SolForgeCore {

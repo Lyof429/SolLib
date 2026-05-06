@@ -17,6 +17,6 @@ public class ItemRendererMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V"))
     public void renderItem(ItemStack stack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack,
                            MultiBufferSource buffer, int packedLight, int packedOverlay, BakedModel model, CallbackInfo ci) {
-        SolClientRegistries.ITEM_RENDERER.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
+        SolClientRegistries.ItemRenderer.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
     }
 }

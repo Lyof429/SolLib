@@ -1,7 +1,6 @@
 package net.lcc.sollib.mixin.common.worldgen.density;
 
 import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;

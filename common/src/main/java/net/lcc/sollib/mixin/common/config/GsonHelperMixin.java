@@ -4,8 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Mixin(GsonHelper.class)
 public class GsonHelperMixin {

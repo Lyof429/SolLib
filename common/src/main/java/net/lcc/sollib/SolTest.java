@@ -5,22 +5,16 @@ import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
-import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
-import net.lcc.sollib.mixin.access.MobEffectAccessor;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.item.Items;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
 
     public static void lyof() {
-        ConfigEntry<Integer> fuelValue = new ConfigEntry<>(5);
-
         ConfigEntry<String> hello = new ConfigEntry<>("world");
         ConfigEntry<JsonObject> exists = new ConfigEntry<>(new JsonObject());
 

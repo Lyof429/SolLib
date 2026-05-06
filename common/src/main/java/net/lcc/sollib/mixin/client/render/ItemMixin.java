@@ -13,6 +13,6 @@ public class ItemMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void initItemRenderer(Item.Properties properties, CallbackInfo ci) {
         if (this instanceof IItemRenderer renderer)
-            SolClientRegistries.ITEM_RENDERER.register(stack -> stack.is((Item) (Object) this), renderer);
+            SolClientRegistries.ItemRenderer.register(stack -> stack.is((Item) (Object) this), renderer);
     }
 }

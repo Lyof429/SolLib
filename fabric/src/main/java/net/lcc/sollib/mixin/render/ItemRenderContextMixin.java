@@ -17,6 +17,6 @@ public class ItemRenderContextMixin {
     @Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;emitItemQuads(Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V"))
     public void renderItem(ItemStack stack, ItemDisplayContext displayContext, boolean invert, PoseStack poseStack,
                            MultiBufferSource buffer, int packedLight, int packedOverlay, BakedModel model, CallbackInfo ci) {
-        SolClientRegistries.ITEM_RENDERER.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
+        SolClientRegistries.ItemRenderer.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
     }
 }

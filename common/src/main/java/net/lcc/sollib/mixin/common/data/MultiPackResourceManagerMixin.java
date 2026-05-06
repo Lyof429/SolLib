@@ -26,7 +26,7 @@ public class MultiPackResourceManagerMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void tailInit(PackType type, List<PackResources> packs, CallbackInfo ci) {
         SolRegistries.CONFIG.reload();
-        SolRegistries.RELOADER.preload((ResourceManager) (Object) this);
+        SolRegistries.Data.RELOADER.preload((ResourceManager) (Object) this);
     }
 
 
@@ -34,26 +34,26 @@ public class MultiPackResourceManagerMixin {
     @Unique private static final Predicate<Map.Entry<ResourceLocation, Resource>> sol_isNull
             = entry -> entry.getValue() == null;
     @Unique private static final BiFunction<ResourceLocation, List<Resource>, List<Resource>> sol_replaceList
-            = (id, list) -> list.stream().map(resource -> SolRegistries.RUNTIME.apply(id, resource)).filter(Objects::nonNull).toList();
+            = (id, list) -> list.stream().map(resource -> SolRegistries.Data.RUNTIME.apply(id, resource)).filter(Objects::nonNull).toList();
     @Unique private static final Predicate<Map.Entry<ResourceLocation, List<Resource>>> sol_isEmpty
             = entry -> entry.getValue().isEmpty();
 
     @ModifyReturnValue(method = "getResource", at = @At("RETURN"))
     private Optional<Resource> getRuntimeResource(Optional<Resource> original, ResourceLocation id) {
-        return Optional.ofNullable(SolRegistries.RUNTIME.apply(id, original.orElse(null)));
+        return Optional.ofNullable(SolRegistries.Data.RUNTIME.apply(id, original.orElse(null)));
     }
 
     @ModifyReturnValue(method = "getResourceStack", at = @At("RETURN"))
     private List<Resource> getRuntimeResourceStack(List<Resource> original, ResourceLocation id) {
-        return original.stream().map(resource -> SolRegistries.RUNTIME.apply(id, resource)).toList();
+        return original.stream().map(resource -> SolRegistries.Data.RUNTIME.apply(id, resource)).toList();
     }
 
     @ModifyReturnValue(method = "listResources", at = @At("RETURN"))
     private Map<ResourceLocation, Resource> listRuntimeResources(Map<ResourceLocation, Resource> original,
                                                                     String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
-        for (ResourceLocation id : SolRegistries.RUNTIME.findMatching(startingPath, allowedPathPredicate))
+        for (ResourceLocation id : SolRegistries.Data.RUNTIME.findMatching(startingPath, allowedPathPredicate))
             original.putIfAbsent(id, null);
-        original.replaceAll(SolRegistries.RUNTIME::apply);
+        original.replaceAll(SolRegistries.Data.RUNTIME::apply);
         original.entrySet().removeIf(sol_isNull);
         return original;
     }
@@ -61,7 +61,7 @@ public class MultiPackResourceManagerMixin {
     @ModifyReturnValue(method = "listResourceStacks", at = @At("RETURN"))
     private Map<ResourceLocation, List<Resource>> listRuntimeResourceStacks(Map<ResourceLocation, List<Resource>> original,
                                                                           String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
-        for (ResourceLocation id : SolRegistries.RUNTIME.findMatching(startingPath, allowedPathPredicate))
+        for (ResourceLocation id : SolRegistries.Data.RUNTIME.findMatching(startingPath, allowedPathPredicate))
             original.putIfAbsent(id, Collections.singletonList(null));
         original.replaceAll(sol_replaceList);
         original.entrySet().removeIf(sol_isEmpty);
