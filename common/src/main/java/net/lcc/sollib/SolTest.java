@@ -41,13 +41,13 @@ public class SolTest {
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
 
-        MOD.getRegistrar(EffectHolder.class).register("meth", () -> MobEffectAccessor.create(MobEffectCategory.BENEFICIAL, 0x00ff00))
+        MOD.register(EffectHolder.class, "meth", () -> MobEffectAccessor.create(MobEffectCategory.BENEFICIAL, 0x00ff00))
                 .withPotion(() -> Items.ANDESITE);
     }
 
 
     public static void sasha() {
-        EntityHolder e = MOD.getRegistrar(EntityHolder.class).register("khto_yoho_zna_sho", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
+        EntityHolder e = MOD.register(EntityHolder.class, "khto_yoho_zna_sho", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
                 .sized(1f, 1f)
                 .build("khto_yoho_zna_sho")
         );

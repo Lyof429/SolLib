@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class SolModContainer {
     private final String name;
@@ -57,6 +58,10 @@ public class SolModContainer {
         SolRegistrar<T, H> r = new SolRegistrar<>(this, clazz);
         this.registrars.put(clazz, r);
         return r;
+    }
+
+    public <T, H extends Holder<T>> H register(Class<H> clazz, String name, Supplier<T> supplier) {
+        return this.getRegistrar(clazz).register(name, supplier);
     }
 
     public SolConfig createConfig(String name, double version, IConfigurable contentBuilder) {
