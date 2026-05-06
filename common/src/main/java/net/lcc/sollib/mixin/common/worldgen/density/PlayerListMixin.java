@@ -18,4 +18,9 @@ public class PlayerListMixin {
     private void joinDensityFunctions(CallbackInfo ci) {
         ProgressionDensityFunction.reloadAll(this.server);
     }
+
+    @Inject(method = "remove", at = @At("TAIL"))
+    private void quitDensityFunctions(CallbackInfo ci) {
+        ProgressionDensityFunction.reloadAll(this.server);
+    }
 }
