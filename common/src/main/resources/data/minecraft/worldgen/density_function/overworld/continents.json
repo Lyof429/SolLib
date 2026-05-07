@@ -2,6 +2,7 @@
   "type": "minecraft:flat_cache",
   "argument": {
     "type": "sollib:progression",
+    "default_value": 0,
     "points": [
       {
         "value": -1,

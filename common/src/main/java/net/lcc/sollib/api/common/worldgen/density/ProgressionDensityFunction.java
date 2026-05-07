@@ -2,7 +2,6 @@ package net.lcc.sollib.api.common.worldgen.density;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.lcc.sollib.SolLib;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -45,6 +44,7 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
             ).apply(point, ProgressionPoint::new));
     public static final Codec<ProgressionDensityFunction> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
+                    Codec.FLOAT.fieldOf("default_value").forGetter(ProgressionDensityFunction::getDefaultValue),
                     ExtraCodecs.nonEmptyList(POINT_CODEC.listOf()).fieldOf("points")
                             .forGetter(ProgressionDensityFunction::getPoints)
             ).apply(instance, ProgressionDensityFunction::new));
@@ -53,14 +53,16 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
     private static final List<ProgressionDensityFunction> INSTANCES = new ArrayList<>();
 
     protected final List<ProgressionPoint> points;
+    protected final float defaultValue;
     protected float min;
     protected float max;
 
     protected float value;
 
-    public ProgressionDensityFunction(List<ProgressionPoint> points) {
+    public ProgressionDensityFunction(float defaultValue, List<ProgressionPoint> points) {
+        this.defaultValue = defaultValue;
+        this.value = this.defaultValue;
         this.points = points;
-        this.value = points.get(0).value();
 
         this.min = points.get(0).value();
         this.max = points.get(0).value();
@@ -76,6 +78,10 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
         return this.points;
     }
 
+    public float getDefaultValue() {
+        return defaultValue;
+    }
+
     @ApiStatus.Internal
     public static void reloadAll(MinecraftServer server) {
         for (ProgressionDensityFunction density : INSTANCES)
@@ -84,7 +90,7 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
 
     @ApiStatus.Internal
     protected void reload(MinecraftServer server) {
-        this.value = this.points.get(0).value();
+        this.value = this.defaultValue;
         if (server == null) return;
 
         Advancement advancement;
