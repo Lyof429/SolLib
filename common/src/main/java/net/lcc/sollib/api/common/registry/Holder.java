@@ -1,6 +1,5 @@
-package net.lcc.sollib.api.common.registry.holder;
+package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -8,8 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Supplier;
 
 public class Holder<T> implements Supplier<T> {
-    protected final SolModContainer mod;
-    protected final String name;
+    protected SolModContainer mod;
+    protected String name;
 
     private T cachedEntry;
     private final Supplier<T> entrySupplier;

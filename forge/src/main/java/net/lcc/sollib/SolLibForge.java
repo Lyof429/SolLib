@@ -34,6 +34,7 @@ public class SolLibForge {
     public static void register(RegisterEvent event) {
         SolRegistries.MOD.iterate(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
+        SolRegistries.MOD.iterate(EnchantHolder.class, holder -> event.register(Registries.ENCHANTMENT, holder.getID(), holder));
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> event.register(Registries.ENTITY_TYPE, holder.getID(), holder));
         SolRegistries.MOD.iterate(EffectHolder.class, holder -> event.register(Registries.MOB_EFFECT, holder.getID(), holder));
         SolRegistries.MOD.iterate(EffectHolder.class, holder -> holder.registerPotion(

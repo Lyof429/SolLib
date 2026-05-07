@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.api.common.registry.holder.Holder;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.api.common.registry.holder.Holder;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Constructor;
@@ -28,15 +27,12 @@ public class SolRegistrar<T, H extends Holder<T>> {
 
     public H register(String name, Supplier<T> supplier) {
         try {
-            return this.register(name, this.constructor.newInstance(this.mod, name, supplier));
+            H holder = this.constructor.newInstance(this.mod, name, supplier);
+            instances.putIfAbsent(name, holder);
+            return holder;
         } catch (Exception ignored) {
             return null;
         }
-    }
-
-    public H register(String name, H holder) {
-        instances.putIfAbsent(name, holder);
-        return holder;
     }
 
     public H get(String name) {

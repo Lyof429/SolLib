@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry.holder;
 
+import net.lcc.sollib.api.common.registry.Holder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.core.Registry;

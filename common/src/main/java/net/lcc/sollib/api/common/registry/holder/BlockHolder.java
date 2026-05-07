@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry.holder;
 
+import net.lcc.sollib.api.common.registry.Holder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.data.block.BlockModel;
 import net.lcc.sollib.api.common.registry.data.block.Flammability;

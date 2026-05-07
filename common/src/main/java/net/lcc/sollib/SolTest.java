@@ -5,11 +5,23 @@ import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
+import net.lcc.sollib.api.common.registry.holder.EnchantHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.ArrowInfiniteEnchantment;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+
+import java.util.List;
+import java.util.Map;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
@@ -36,13 +48,11 @@ public class SolTest {
                                         .add("this is a list, in case you didn't notice")
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
+
+        MOD.register(EnchantHolder.class, "magicality",
+                () -> new Enchantment(Enchantment.Rarity.COMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}) {});
     }
 
 
-    public static void sasha() {
-        EntityHolder e = MOD.register(EntityHolder.class, "khto_yoho_zna_sho", () -> EntityType.Builder.of(Pig::new, MobCategory.CREATURE)
-                .sized(1f, 1f)
-                .build("khto_yoho_zna_sho")
-        );
-    }
+    public static void sasha() {}
 }
