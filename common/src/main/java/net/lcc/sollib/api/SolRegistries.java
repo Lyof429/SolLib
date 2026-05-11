@@ -7,11 +7,11 @@ import net.lcc.sollib.api.common.registry.SModContainerRegistry;
 import net.lcc.sollib.api.common.weather.SWeatherCommandRegistry;
 
 public class SolRegistries {
-    public static final SConfigRegistry CONFIG = new SConfigRegistry();
+    public static final SConfigRegistry CONFIG = SConfigRegistry.INSTANCE;
     public static class Data {
-        public static final SReloadRegistry RELOAD = new SReloadRegistry();
-        public static final SRuntimeRegistry RUNTIME = new SRuntimeRegistry();
+        public static final SReloadRegistry RELOAD = SReloadRegistry.INSTANCE;
+        public static final SRuntimeRegistry RUNTIME = SRuntimeRegistry.INSTANCE;
     }
-    public static final SModContainerRegistry MOD = new SModContainerRegistry();
-    public static final SWeatherCommandRegistry WEATHER = new SWeatherCommandRegistry();
+    public static final SModContainerRegistry MOD = SModContainerRegistry.INSTANCE;
+    public static final SWeatherCommandRegistry WEATHER = SWeatherCommandRegistry.INSTANCE;
 }

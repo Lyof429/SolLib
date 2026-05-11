@@ -4,12 +4,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class RuntimeData {
     protected Supplier<Boolean> activationRule;
     protected Function<String, String> function;
 
-    public RuntimeData(Supplier<Boolean> activationRule, Function<String, String> function) {
+    public RuntimeData(Supplier<Boolean> activationRule, UnaryOperator<String> function) {
         this.activationRule = activationRule;
         this.function = function;
     }

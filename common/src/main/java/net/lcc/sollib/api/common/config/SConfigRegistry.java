@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SConfigRegistry {
+    public static final SConfigRegistry INSTANCE = new SConfigRegistry();
+    private SConfigRegistry() {}
+
     protected static final SolLogger LOG = new SolLogger("SolLib/Config");
 
-    protected final Map<String, SolConfig> INSTANCES = new HashMap<>();
+    private final Map<String, SolConfig> INSTANCES = new HashMap<>();
 
     /**
      * @param name The name of the config to get

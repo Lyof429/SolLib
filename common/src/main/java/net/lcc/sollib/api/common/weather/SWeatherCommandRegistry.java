@@ -2,6 +2,7 @@ package net.lcc.sollib.api.common.weather;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.TimeArgument;
@@ -12,6 +13,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class SWeatherCommandRegistry {
+    public static final SWeatherCommandRegistry INSTANCE = new SWeatherCommandRegistry();
+    private SWeatherCommandRegistry() {}
+
     private final Map<String, BiConsumer<CommandSourceStack, Integer>> INSTANCES = new HashMap<>();
 
     /**

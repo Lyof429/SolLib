@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SReloadRegistry {
+    public static final SReloadRegistry INSTANCE = new SReloadRegistry();
+    private SReloadRegistry() {}
+
     protected static final SolLogger LOG = new SolLogger("SolLib/Data/Reload");
 
-    protected List<IReloadListener> INSTANCES = new ArrayList<>();
+    private final List<IReloadListener> INSTANCES = new ArrayList<>();
 
     /**
      * @param listener An instance of a {@link IReloadListener} implementation, which will then be reloaded on every resource reload.

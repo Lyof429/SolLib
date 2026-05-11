@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.data.reload.SReloadRegistry;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -18,22 +19,38 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class SRuntimeRegistry {
+    public static final SRuntimeRegistry INSTANCE = new SRuntimeRegistry();
+    private SRuntimeRegistry() {}
+
     protected static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    protected Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
+    private final Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
 
+    /**
+     * Dynamically removes the specified data if activationRule is met (on each reload)
+     */
     public void addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
         addText(target, original -> null, activationRule);
     }
 
-    public void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function) {
+    /**
+     * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
+     * In case the targeted data doesn't exist, a null value will be passed to function
+     */
+    public void addJson(ResourceLocation target, UnaryOperator<JsonObject> function) {
         addJson(target, function, () -> true);
     }
 
-    public void addJson(ResourceLocation target, Function<JsonObject, JsonObject> function, Supplier<Boolean> activationRule) {
+    /**
+     * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
+     * Only applied if activationRule is met for that specific reload <br/>
+     * In case the targeted data doesn't exist, a null value will be passed to function
+     */
+    public void addJson(ResourceLocation target, UnaryOperator<JsonObject> function, Supplier<Boolean> activationRule) {
         addText(target, original -> {
             try {
                 return GSON.toJson(function.apply(GSON.fromJson(original, JsonObject.class)));
@@ -43,11 +60,20 @@ public class SRuntimeRegistry {
         }, activationRule);
     }
 
-    public void addText(ResourceLocation target, Function<String, String> function) {
+    /**
+     * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
+     * In case the targeted data doesn't exist, a null value will be passed to function
+     */
+    public void addText(ResourceLocation target, UnaryOperator<String> function) {
         addText(target, function, () -> true);
     }
 
-    public void addText(ResourceLocation target, Function<String, String> function, Supplier<Boolean> activationRule) {
+    /**
+     * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
+     * Only applied if activationRule is met for that specific reload <br/>
+     * In case the targeted data doesn't exist, a null value will be passed to function
+     */
+    public void addText(ResourceLocation target, UnaryOperator<String> function, Supplier<Boolean> activationRule) {
         if (!INSTANCES.containsKey(target)) INSTANCES.put(target, new ArrayList<>());
         INSTANCES.get(target).add(new RuntimeData(activationRule, function));
     }

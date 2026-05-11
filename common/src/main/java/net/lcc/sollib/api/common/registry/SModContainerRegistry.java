@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
@@ -8,6 +9,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SModContainerRegistry {
+    public static final SModContainerRegistry INSTANCE = new SModContainerRegistry();
+    private SModContainerRegistry() {}
+
     protected final Map<String, SolModContainer> INSTANCES = new HashMap<>();
 
     /**
