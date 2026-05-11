@@ -3,8 +3,6 @@ package net.lcc.sollib.api.common.data.runtime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.SolLib;
-import net.lcc.sollib.api.common.data.reload.SReloadRegistry;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -28,21 +25,21 @@ public class SRuntimeRegistry {
     protected static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private final Map<ResourceLocation, List<RuntimeData>> INSTANCES = new HashMap<>();
+    private final Map<ResourceLocation, List<RuntimeData>> instances = new HashMap<>();
 
     /**
      * Dynamically removes the specified data if activationRule is met (on each reload)
      */
-    public void addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
-        addText(target, original -> null, activationRule);
+    public RuntimeData addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
+        return addText(target, original -> null, activationRule);
     }
 
     /**
      * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
      * In case the targeted data doesn't exist, a null value will be passed to function
      */
-    public void addJson(ResourceLocation target, UnaryOperator<JsonObject> function) {
-        addJson(target, function, () -> true);
+    public RuntimeData addJson(ResourceLocation target, UnaryOperator<JsonObject> function) {
+        return addJson(target, function, () -> true);
     }
 
     /**
@@ -50,8 +47,8 @@ public class SRuntimeRegistry {
      * Only applied if activationRule is met for that specific reload <br/>
      * In case the targeted data doesn't exist, a null value will be passed to function
      */
-    public void addJson(ResourceLocation target, UnaryOperator<JsonObject> function, Supplier<Boolean> activationRule) {
-        addText(target, original -> {
+    public RuntimeData addJson(ResourceLocation target, UnaryOperator<JsonObject> function, Supplier<Boolean> activationRule) {
+        return addText(target, original -> {
             try {
                 return GSON.toJson(function.apply(GSON.fromJson(original, JsonObject.class)));
             } catch (Exception ignored) {
@@ -64,8 +61,8 @@ public class SRuntimeRegistry {
      * Dynamically changes the specified data if activationRule is met (on each reload) <br/>
      * In case the targeted data doesn't exist, a null value will be passed to function
      */
-    public void addText(ResourceLocation target, UnaryOperator<String> function) {
-        addText(target, function, () -> true);
+    public RuntimeData addText(ResourceLocation target, UnaryOperator<String> function) {
+        return addText(target, function, () -> true);
     }
 
     /**
@@ -73,15 +70,17 @@ public class SRuntimeRegistry {
      * Only applied if activationRule is met for that specific reload <br/>
      * In case the targeted data doesn't exist, a null value will be passed to function
      */
-    public void addText(ResourceLocation target, UnaryOperator<String> function, Supplier<Boolean> activationRule) {
-        if (!INSTANCES.containsKey(target)) INSTANCES.put(target, new ArrayList<>());
-        INSTANCES.get(target).add(new RuntimeData(activationRule, function));
+    public RuntimeData addText(ResourceLocation target, UnaryOperator<String> function, Supplier<Boolean> activationRule) {
+        if (!instances.containsKey(target)) instances.put(target, new ArrayList<>());
+        RuntimeData data = new RuntimeData(activationRule, function);
+        instances.get(target).add(data);
+        return data;
     }
 
 
     @ApiStatus.Internal
     public Resource apply(ResourceLocation target, Resource original) {
-        if (!INSTANCES.containsKey(target)) return original;
+        if (!instances.containsKey(target)) return original;
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
 
         LOG.info("Applying configured data:", target);
@@ -93,7 +92,7 @@ public class SRuntimeRegistry {
             result = null;
         }
 
-        for (RuntimeData data : INSTANCES.get(target)) {
+        for (RuntimeData data : instances.get(target)) {
             try {
                 result = data.apply(result);
             } catch (Exception e) {
@@ -109,10 +108,15 @@ public class SRuntimeRegistry {
     @ApiStatus.Internal
     public List<ResourceLocation> findMatching(String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
         List<ResourceLocation> matching = new ArrayList<>();
-        for (ResourceLocation id : INSTANCES.keySet()) {
+        for (ResourceLocation id : instances.keySet()) {
             if (id.getPath().startsWith(startingPath + "/") && allowedPathPredicate.test(id))
                 matching.add(id);
         }
         return matching;
+    }
+
+    @ApiStatus.Internal
+    public void clean() {
+        instances.forEach((id, list) -> list.removeIf(RuntimeData::isEphemeral));
     }
 }

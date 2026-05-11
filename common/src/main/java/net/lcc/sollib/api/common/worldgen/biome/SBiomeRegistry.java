@@ -3,11 +3,13 @@ package net.lcc.sollib.api.common.worldgen.biome;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class SBiomeRegistry {
     public static final SBiomeRegistry INSTANCE = new SBiomeRegistry();
@@ -15,23 +17,7 @@ public class SBiomeRegistry {
 
     protected static final SolLogger LOG = new SolLogger("SolLib/WorldGen/Biome");
 
-    private final Map<String, DimensionGenerator> INSTANCES = new HashMap<>();
-
-    /**
-     * Gets or create the {@link DimensionGenerator} associated to this dimension id
-     */
-    public DimensionGenerator get(String dimension) {
-        if (!this.has(dimension))
-            INSTANCES.put(dimension, this.makeGenerator(dimension));
-        return INSTANCES.get(dimension);
-    }
-
-    /**
-     * @return true iff the specified dimension id has an associated {@link DimensionGenerator}
-     */
-    public boolean has(String dimension) {
-        return INSTANCES.containsKey(dimension);
-    }
+    private final Map<String, DimensionGenerator> instances = new HashMap<>();
 
     /**
      * Abstracted constructor for {@link DimensionGenerator}.
@@ -45,18 +31,42 @@ public class SBiomeRegistry {
     }
 
     @ApiStatus.Internal
-    public void applyBiomes(ResourceLocation dimension, JsonObject biomes) {
-        DimensionGenerator generator = INSTANCES.get(dimension.toString());
-        if (generator == null) return;
-
-        generator.applyBiomes(biomes.getAsJsonObject("generator").getAsJsonObject("biome_source"));
+    public void read(JsonObject json) {
+        String dimension = GsonHelper.getAsString(json, "dimension");
+        if (!instances.containsKey(dimension))
+            instances.put(dimension, this.makeGenerator(dimension));
+        instances.get(dimension).read(json);
     }
 
     @ApiStatus.Internal
-    public void applyRules(ResourceLocation dimension, JsonObject noiseSettings) {
-        DimensionGenerator generator = INSTANCES.get(dimension.toString());
-        if (generator == null) return;
+    public void iterate(Consumer<ResourceLocation> consumer) {
+        instances.forEach((id, generator) -> consumer.accept(new ResourceLocation(id)));
+    }
+
+    @ApiStatus.Internal
+    public void clean() {
+        instances.clear();
+    }
+
+    @ApiStatus.Internal
+    public JsonObject applyBiomes(ResourceLocation dimension, JsonObject biomes) {
+        LOG.warn(dimension, instances);
+
+        DimensionGenerator generator = instances.get(dimension.toString());
+        LOG.warn(generator);
+        if (generator == null) return biomes;
+
+        LOG.warn(biomes);
+        generator.applyBiomes(biomes.getAsJsonObject("generator").getAsJsonObject("biome_source"));
+        return biomes;
+    }
+
+    @ApiStatus.Internal
+    public JsonObject applyRules(ResourceLocation dimension, JsonObject noiseSettings) {
+        DimensionGenerator generator = instances.get(dimension.toString());
+        if (generator == null) return noiseSettings;
 
         generator.applyRules(noiseSettings.getAsJsonObject("surface_rule"));
+        return noiseSettings;
     }
 }

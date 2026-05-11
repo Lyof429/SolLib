@@ -18,11 +18,15 @@ public class DimensionGenerator {
         this.rules = new ArrayList<>();
     }
 
-    public void applyBiomes(JsonObject target) {
+    public void read(JsonObject json) {
 
     }
 
-    public void applyRules(JsonObject target) {
+    public void applyBiomes(JsonObject target) {
+        SBiomeRegistry.LOG.info(target);
+    }
 
+    public void applyRules(JsonObject target) {
+        SBiomeRegistry.LOG.info(target);
     }
 }
