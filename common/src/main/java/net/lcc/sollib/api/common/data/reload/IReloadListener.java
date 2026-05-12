@@ -1,5 +1,12 @@
 package net.lcc.sollib.api.common.data.reload;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.worldgen.biome.SBiomeRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 /**
@@ -23,4 +30,18 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public interface IReloadListener {
     default void preload(ResourceManager manager) {}
     void reload(ResourceManager manager);
+
+    default JsonObject open(ResourceLocation id, Resource resource) {
+        try {
+            String content = new String(resource.open().readAllBytes());
+            JsonElement json = new Gson().fromJson(content, JsonElement.class);
+
+            if (json == null || !json.isJsonObject()) return new JsonObject();
+
+            return json.getAsJsonObject();
+        } catch (Throwable e) {
+            SReloadRegistry.LOG.error("Could not read data at " + id);
+        }
+        return new JsonObject();
+    }
 }

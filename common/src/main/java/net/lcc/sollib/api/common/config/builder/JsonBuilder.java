@@ -152,6 +152,21 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     @Override
+    public IJsonBuilder add(String key, JsonElement value) {
+        if (value.isJsonPrimitive()) {
+            JsonPrimitive p = value.getAsJsonPrimitive();
+
+            if (p.isString()) this.add(key, p.getAsString());
+            else if (p.isNumber()) this.add(key, p.getAsDouble());
+            else if (p.isBoolean()) this.add(key, p.getAsBoolean());
+        } else if (value.isJsonObject())
+            this.addObject(key, value.getAsJsonObject());
+        else if (value.isJsonArray())
+            this.addArray(key, value.getAsJsonArray());
+        return this;
+    }
+
+    @Override
     public IJsonBuilder addObject(String key, IConfigurable consumer) {
         this.path.push(key);
         this.currentPath = String.join(".", this.path);
@@ -180,16 +195,7 @@ public class JsonBuilder implements IJsonBuilder {
         return this.addObject(key, self -> {
             for (String k : value.keySet()) {
                 JsonElement v = value.get(k);
-                if (v.isJsonPrimitive()) {
-                    JsonPrimitive p = v.getAsJsonPrimitive();
-
-                    if (p.isString()) self.add(k, p.getAsString());
-                    else if (p.isNumber()) self.add(k, p.getAsDouble());
-                    else if (p.isBoolean()) self.add(k, p.getAsBoolean());
-                } else if (v.isJsonObject())
-                    self.addObject(k, v.getAsJsonObject());
-                else if (v.isJsonArray())
-                    self.addArray(k, v.getAsJsonArray());
+                self.add(k, v);
             }
         });
     }
@@ -221,6 +227,8 @@ public class JsonBuilder implements IJsonBuilder {
                 else if (v instanceof Number it) self.add(it);
                 else if (v instanceof Boolean it) self.add(it);
                 else if (v instanceof IConfigurable it) self.addObject(it);
+                else if (v instanceof Iterable<?> it) self.addArray(it);
+                else if (v instanceof JsonElement it) self.add(it);
             }
         });
     }
@@ -246,8 +254,23 @@ public class JsonBuilder implements IJsonBuilder {
         }
 
         @Override
-        public IArrayBuilder add(Boolean value) {
-            this.append(value.toString());
+        public IArrayBuilder add(boolean value) {
+            this.append(String.valueOf(value));
+            return this;
+        }
+
+        @Override
+        public IArrayBuilder add(JsonElement value) {
+            if (value.isJsonPrimitive()) {
+                JsonPrimitive p = value.getAsJsonPrimitive();
+
+                if (p.isString()) this.add(p.getAsString());
+                else if (p.isNumber()) this.add(p.getAsDouble());
+                else if (p.isBoolean()) this.add(p.getAsBoolean());
+            } else if (value.isJsonObject())
+                this.addObject(value.getAsJsonObject());
+            else if (value.isJsonArray())
+                this.addArray(value.getAsJsonArray());
             return this;
         }
 
@@ -272,16 +295,7 @@ public class JsonBuilder implements IJsonBuilder {
             return this.addObject(self -> {
                 for (String k : value.keySet()) {
                     JsonElement v = value.get(k);
-                    if (v.isJsonPrimitive()) {
-                        JsonPrimitive p = v.getAsJsonPrimitive();
-
-                        if (p.isString()) self.add(k, p.getAsString());
-                        else if (p.isNumber()) self.add(k, p.getAsDouble());
-                        else if (p.isBoolean()) self.add(k, p.getAsBoolean());
-                    } else if (v.isJsonObject())
-                        self.addObject(k, v.getAsJsonObject());
-                    else if (v.isJsonArray())
-                        self.addArray(k, v.getAsJsonArray());
+                    self.add(k, v);
                 }
             });
         }
@@ -310,6 +324,8 @@ public class JsonBuilder implements IJsonBuilder {
                     else if (v instanceof Number it) self.add(it);
                     else if (v instanceof Boolean it) self.add(it);
                     else if (v instanceof IConfigurable it) self.addObject(it);
+                    else if (v instanceof Iterable<?> it) self.addArray(it);
+                    else if (v instanceof JsonElement it) self.add(it);
                 }
             });
         }

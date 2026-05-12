@@ -4,6 +4,7 @@ import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class SolModContainer {
     }
 
     public ResourceLocation makeID(String name) {
-        return ResourceLocation.tryBuild(this.getNamespace(), name);
+        return Identifier.of(this.getNamespace(), name);
     }
 
     public SolLogger getLogger() {

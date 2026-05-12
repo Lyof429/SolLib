@@ -1,0 +1,21 @@
+{
+  "dimension": "minecraft:the_nether",
+  "biome": "minecraft:plains",
+
+  "parameters": {
+    "continentalness": 0,
+    "depth": 0,
+    "erosion": 0,
+    "humidity": -0.1,
+    "offset": 0.175,
+    "temperature": -0.2,
+    "weirdness": 0
+  },
+
+  "surface_rule": {
+    "type": "minecraft:block",
+    "result_state": {
+      "Name": "minecraft:diamond_block"
+    }
+  }
+}

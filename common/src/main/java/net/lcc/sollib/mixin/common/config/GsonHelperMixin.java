@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -132,7 +133,7 @@ public class GsonHelperMixin {
     private static void getConfiguredItem(JsonObject json, String memberName, CallbackInfoReturnable<Item> cir) {
         sol_apply(json, memberName, "", v -> {
             if (v.isJsonPrimitive() && v.getAsJsonPrimitive().isString())
-                cir.setReturnValue(BuiltInRegistries.ITEM.getOptional(new ResourceLocation(v.getAsString())).orElseThrow(
+                cir.setReturnValue(BuiltInRegistries.ITEM.getOptional(Identifier.of(v.getAsString())).orElseThrow(
                         () -> new JsonSyntaxException("Expected " + memberName + " to be an item, was unknown string '" + v + "'")));
         });
     }

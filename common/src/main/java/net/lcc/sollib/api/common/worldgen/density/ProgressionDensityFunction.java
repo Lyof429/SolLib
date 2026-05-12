@@ -2,6 +2,7 @@ package net.lcc.sollib.api.common.worldgen.density;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +40,7 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
     public static final Codec<ProgressionPoint> POINT_CODEC = RecordCodecBuilder.create(point ->
             point.group(
                     Codec.FLOAT.fieldOf("value").forGetter(ProgressionPoint::value),
-                    ExtraCodecs.NON_EMPTY_STRING.fieldOf("advancement").xmap(it -> new ResourceLocation(it), ResourceLocation::toString)
+                    ExtraCodecs.NON_EMPTY_STRING.fieldOf("advancement").xmap(Identifier::of, ResourceLocation::toString)
                             .forGetter(ProgressionPoint::advancement)
             ).apply(point, ProgressionPoint::new));
     public static final Codec<ProgressionDensityFunction> CODEC = RecordCodecBuilder.create(instance ->

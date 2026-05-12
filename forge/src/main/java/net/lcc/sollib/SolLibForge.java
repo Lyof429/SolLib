@@ -2,6 +2,7 @@ package net.lcc.sollib;
 
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.*;
+import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.core.PotionRecipe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -46,10 +47,10 @@ public class SolLibForge {
             if (holder.shouldSpawn()) {
                 ResourceLocation id = holder.getID();
 
-                SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
+                SolRegistries.Data.RUNTIME.addJson(Identifier.of(id.getNamespace(),
                                 "tags/worldgen/biome/" + id.getPath() + "_can_spawn.json"),
                         json -> holder.getSpawn().createTag(json, id));
-                SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild(id.getNamespace(),
+                SolRegistries.Data.RUNTIME.addJson(Identifier.of(id.getNamespace(),
                                 "forge/biome_modifier/" + id.getPath() + ".json"),
                         json -> holder.getSpawn().createBiomeModifier(json, id));
             }

@@ -17,8 +17,8 @@ public class RuntimeData {
         this.ephemeral = false;
     }
 
-    public RuntimeData withEphemeral(boolean persistent) {
-        this.ephemeral = persistent;
+    public RuntimeData withEphemeral(boolean ephemeral) {
+        this.ephemeral = ephemeral;
         return this;
     }
 

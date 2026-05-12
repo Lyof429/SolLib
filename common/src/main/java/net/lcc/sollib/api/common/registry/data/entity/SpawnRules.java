@@ -2,6 +2,7 @@ package net.lcc.sollib.api.common.registry.data.entity;
 
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -21,8 +22,8 @@ public record SpawnRules(List<ResourceKey<Biome>> biomeKeys, List<TagKey<Biome>>
         List<TagKey<Biome>> biomeTags = new ArrayList<>();
         for (String s : biomes) {
             if (s.startsWith("#"))
-                biomeTags.add(TagKey.create(Registries.BIOME, new ResourceLocation(s.substring(1))));
-            else biomeKeys.add(ResourceKey.create(Registries.BIOME, new ResourceLocation(s)));
+                biomeTags.add(TagKey.create(Registries.BIOME, Identifier.of(s.substring(1))));
+            else biomeKeys.add(ResourceKey.create(Registries.BIOME, Identifier.of(s)));
         }
         return new SpawnRules(biomeKeys, biomeTags, category, weight, min, max);
     }

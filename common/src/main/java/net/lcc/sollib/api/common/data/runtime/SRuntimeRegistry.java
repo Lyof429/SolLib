@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -32,6 +33,20 @@ public class SRuntimeRegistry {
      */
     public RuntimeData addRemoval(ResourceLocation target, Supplier<Boolean> activationRule) {
         return addText(target, original -> null, activationRule);
+    }
+
+    /**
+     * Dynamically adds the specified data if it doesn't exist already (on each reload)
+     */
+    public RuntimeData addDefault(ResourceLocation target, String content) {
+        return addDefault(target, content, () -> true);
+    }
+
+    /**
+     * Dynamically adds the specified data if activationRule is met and it doesn't exist already (on each reload)
+     */
+    public RuntimeData addDefault(ResourceLocation target, String content, Supplier<Boolean> activationRule) {
+        return addText(target, original -> original == null ? content : original, activationRule);
     }
 
     /**
@@ -115,8 +130,14 @@ public class SRuntimeRegistry {
         return matching;
     }
 
+    private static final BiConsumer<ResourceLocation, List<RuntimeData>> sol_removeEphemeral
+            = (id, list) -> list.removeIf(RuntimeData::isEphemeral);
+    private static final Predicate<Map.Entry<ResourceLocation, List<RuntimeData>>> sol_isEmpty
+            = entry -> entry.getValue().isEmpty();
+
     @ApiStatus.Internal
     public void clean() {
-        instances.forEach((id, list) -> list.removeIf(RuntimeData::isEphemeral));
+        instances.forEach(sol_removeEphemeral);
+        instances.entrySet().removeIf(sol_isEmpty);
     }
 }
