@@ -7,7 +7,6 @@ import com.google.gson.JsonSyntaxException;
 import net.lcc.sollib.api.SolRegistries;
 import net.lcc.sollib.core.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;

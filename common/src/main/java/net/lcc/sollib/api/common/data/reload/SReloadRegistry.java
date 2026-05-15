@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.data.reload;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;

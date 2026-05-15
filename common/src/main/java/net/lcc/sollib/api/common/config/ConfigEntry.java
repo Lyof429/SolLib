@@ -3,7 +3,6 @@ package net.lcc.sollib.api.common.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.SolRegistries;
 
 import java.util.function.Function;

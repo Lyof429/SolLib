@@ -3,8 +3,6 @@ package net.lcc.sollib.api.common.data.reload;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.api.SolRegistries;
-import net.lcc.sollib.api.common.worldgen.biome.SBiomeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;

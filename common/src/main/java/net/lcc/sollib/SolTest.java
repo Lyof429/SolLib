@@ -4,24 +4,6 @@ import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
-import net.lcc.sollib.api.common.registry.holder.EnchantHolder;
-import net.lcc.sollib.api.common.registry.holder.EntityHolder;
-import net.lcc.sollib.api.common.registry.holder.ItemHolder;
-import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.ArrowInfiniteEnchantment;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
-
-import java.util.List;
-import java.util.Map;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");

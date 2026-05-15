@@ -1,7 +1,6 @@
 package net.lcc.sollib.api.common.config;
 
 import com.google.gson.JsonElement;
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
@@ -32,7 +31,6 @@ public class SModContainerRegistry {
      * Loops over the {@link SolRegistrar}{@literal <T, H>} from every {@link SolModContainer},
      * and applies <b>consumer</b> to every {@link Holder}{@literal <T>}
      */
-    @ApiStatus.Internal
     public <T, H extends Holder<T>> void iterate(Class<H> clazz, Consumer<H> consumer) {
         for (SolModContainer mod : INSTANCES.values())
             if (mod.hasRegistrar(clazz)) mod.getRegistrar(clazz).iterate(consumer);
@@ -42,7 +40,6 @@ public class SModContainerRegistry {
      * Loops over the {@link SolRegistrar}{@literal <T, H>} from every {@link SolModContainer},
      * and returns the first {@link Holder}{@literal <T>} that verifies <b>predicate</b>
      */
-    @ApiStatus.Internal
     public <T, H extends Holder<T>> H find(Class<H> clazz, Predicate<H> predicate) {
         H result = null;
         for (SolModContainer mod : INSTANCES.values()) {
