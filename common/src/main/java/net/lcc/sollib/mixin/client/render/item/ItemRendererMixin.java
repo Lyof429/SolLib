@@ -1,9 +1,9 @@
-package net.lcc.sollib.mixin.render;
+package net.lcc.sollib.mixin.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
 import net.lcc.sollib.api.SolClientRegistries;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemRenderContext.class)
-public class ItemRenderContextMixin {
-    @Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;emitItemQuads(Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V"))
-    public void renderItem(ItemStack stack, ItemDisplayContext displayContext, boolean invert, PoseStack poseStack,
+@Mixin(ItemRenderer.class)
+public class ItemRendererMixin {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V"))
+    public void renderItem(ItemStack stack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack,
                            MultiBufferSource buffer, int packedLight, int packedOverlay, BakedModel model, CallbackInfo ci) {
         SolClientRegistries.ItemRenderer.apply(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
     }

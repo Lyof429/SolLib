@@ -9,7 +9,8 @@
     "registry.FireBlockMixin"
   ],
   "client": [
-    "config.ConfigScreenHandlerMixin"
+    "config.ConfigScreenHandlerMixin",
+    "render.block.ChunkRenderDispatcherMixin"
   ],
   "server": [
   ],

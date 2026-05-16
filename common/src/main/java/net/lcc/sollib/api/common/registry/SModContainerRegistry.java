@@ -1,7 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;

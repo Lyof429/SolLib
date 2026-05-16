@@ -10,7 +10,8 @@
   "client": [
     "BuiltInRegistriesClientMixin",
     "config.ModMenuMixin",
-    "render.ItemRenderContextMixin"
+    "render.block.ChunkRenderDispatcherMixin",
+    "render.item.ItemRenderContextMixin"
   ],
   "server": [
   ],

@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin.client.render;
+package net.lcc.sollib.mixin.client.render.item;
 
 import net.lcc.sollib.api.SolClientRegistries;
 import net.lcc.sollib.api.client.render.item.IItemRenderer;
