@@ -2,7 +2,7 @@ package net.lcc.sollib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;

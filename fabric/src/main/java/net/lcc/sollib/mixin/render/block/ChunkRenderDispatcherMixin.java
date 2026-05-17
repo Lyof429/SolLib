@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.lcc.sollib.api.SolClientRegistries;
+import net.lcc.sollib.api.client.SolClientRegistries;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -26,7 +26,7 @@ public class ChunkRenderDispatcherMixin {
             BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter level, PoseStack poseStack, VertexConsumer consumer, boolean checkSides, RandomSource random, Operation<Void> original
     ) {
         original.call(instance, state, pos, level, poseStack, consumer, checkSides, random);
-        SolClientRegistries.BlockRenderer.apply(
+        SolClientRegistries.Render.BLOCK.apply(
                 instance,
                 state,
                 pos,

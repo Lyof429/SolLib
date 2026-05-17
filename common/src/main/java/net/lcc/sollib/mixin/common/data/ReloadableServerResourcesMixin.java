@@ -1,7 +1,7 @@
 package net.lcc.sollib.mixin.common.data;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;

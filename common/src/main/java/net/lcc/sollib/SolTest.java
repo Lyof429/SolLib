@@ -1,7 +1,7 @@
 package net.lcc.sollib;
 
 import com.google.gson.JsonObject;
-import net.lcc.sollib.api.SolClientRegistries;
+import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
@@ -39,7 +39,7 @@ public class SolTest {
 
 
     public static void sasha() {
-        SolClientRegistries.BlockRenderer.register(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE), (instance, state, pos, getter, poseStack, vertexConsumer, random) -> {
+        SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE), (instance, state, pos, getter, poseStack, vertexConsumer, random) -> {
             BlockState state1 = Blocks.AZALEA.defaultBlockState();
             instance.renderBatched(state1, pos, getter, poseStack, vertexConsumer, true, random);
         });

@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.commands.WeatherCommand;
 import org.spongepowered.asm.mixin.Mixin;

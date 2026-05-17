@@ -1,6 +1,6 @@
 package net.lcc.sollib.api.client.ui.config;
 
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

@@ -1,4 +1,4 @@
-package net.lcc.sollib.api;
+package net.lcc.sollib.api.common;
 
 import net.lcc.sollib.api.common.config.SConfigRegistry;
 import net.lcc.sollib.api.common.data.reload.SReloadRegistry;

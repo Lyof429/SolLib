@@ -2,7 +2,7 @@ package net.lcc.sollib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootTable;

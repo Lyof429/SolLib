@@ -1,7 +1,7 @@
 package net.lcc.sollib.core;
 
 import net.lcc.sollib.SolLib;
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.event.SAxeStrippableEvent;

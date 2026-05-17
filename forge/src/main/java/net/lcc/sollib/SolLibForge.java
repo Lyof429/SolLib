@@ -1,6 +1,6 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.SolRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.*;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.core.PotionRecipe;

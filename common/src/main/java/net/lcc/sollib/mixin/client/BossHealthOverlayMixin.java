@@ -2,7 +2,7 @@ package net.lcc.sollib.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lcc.sollib.api.SolClientRegistries;
+import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.client.ui.bossbar.IBossBarRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
@@ -20,7 +20,7 @@ public class BossHealthOverlayMixin {
             )
     )
     private void wrapDrawBar(BossHealthOverlay instance, GuiGraphics guiGraphics, int x, int y, BossEvent bossEvent, Operation<Void> original) {
-        IBossBarRenderer renderer = SolClientRegistries.BossBar.getRenderer(bossEvent);
+        IBossBarRenderer renderer = SolClientRegistries.BOSS_BAR.getRenderer(bossEvent);
 
         if (renderer != null) renderer.render(guiGraphics, x, y, bossEvent);
         else original.call(instance, guiGraphics, x, y, bossEvent);
