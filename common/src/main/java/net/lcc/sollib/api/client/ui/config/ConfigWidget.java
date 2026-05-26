@@ -43,11 +43,11 @@ public class ConfigWidget extends AbstractWidget {
         int buttonSize = (this.width / 2 - 12 - 4) / 2;
         this.edit = new ScrollingButton(this.getX() + this.width / 2 + 8, super.getY() + 4,
                 buttonSize, this.getHeight() - 8,
-                Component.literal("Edit"),
+                Component.translatable("gui.sollib.config.edit"),
                 button -> this.config.openFile());
         this.reset = new ScrollingButton(this.getX() + this.width - buttonSize - 4, super.getY() + 4,
                 buttonSize, this.getHeight() - 8,
-                Component.literal("Reset").withStyle(ChatFormatting.DARK_RED), button -> {
+                Component.translatable("gui.sollib.config.reset").withStyle(ChatFormatting.DARK_RED), button -> {
             this.config.init(true);
             this.reload();
         });

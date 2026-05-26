@@ -25,14 +25,13 @@ public class SolConfigScreen extends Screen {
         super.init();
 
         this.configList = this.addRenderableWidget(new ConfigListWidget(this.width / 4, this.height / 4,
-                this.width / 2, this.height / 2,
-                Component.literal("Configs"), this.modContainer.getConfigs()));
+                this.width / 2, this.height / 2, this.modContainer.getConfigs()));
 
         int buttonSize = (this.width / 2 - 20) / 2;
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE,
                         button -> this.onClose())
                 .pos(this.width / 4, this.height - 27).size(buttonSize, 20).build());
-        this.addRenderableWidget(Button.builder(Component.literal("Reload"),
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.sollib.config.reload"),
                         button -> this.configList.reload())
                 .pos(this.width * 3 / 4 - buttonSize, this.height - 27).size(buttonSize, 20).build());
     }

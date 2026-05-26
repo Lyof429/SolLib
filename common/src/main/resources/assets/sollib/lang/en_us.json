@@ -1,0 +1,6 @@
+{
+  "gui.sollib.config.configs": "Configs",
+  "gui.sollib.config.reload": "Reload",
+  "gui.sollib.config.edit": "Edit",
+  "gui.sollib.config.reset": "Reset"
+}

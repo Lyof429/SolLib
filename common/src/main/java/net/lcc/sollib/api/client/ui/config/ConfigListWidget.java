@@ -13,10 +13,9 @@ public class ConfigListWidget extends AbstractScrollWidget {
     public static final int BUTTON_SIZE = 24;
 
     private final List<ConfigWidget> widgets;
-    private SolConfig selected;
 
-    public ConfigListWidget(int x, int y, int width, int height, Component message, Iterable<SolConfig> configs) {
-        super(x, y, width, height, message);
+    public ConfigListWidget(int x, int y, int width, int height, Iterable<SolConfig> configs) {
+        super(x, y, width, height, Component.translatable("gui.sollib.config.configs"));
 
         y += 1;
         this.widgets = new ArrayList<>();
@@ -24,7 +23,6 @@ public class ConfigListWidget extends AbstractScrollWidget {
             this.widgets.add(new ConfigWidget(this, x + 1, y, width - 2, BUTTON_SIZE, config));
             y += BUTTON_SIZE;
         }
-        this.selected = null;
     }
 
     @Override
