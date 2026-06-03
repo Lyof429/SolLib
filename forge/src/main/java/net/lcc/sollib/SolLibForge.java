@@ -33,15 +33,10 @@ public class SolLibForge {
 
     @SubscribeEvent
     public static void register(RegisterEvent event) {
-        SolRegistries.MOD.iterate(ItemHolder.class, holder -> event.register(Registries.ITEM, holder.getID(), holder));
-        SolRegistries.MOD.iterate(BlockHolder.class, holder -> event.register(Registries.BLOCK, holder.getID(), holder));
-        SolRegistries.MOD.iterate(EnchantHolder.class, holder -> event.register(Registries.ENCHANTMENT, holder.getID(), holder));
-        SolRegistries.MOD.iterate(EntityHolder.class, holder -> event.register(Registries.ENTITY_TYPE, holder.getID(), holder));
-        SolRegistries.MOD.iterate(EffectHolder.class, holder -> event.register(Registries.MOB_EFFECT, holder.getID(), holder));
+        SolRegistries.MOD.register((registry, holder) -> event.register(registry, holder.getID(), holder));
         SolRegistries.MOD.iterate(EffectHolder.class, holder -> holder.registerPotion(
                 potion -> event.register(Registries.POTION, potion.getID(), potion)
         ));
-        SolRegistries.MOD.iterate(DensityFunctionHolder.class, holder -> event.register(Registries.DENSITY_FUNCTION_TYPE, holder.getID(), holder));
 
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.shouldSpawn()) {

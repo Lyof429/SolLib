@@ -42,7 +42,7 @@ public class EntityHolder extends Holder<EntityType<?>> {
     }
 
     @Override
-    protected Registry<EntityType<?>> getRegistry() {
+    public Registry<EntityType<?>> getRegistry() {
         return BuiltInRegistries.ENTITY_TYPE;
     }
 

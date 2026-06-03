@@ -29,7 +29,7 @@ public class ItemHolder extends Holder<Item> {
     }
 
     @Override
-    protected Registry<Item> getRegistry() {
+    public Registry<Item> getRegistry() {
         return BuiltInRegistries.ITEM;
     }
 

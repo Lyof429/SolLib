@@ -10,9 +10,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SolRegistrar<T, H extends Holder<T>> {
-    protected final SolModContainer mod;
+    private final SolModContainer mod;
     protected final Map<String, H> instances;
-    protected final Constructor<H> constructor;
+    private final Constructor<H> constructor;
 
     public SolRegistrar(SolModContainer mod, Class<H> clazz) {
         Constructor<H> constructor = null;

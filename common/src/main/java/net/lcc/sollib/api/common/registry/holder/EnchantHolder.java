@@ -14,7 +14,7 @@ public class EnchantHolder extends Holder<Enchantment> {
     }
 
     @Override
-    protected Registry<Enchantment> getRegistry() {
+    public Registry<Enchantment> getRegistry() {
         return BuiltInRegistries.ENCHANTMENT;
     }
 }

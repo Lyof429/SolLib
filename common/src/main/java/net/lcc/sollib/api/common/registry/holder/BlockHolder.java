@@ -54,7 +54,7 @@ public class BlockHolder extends Holder<Block> {
     }
 
     @Override
-    protected Registry<Block> getRegistry() {
+    public Registry<Block> getRegistry() {
         return BuiltInRegistries.BLOCK;
     }
 

@@ -1,7 +1,13 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.SolLib;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -15,6 +21,8 @@ public class SModContainerRegistry {
      * Stores a SolModContainer for automatic registry. Called automatically in {@link SolModContainer#SolModContainer(String name, String namespace)}
      */
     public void register(SolModContainer mod) {
+        if (get(mod.getNamespace()) != null)
+            throw new IllegalStateException("SolModContainer for namespace \"" + mod.getNamespace() + "\" already registered!");
         INSTANCES.putIfAbsent(mod.getNamespace(), mod);
     }
 
@@ -45,5 +53,14 @@ public class SModContainerRegistry {
             if (result != null) return result;
         }
         return null;
+    }
+
+    @ApiStatus.Internal
+    public <T> void register(BiConsumer<ResourceKey<Registry<T>>, Holder<T>> consumer) {
+        for (SolModContainer mod : INSTANCES.values())
+            for (SolRegistrar<?, ?> registrar : mod.registrars.values())
+                for (Holder<?> holder : registrar.instances.values())
+                    if (holder.getRegistry() != null)
+                        consumer.accept((ResourceKey<Registry<T>>) holder.getRegistry().key(), (Holder<T>) holder);
     }
 }

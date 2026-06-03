@@ -5,13 +5,18 @@ import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BambooLeaves;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SolTest {
-    public static final SolModContainer MOD = new SolModContainer("SolLib", "sollib");
+    public static final SolModContainer MOD = new SolModContainer("SolLibTest", "sollib_test");
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
@@ -35,6 +40,9 @@ public class SolTest {
                                         .add("this is a list, in case you didn't notice")
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
+
+        MOD.register(ItemHolder.class, "thing", () -> new Item(new Item.Properties()));
+        MOD.register(BlockHolder.class, "cube", () -> new Block(BlockBehaviour.Properties.of())).withItem();
     }
 
 

@@ -15,7 +15,7 @@ public class DensityFunctionHolder extends Holder<Codec<? extends DensityFunctio
     }
 
     @Override
-    protected Registry<Codec<? extends DensityFunction>> getRegistry() {
+    public Registry<Codec<? extends DensityFunction>> getRegistry() {
         return BuiltInRegistries.DENSITY_FUNCTION_TYPE;
     }
 }

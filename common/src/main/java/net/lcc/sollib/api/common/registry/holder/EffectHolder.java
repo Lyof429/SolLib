@@ -39,7 +39,7 @@ public class EffectHolder extends Holder<MobEffect> {
     }
 
     @Override
-    protected Registry<MobEffect> getRegistry() {
+    public Registry<MobEffect> getRegistry() {
         return BuiltInRegistries.MOB_EFFECT;
     }
 

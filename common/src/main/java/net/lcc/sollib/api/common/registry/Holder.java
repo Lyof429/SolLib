@@ -42,7 +42,7 @@ public class Holder<T> implements Supplier<T> {
         return this.mod.makeID(this.name);
     }
 
-    protected Registry<T> getRegistry() {
+    public Registry<T> getRegistry() {
         return null;
     }
 }

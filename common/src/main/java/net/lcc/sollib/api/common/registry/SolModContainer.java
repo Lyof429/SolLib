@@ -16,7 +16,7 @@ public class SolModContainer {
     private final String namespace;
 
     private final SolLogger logger;
-    private final Map<Class<?>, SolRegistrar<?, ?>> registrars;
+    protected final Map<Class<?>, SolRegistrar<?, ?>> registrars;
     private final Map<String, SolConfig> configs;
 
     public SolModContainer(String name, String namespace) {
