@@ -24,9 +24,10 @@ import net.minecraft.util.GsonHelper;
  * }
  * </pre>
  *
- * There currently are 4 types of conditions: <br/>
+ * There currently are 5 types of conditions: <br/>
  * - "dependency": Takes an extra <i>mod</i> argument. File will only be loaded if said namespace is running. <br/>
  * - "config": Takes an extra <i>entry</i> argument. File will only be loaded if the corresponding {@link ConfigEntry} evaluates to true.
+ * - "not": Takes another condition in a <i>condition</i> field and inverts it. <br/>
  * - "and": Takes a list of conditions in a <i>conditions</i> field. Yields true only if every sub condition is true. <br/>
  * - "or": Takes a list of conditions in a <i>conditions</i> field. Yields true if at least one sub condition is true.
  * <br/> <br/>
@@ -43,8 +44,11 @@ import net.minecraft.util.GsonHelper;
  *         "entry": "sollib/test:test_category.nested.exists"
  *       },
  *       {
- *         "type": "dependency",
- *         "mod": "fabric"
+ *         "type": "not",
+ *         "condition: {
+ *           "type": "dependency",
+ *           "mod": "fabric"
+ *         }
  *       }
  *     ]
  *   }
@@ -57,49 +61,44 @@ public class LoadCondition {
             try {
                 JsonObject json = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonObject.class);
 
-                JsonObject condition = GsonHelper.getAsJsonObject(json, "condition");
-                return shouldLoad(id, condition) ? resource : null;
-            } catch (Exception ignored) {}
+                JsonObject condition = GsonHelper.getAsJsonObject(json, "sollib:condition");
+                return shouldLoad(condition) ? resource : null;
+            } catch (Exception ignored) {
+                SRuntimeRegistry.LOG.error("Error while reading condition for data " + id);
+            }
         }
         return resource;
     }
 
-    public static boolean shouldLoad(ResourceLocation id, JsonObject condition) {
-        try {
-            String type = condition.get("type").getAsString();
+    public static boolean shouldLoad(JsonObject condition) {
+        String type = condition.get("type").getAsString();
 
-            switch (type) {
-                case "dependency" -> {
-                    return Services.PLATFORM.isModLoaded(GsonHelper.getAsString(condition, "mod"));
+        return switch (type) {
+            case "dependency" ->
+                Services.PLATFORM.isModLoaded(GsonHelper.getAsString(condition, "mod"));
+            case "config" ->
+                SolRegistries.CONFIG.get(GsonHelper.getAsString(condition, "entry"), true);
+            case "not" ->
+                    !shouldLoad(GsonHelper.getAsJsonObject(condition, "condition"));
+            case "and" -> {
+                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
+                    if (!(c instanceof JsonObject o))
+                        throw new IllegalArgumentException("Unknown condition object: " + c);
+                    if (!shouldLoad(o))
+                        yield false;
                 }
-                case "config" -> {
-                    return SolRegistries.CONFIG.get(GsonHelper.getAsString(condition, "entry"), true);
-                }
-                case "and" -> {
-                    for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
-                        if (!(c instanceof JsonObject o))
-                            throw new IllegalArgumentException("Unknown condition object: " + c);
-                        if (!shouldLoad(id, o))
-                            return false;
-                    }
-                    return true;
-                }
-                case "or" -> {
-                    for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
-                        if (!(c instanceof JsonObject o))
-                            throw new IllegalArgumentException("Unknown condition object: " + c);
-                        if (shouldLoad(id, o))
-                            return true;
-                    }
-                    return false;
-                }
+                yield true;
             }
-            throw new IllegalArgumentException("Unknown condition type: " + type);
-
-        } catch (Exception e) {
-            SRuntimeRegistry.LOG.error("Unknown condition in " + id + ": " + condition);
-            e.printStackTrace();
-        }
-        return true;
+            case "or" -> {
+                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
+                    if (!(c instanceof JsonObject o))
+                        throw new IllegalArgumentException("Unknown condition object: " + c);
+                    if (shouldLoad(o))
+                        yield true;
+                }
+                yield false;
+            }
+            default -> throw new IllegalArgumentException("Unknown condition type: " + type);
+        };
     }
 }
