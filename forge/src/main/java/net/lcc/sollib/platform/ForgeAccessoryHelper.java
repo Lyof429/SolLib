@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Dependency(mod = "curios")
 public class ForgeAccessoryHelper implements IAccessoryHelper {
     @Override
     public Map<String, ItemStack> getAccessories(LivingEntity entity) {

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Dependency(mod = "trinkets")
 public class FabricAccessoryHelper implements IAccessoryHelper {
     @Override
     public Map<String, ItemStack> getAccessories(LivingEntity entity) {
@@ -22,7 +23,7 @@ public class FabricAccessoryHelper implements IAccessoryHelper {
         Map<String, ItemStack> result = new HashMap<>();
         for (Map.Entry<String, Map<String, TrinketInventory>> entry : inventory.get().getInventory().entrySet()) {
             for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet()) {
-                result.put(entry.getKey() + "/" + slot, slot.getValue().getItem(0));
+                result.put(entry.getKey() + "/" + slot.getKey(), slot.getValue().getItem(0));
             }
         }
 
