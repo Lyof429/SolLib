@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.SolLib;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;

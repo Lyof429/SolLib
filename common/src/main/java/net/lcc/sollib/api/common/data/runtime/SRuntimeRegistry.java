@@ -3,6 +3,7 @@ package net.lcc.sollib.api.common.data.runtime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.lcc.sollib.api.common.data.runtime.condition.LoadCondition;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -23,8 +24,8 @@ public class SRuntimeRegistry {
     public static final SRuntimeRegistry INSTANCE = new SRuntimeRegistry();
     private SRuntimeRegistry() {}
 
-    protected static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
-    protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final Map<ResourceLocation, List<RuntimeData>> instances = new HashMap<>();
 

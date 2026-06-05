@@ -1,8 +1,6 @@
 package net.lcc.sollib;
 
-import com.google.gson.JsonObject;
 import net.lcc.sollib.api.client.SolClientRegistries;
-import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.data.reload.SimpleDataRegistry;

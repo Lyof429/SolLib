@@ -1,7 +1,8 @@
 package net.lcc.sollib;
 
 import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.registry.holder.*;
+import net.lcc.sollib.api.common.registry.holder.EffectHolder;
+import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.core.PotionRecipe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -20,8 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Map;
 import java.util.function.Supplier;

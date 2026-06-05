@@ -1,7 +1,6 @@
 package net.lcc.sollib.platform;
 
 import net.lcc.sollib.SolLib;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.platform.services.IAccessoryHelper;
 import net.lcc.sollib.platform.services.IPlatformHelper;
 
@@ -28,16 +27,12 @@ public class Services {
                     T loadedService = iterator.next();
 
                     Dependency dependency = loadedService.getClass().getAnnotation(Dependency.class);
-                    if (dependency != null && !Services.PLATFORM.isModLoaded(dependency.mod())) {
-                        SolTest.MOD.getLogger().info("Found implementation, but", dependency.mod(), "isn't loaded");
+                    if (dependency != null && !Services.PLATFORM.isModLoaded(dependency.mod()))
                         continue;
-                    }
 
                     SolLib.MOD.getLogger().info("Loaded", loadedService, "for service", clazz);
                     return loadedService;
-                } catch (Exception ignored) {
-                    SolTest.MOD.getLogger().info(ignored);
-                }
+                } catch (Exception ignored) {}
             }
 
             T loadedService = fallback.getConstructor().newInstance();

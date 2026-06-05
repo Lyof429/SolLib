@@ -2,7 +2,6 @@ package net.lcc.sollib.api.common.config.builder;
 
 import com.google.gson.*;
 import com.google.gson.stream.MalformedJsonException;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.SolConfig;
 

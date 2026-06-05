@@ -1,8 +1,8 @@
 package net.lcc.sollib.platform;
 
-import dev.emi.trinkets.api.*;
-import net.lcc.sollib.SolLib;
-import net.lcc.sollib.SolTest;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketInventory;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.lcc.sollib.platform.services.IAccessoryHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -15,8 +15,6 @@ import java.util.Optional;
 public class FabricAccessoryHelper implements IAccessoryHelper {
     @Override
     public Map<String, ItemStack> getAccessories(LivingEntity entity) {
-        SolTest.MOD.getLogger().info("Retrieving Trinkets for " + entity);
-
         Optional<TrinketComponent> inventory = TrinketsApi.getTrinketComponent(entity);
         if (inventory.isEmpty()) return Map.of();
 

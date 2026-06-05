@@ -1,11 +1,11 @@
-package net.lcc.sollib.api.common.data.runtime;
+package net.lcc.sollib.api.common.data.runtime.condition;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.SolTest;
-import net.lcc.sollib.api.common.config.ConfigEntry;
+import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.SolRegistries;
+import net.lcc.sollib.api.common.config.ConfigEntry;
+import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -27,25 +27,25 @@ import net.minecraft.util.GsonHelper;
  * There currently are 5 types of conditions: <br/>
  * - "dependency": Takes an extra <i>mod</i> argument. File will only be loaded if said namespace is running. <br/>
  * - "config": Takes an extra <i>entry</i> argument. File will only be loaded if the corresponding {@link ConfigEntry} evaluates to true.
- * - "not": Takes another condition in a <i>condition</i> field and inverts it. <br/>
- * - "and": Takes a list of conditions in a <i>conditions</i> field. Yields true only if every sub condition is true. <br/>
- * - "or": Takes a list of conditions in a <i>conditions</i> field. Yields true if at least one sub condition is true.
+ * - "not": Takes another condition in a <i>value</i> field and inverts it. <br/>
+ * - "and": Takes a list of conditions in a <i>values</i> field. Yields true only if every sub condition is true. <br/>
+ * - "or": Takes a list of conditions in a <i>values</i> field. Yields true if at least one sub condition is true.
  * <br/> <br/>
  *
  * For example:
  * <pre>
  * {
  *   "message": "Hello World!",
- *   "condition": {
+ *   "sollib:load_condition": {
  *     "type": "and",
- *     "conditions": [
+ *     "values": [
  *       {
  *         "type": "config",
  *         "entry": "sollib/test:test_category.nested.exists"
  *       },
  *       {
  *         "type": "not",
- *         "condition: {
+ *         "value: {
  *           "type": "dependency",
  *           "mod": "fabric"
  *         }
@@ -56,15 +56,30 @@ import net.minecraft.util.GsonHelper;
  * </pre>
  */
 public class LoadCondition {
+    public static final ResourceLocation CONFIG = SolLib.MOD.makeID("config");
+
+    public static boolean configMatches(JsonObject json) {
+        try {
+            return SolRegistries.CONFIG.get(GsonHelper.getAsString(json, "entry"), true);
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+
     public static Resource apply(ResourceLocation id, Resource resource) {
         if (id.getPath().endsWith(".json")) {
             try {
-                JsonObject json = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonObject.class);
+                JsonElement elm = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonElement.class);
+                if (!elm.isJsonObject()) return resource;
+                JsonObject json = elm.getAsJsonObject();
+                if (!json.has("sollib:load_condition")) return resource;
 
-                JsonObject condition = GsonHelper.getAsJsonObject(json, "sollib:condition");
+                JsonObject condition = GsonHelper.getAsJsonObject(json, "sollib:load_condition");
                 return shouldLoad(condition) ? resource : null;
-            } catch (Exception ignored) {
-                SRuntimeRegistry.LOG.error("Error while reading condition for data " + id);
+            } catch (Exception e) {
+                SRuntimeRegistry.LOG.error("Error while reading load condition for data " + id);
+                e.printStackTrace();
             }
         }
         return resource;
@@ -77,11 +92,11 @@ public class LoadCondition {
             case "dependency" ->
                 Services.PLATFORM.isModLoaded(GsonHelper.getAsString(condition, "mod"));
             case "config" ->
-                SolRegistries.CONFIG.get(GsonHelper.getAsString(condition, "entry"), true);
+                configMatches(condition);
             case "not" ->
-                    !shouldLoad(GsonHelper.getAsJsonObject(condition, "condition"));
+                !shouldLoad(GsonHelper.getAsJsonObject(condition, "value"));
             case "and" -> {
-                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
+                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "values")) {
                     if (!(c instanceof JsonObject o))
                         throw new IllegalArgumentException("Unknown condition object: " + c);
                     if (!shouldLoad(o))
@@ -90,7 +105,7 @@ public class LoadCondition {
                 yield true;
             }
             case "or" -> {
-                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "conditions")) {
+                for (JsonElement c : GsonHelper.getAsJsonArray(condition, "values")) {
                     if (!(c instanceof JsonObject o))
                         throw new IllegalArgumentException("Unknown condition object: " + c);
                     if (shouldLoad(o))

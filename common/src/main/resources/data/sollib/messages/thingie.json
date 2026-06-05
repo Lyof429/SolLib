@@ -1,8 +1,8 @@
 {
   "message": "Hello World!",
-  "condition": {
+  "sollib:load_condition": {
     "type": "and",
-    "conditions": [
+    "values": [
       {
         "type": "config",
         "entry": "sollib/test:test_category.nested.exists"
