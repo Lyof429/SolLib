@@ -6,15 +6,30 @@ plugins {
 
 subprojects {
     repositories {
+        // Mod Menu, EMI and Trinkets
         maven {
             name "TerraformersMC"
             url "https://maven.terraformersmc.com/"
         }
 
-        // Modrinth
+        // Sodium (CaffeineMC's maven is only for 1.21+
         maven {
             name "Modrinth"
             url "https://api.modrinth.com/maven"
+        }
+
+        // Trinkets
+        maven {
+            name "Ladysnake Libs"
+            url 'https://maven.ladysnake.org/releases'
+        }
+
+        // Curios
+        repositories {
+            maven {
+                name "Illusive Soulworks maven"
+                url "https://maven.theillusivec4.top/"
+            }
         }
     }
 }

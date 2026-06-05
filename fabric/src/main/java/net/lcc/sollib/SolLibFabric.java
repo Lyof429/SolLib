@@ -14,5 +14,6 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Environment(EnvType.CLIENT)
     @Override
     public void onInitializeClient() {
+
     }
 }

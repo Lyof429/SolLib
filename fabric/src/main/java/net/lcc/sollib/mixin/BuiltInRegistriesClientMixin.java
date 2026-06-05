@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BuiltInRegistriesClientMixin {
     @Inject(method = "bootStrap", at = @At("TAIL"))
     private static void bootstrapSol(CallbackInfo ci) {
-            SolFabricCore.registerClient();
-        }
+        SolFabricCore.registerClient();
+    }
 }
