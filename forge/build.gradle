@@ -26,6 +26,7 @@ legacyForge {
     runs {
         client {
             client()
+            gameDirectory = project.file('../run')
         }
         data {
             data()
@@ -33,6 +34,7 @@ legacyForge {
         }
         server {
             server()
+            gameDirectory = project.file('../run')
         }
     }
 
