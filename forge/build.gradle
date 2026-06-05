@@ -57,7 +57,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // Curios
-    modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+    modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}"  // :api
 }
 
 jar {

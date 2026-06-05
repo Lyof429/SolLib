@@ -2,8 +2,11 @@ package net.lcc.sollib;
 
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
+import net.lcc.sollib.core.DebugItem;
 import net.lcc.sollib.platform.Services;
+import net.minecraft.world.item.Item;
 
 public class SolLib {
     public static final String MOD_ID = "sollib";
@@ -19,5 +22,7 @@ public class SolLib {
         }
 
         MOD.register(DensityFunctionHolder.class, "progression", () -> ProgressionDensityFunction.CODEC);
+
+        MOD.register(ItemHolder.class, "debugger", () -> new DebugItem(new Item.Properties().stacksTo(1)));
     }
 }
