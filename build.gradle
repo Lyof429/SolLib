@@ -7,14 +7,14 @@ plugins {
 subprojects {
     repositories {
         maven {
-            name = "TerraformersMC"
-            url = "https://maven.terraformersmc.com/"
+            name "TerraformersMC"
+            url "https://maven.terraformersmc.com/"
         }
 
-        // Sodium
+        // Modrinth
         maven {
-            name "CaffeineMC"
-            url "https://maven.caffeinemc.net/releases" //
+            name "Modrinth"
+            url "https://api.modrinth.com/maven"
         }
     }
 }

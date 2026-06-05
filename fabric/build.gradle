@@ -18,6 +18,8 @@ dependencies {
     modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
     // ModMenu
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    // Sodium
+    modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
 }
 
 loom {
