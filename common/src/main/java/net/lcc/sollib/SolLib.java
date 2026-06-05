@@ -22,7 +22,5 @@ public class SolLib {
         }
 
         MOD.register(DensityFunctionHolder.class, "progression", () -> ProgressionDensityFunction.CODEC);
-
-        MOD.register(ItemHolder.class, "debugger", () -> new DebugItem(new Item.Properties().stacksTo(1)));
     }
 }

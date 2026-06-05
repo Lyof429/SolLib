@@ -1,8 +1,6 @@
 package net.lcc.sollib.core;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.SolTest;
-import net.lcc.sollib.platform.Services;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +15,7 @@ public class DebugItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        SolTest.MOD.getLogger().info(Services.ACCESSORY.getAccessories(player));
+        SolTest.MOD.getLogger().info(SolTest.messages.getAll());
         return super.use(level, player, usedHand);
     }
 }

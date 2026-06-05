@@ -2,11 +2,14 @@ package net.lcc.sollib;
 
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.client.SolClientRegistries;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
+import net.lcc.sollib.api.common.data.reload.SimpleDataRegistry;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.lcc.sollib.core.DebugItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -17,6 +20,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolLibTest", "sollib_test");
+
+    public static final SimpleDataRegistry<String> messages = new SimpleDataRegistry<>("messages",
+            (id, json) -> json.get("message").getAsString());
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
@@ -43,6 +49,8 @@ public class SolTest {
 
         MOD.register(ItemHolder.class, "thing", () -> new Item(new Item.Properties()));
         MOD.register(BlockHolder.class, "cube", () -> new Block(BlockBehaviour.Properties.of())).withItem();
+
+        MOD.register(ItemHolder.class, "debugger", () -> new DebugItem(new Item.Properties().stacksTo(1)));
     }
 
 
