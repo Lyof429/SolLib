@@ -16,15 +16,9 @@ public class SimpleDataRegistry<T> {
         T read(ResourceLocation id, JsonObject json);
     }
 
-    protected final String path;
-    protected final Reader<T> reader;
-
     protected final Map<ResourceLocation, T> values;
 
     public SimpleDataRegistry(String path, Reader<T> reader) {
-        this.path = path;
-        this.reader = reader;
-
         this.values = new HashMap<>();
         SolRegistries.Data.RELOAD.register(manager -> {
             this.values.clear();
@@ -34,7 +28,7 @@ public class SimpleDataRegistry<T> {
                 JsonObject json = IReloadListener.open(entry);
                 if (json == null) continue;
 
-                this.values.put(finder.fileToId(entry.getKey()), this.reader.read(entry.getKey(), json));
+                this.values.put(finder.fileToId(entry.getKey()), reader.read(entry.getKey(), json));
             }
         });
     }

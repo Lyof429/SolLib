@@ -26,7 +26,7 @@ public class SolTest {
 
     public static void lyof() {
         ConfigEntry<String> hello = new ConfigEntry<>("world");
-        ConfigEntry<JsonObject> exists = new ConfigEntry<>(new JsonObject());
+        ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
 
         IConfigurable builder = it -> it
                 .addObject("test_category", a -> a
@@ -38,7 +38,6 @@ public class SolTest {
                                 .add("exists", true)
                                 .bind(exists))
                         .addObject("another", b -> b
-                                .bind(exists)
                                 .comment("Ah and lists of them too I forgot about that")
                                 .comment("  (Lists don't have to hold a single type btw)")
                                 .addArray("michel", c -> c

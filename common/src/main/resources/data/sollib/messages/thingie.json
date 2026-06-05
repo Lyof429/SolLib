@@ -1,3 +1,16 @@
 {
-  "message": "Hello World!"
+  "message": "Hello World!",
+  "condition": {
+    "type": "and",
+    "conditions": [
+      {
+        "type": "config",
+        "entry": "sollib/test:test_category.nested.exists"
+      },
+      {
+        "type": "dependency",
+        "mod": "fabric"
+      }
+    ]
+  }
 }
