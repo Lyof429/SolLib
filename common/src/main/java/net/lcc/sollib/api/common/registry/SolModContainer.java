@@ -51,7 +51,7 @@ public class SolModContainer {
     }
 
     @SuppressWarnings("unchecked")
-    public <T, H extends Holder<T>> SolRegistrar<T, H> getRegistrar(Class<H> clazz) {
+    public <T, H extends SHolder<T>> SolRegistrar<T, H> getRegistrar(Class<H> clazz) {
         if (this.registrars.containsKey(clazz))
             return (SolRegistrar<T, H>) this.registrars.get(clazz);
 
@@ -60,7 +60,7 @@ public class SolModContainer {
         return r;
     }
 
-    public <T, H extends Holder<T>> H register(Class<H> clazz, String name, Supplier<T> supplier) {
+    public <T, H extends SHolder<T>> H register(Class<H> clazz, String name, Supplier<T> supplier) {
         return this.getRegistrar(clazz).register(name, supplier);
     }
 

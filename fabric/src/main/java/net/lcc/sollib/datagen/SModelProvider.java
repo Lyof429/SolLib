@@ -69,7 +69,7 @@ public class SModelProvider extends FabricModelProvider {
     }
 
     private void pottedCrossBlock(BlockModelGenerators generators, Block block) {
-        Block plant = ((FlowerPotBlock) block).getContent();
+        Block plant = ((FlowerPotBlock) block).getPotted();
         TextureMapping textureMapping = TextureMapping.plant(plant);
         ResourceLocation modelId = ModelTemplates.FLOWER_POT_CROSS.create(block, textureMapping, generators.modelOutput);
         generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, modelId));

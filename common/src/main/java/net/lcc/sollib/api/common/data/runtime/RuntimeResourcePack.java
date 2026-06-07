@@ -1,15 +1,19 @@
 package net.lcc.sollib.api.common.data.runtime;
 
 import net.lcc.sollib.SolLib;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Set;
 
 public class RuntimeResourcePack implements PackResources {
@@ -41,13 +45,9 @@ public class RuntimeResourcePack implements PackResources {
     }
 
     @Override
-    public String packId() {
-        return SolLib.MOD_ID + "_runtime_data";
-    }
-
-    @Override
-    public boolean isBuiltin() {
-        return true;
+    public PackLocationInfo location() {
+        return new PackLocationInfo(SolLib.MOD_ID + "_runtime_data", Component.literal("Sol Runtime Data"),
+                PackSource.DEFAULT, Optional.empty());
     }
 
     @Override

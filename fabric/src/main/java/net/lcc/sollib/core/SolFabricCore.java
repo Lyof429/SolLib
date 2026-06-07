@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -61,17 +61,21 @@ public class SolFabricCore {
                         holder.getSpawn().weight(), holder.getSpawn().min(), holder.getSpawn().max());
         });
 
-        SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
-            if (holder.hasPotion()) {
-                PotionBrewing.addMix(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get());
+        FabricBrewingRecipeRegistryBuilder.BUILD.register(builder -> {
+            SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
+                if (holder.hasPotion()) {
+                    builder.addMix(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get());
 
-                if (holder.hasLongPotion())
-                    PotionBrewing.addMix(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get());
-                if (holder.hasStrongPotion())
-                    PotionBrewing.addMix(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get());
-            }
+                    if (holder.hasLongPotion())
+                        builder.addMix(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get());
+                    if (holder.hasStrongPotion())
+                        builder.addMix(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get());
+                }
+            });
         });
     }
+
+
 
     @Environment(EnvType.CLIENT)
     public static void registerClient() {

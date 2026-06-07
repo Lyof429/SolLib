@@ -1,8 +1,9 @@
 package net.lcc.sollib.api.common.registry.holder;
 
-import net.lcc.sollib.api.common.registry.Holder;
+import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.platform.Services;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
@@ -19,14 +20,14 @@ import java.util.function.Supplier;
  * A holder class for effect registry using a {@link SolModContainer}
  * @author Cocreated by Hellion and Lyof
  */
-public class EffectHolder extends Holder<MobEffect> {
+public class EffectHolder extends SHolder<MobEffect> {
     public static final int DURATION = 3600;
 
     private Supplier<Potion> craftingBase;
     private Supplier<ItemLike> craftingIngredient;
-    private Holder<Potion> potion;
-    private Holder<Potion> longPotion;
-    private Holder<Potion> strongPotion;
+    private SHolder<Potion> potion;
+    private SHolder<Potion> longPotion;
+    private SHolder<Potion> strongPotion;
 
     public EffectHolder(SolModContainer mod, String name, Supplier<MobEffect> entrySupplier) {
         super(mod, name, entrySupplier);
@@ -48,7 +49,7 @@ public class EffectHolder extends Holder<MobEffect> {
      * @param ingredient What ingredient must be added to brew this
      */
     public EffectHolder withPotion(Supplier<ItemLike> ingredient) {
-        return this.withPotion(() -> Potions.AWKWARD, ingredient);
+        return this.withPotion(Potions.AWKWARD::value, ingredient);
     }
 
     /**
@@ -83,11 +84,14 @@ public class EffectHolder extends Holder<MobEffect> {
         this.craftingBase = base;
         this.craftingIngredient = ingredient;
 
-        this.potion = new Holder<>(this.mod, this.name, () -> new Potion(new MobEffectInstance(this.get(), duration)));
-        this.longPotion = hasLong ? new Holder<>(this.mod, "long_" + this.name,
-                () -> new Potion(name, new MobEffectInstance(this.get(), duration * 8 / 3))) : null;
-        this.strongPotion = hasStrong ? new Holder<>(this.mod, "strong_" + this.name,
-                () -> new Potion(name, new MobEffectInstance(this.get(), duration / 2, 1))) : null;
+        this.potion = new SHolder<>(this.mod, this.name,
+                () -> new Potion(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()), duration)));
+        this.longPotion = hasLong ? new SHolder<>(this.mod, "long_" + this.name,
+                () -> new Potion(name, new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()),
+                        duration * 8 / 3))) : null;
+        this.strongPotion = hasStrong ? new SHolder<>(this.mod, "strong_" + this.name,
+                () -> new Potion(name, new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()),
+                        duration / 2, 1))) : null;
 
         if (Services.PLATFORM.getPlatformName().equals("Fabric"))
             this.registerPotion(holder -> Registry.register(BuiltInRegistries.POTION, holder.getID(), holder.get()));
@@ -107,28 +111,28 @@ public class EffectHolder extends Holder<MobEffect> {
         return this.hasPotion() && this.strongPotion != null;
     }
 
-    public Supplier<Potion> getCraftingBase() {
-        return this.craftingBase;
+    public Supplier<Holder<Potion>> getCraftingBase() {
+        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.craftingBase.get());
     }
 
     public Supplier<ItemLike> getCraftingIngredient() {
         return this.craftingIngredient;
     }
 
-    public Supplier<Potion> getPotion() {
-        return this.potion;
+    public Supplier<Holder<Potion>> getPotion() {
+        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.potion.get());
     }
 
-    public Supplier<Potion> getLongPotion() {
-        return this.longPotion;
+    public Supplier<Holder<Potion>> getLongPotion() {
+        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.longPotion.get());
     }
 
-    public Supplier<Potion> getStrongPotion() {
-        return this.strongPotion;
+    public Supplier<Holder<Potion>> getStrongPotion() {
+        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.strongPotion.get());
     }
 
     @ApiStatus.Internal
-    public void registerPotion(Consumer<Holder<Potion>> registrar) {
+    public void registerPotion(Consumer<SHolder<Potion>> registrar) {
         registrar.accept(this.potion);
         if (this.longPotion != null)
             registrar.accept(this.longPotion);

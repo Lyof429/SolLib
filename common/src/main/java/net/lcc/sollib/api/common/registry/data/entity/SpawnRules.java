@@ -42,7 +42,7 @@ public record SpawnRules(List<ResourceKey<Biome>> biomeKeys, List<TagKey<Biome>>
 
         // Generating the biome modifier file
         return new JsonBuilder()
-                .add("type", "forge:add_spawns")
+                .add("type", "neoforge:add_spawns")
                 .add("biomes", "#" + entity + "_can_spawn")
                 .addObject("spawners", spawners -> spawners
                         .add("type", entity.toString())

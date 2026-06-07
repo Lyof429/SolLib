@@ -1,6 +1,6 @@
 package net.lcc.sollib.api.common.registry.holder;
 
-import net.lcc.sollib.api.common.registry.Holder;
+import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * A holder class for item registry using a {@link SolModContainer}
  * @author Cocreated by Hellion and Lyof
  */
-public class ItemHolder extends Holder<Item> {
+public class ItemHolder extends SHolder<Item> {
     private int fuelDuration;
     private List<TagKey<Item>> tags;
     private ModelTemplate model;

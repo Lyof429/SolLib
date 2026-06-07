@@ -9,8 +9,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -60,20 +58,17 @@ public class MockItemRenderer {
         int width = pixelData.length;
         int height = (width > 0) ? pixelData[0].length : 0;
 
-        Matrix4f pose = matrixStack.last().pose();
-        Matrix3f normal = matrixStack.last().normal();
-
-        renderItem(pixelData, buffer, pose, normal, halfZ, light, width, height, red, green, blue);
+        renderItem(pixelData, buffer, matrixStack.last(), halfZ, light, width, height, red, green, blue);
 
         matrixStack.popPose();
     }
 
 
-    private static void renderItem(Boolean[][] pixelData, VertexConsumer buffer, Matrix4f pose, Matrix3f normal,
+    private static void renderItem(Boolean[][] pixelData, VertexConsumer buffer, PoseStack.Pose pose,
                                    float halfZ, int light, int width, int height, int red, int green, int blue) {
         // Front face
         addQuad(
-                buffer, pose, normal,
+                buffer, pose,
                 0, 0, halfZ,
                 1, 0, halfZ,
                 1, 1, halfZ,
@@ -85,7 +80,7 @@ public class MockItemRenderer {
 
         // Back face
         addQuad(
-                buffer, pose, normal,
+                buffer, pose,
                 1, 0, -halfZ,
                 0, 0, -halfZ,
                 0, 1, -halfZ,
@@ -112,7 +107,7 @@ public class MockItemRenderer {
                 if (x == 0 || !pixelData[x - 1][y]) {
                     float[][] sideUV = computeVerticalSliceUV(x, y, y + 1, width, height);
                     addQuad(
-                            buffer, pose, normal,
+                            buffer, pose,
                             scaledX, scaledYNext, halfZ,
                             scaledX, scaledYNext, -halfZ,
                             scaledX, scaledY, -halfZ,
@@ -124,7 +119,7 @@ public class MockItemRenderer {
                 if (x == width - 1 || !pixelData[x + 1][y]) {
                     float[][] sideUV = computeVerticalSliceUV(x, y, y + 1, width, height);
                     addQuad(
-                            buffer, pose, normal,
+                            buffer, pose,
                             scaledXNext, scaledYNext, -halfZ,
                             scaledXNext, scaledYNext, halfZ,
                             scaledXNext, scaledY, halfZ,
@@ -137,7 +132,7 @@ public class MockItemRenderer {
                 if (y == 0 || !pixelData[x][y - 1]) {
                     float[][] sideUV = computeHorizontalSliceUV(x, x + 1, y, width, height);
                     addQuad(
-                            buffer, pose, normal,
+                            buffer, pose,
                             scaledXNext, scaledY, -halfZ,
                             scaledXNext, scaledY, halfZ,
                             scaledX, scaledY, halfZ,
@@ -149,7 +144,7 @@ public class MockItemRenderer {
                 if (y == height - 1 || !pixelData[x][y + 1]) {
                     float[][] sideUV = computeHorizontalSliceUV(x, x + 1, y, width, height);
                     addQuad(
-                            buffer, pose, normal,
+                            buffer, pose,
                             scaledXNext, scaledYNext, halfZ,
                             scaledXNext, scaledYNext, -halfZ,
                             scaledX, scaledYNext, -halfZ,
@@ -196,40 +191,36 @@ public class MockItemRenderer {
         };
     }
 
-    private static void addQuad(VertexConsumer buffer, Matrix4f pose, Matrix3f normalMatrix,
+    private static void addQuad(VertexConsumer buffer, PoseStack.Pose pose,
                                 float x0, float y0, float z0, float x1, float y1, float z1,
                                 float x2, float y2, float z2, float x3, float y3, float z3,
                                 float[] uv0, float[] uv1, float[] uv2, float[] uv3,
                                 int light, float nx, float ny, float nz, int r, int g, int b) {
 
-        buffer.vertex(pose, x0, y0, z0)
-                .color(r, g, b, 255)
-                .uv(uv0[0], uv0[1])
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normalMatrix, nx, ny, nz)
-                .endVertex();
-        buffer.vertex(pose, x1, y1, z1)
-                .color(r, g, b, 255)
-                .uv(uv1[0], uv1[1])
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normalMatrix, nx, ny, nz)
-                .endVertex();
-        buffer.vertex(pose, x2, y2, z2)
-                .color(r, g, b, 255)
-                .uv(uv2[0], uv2[1])
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normalMatrix, nx, ny, nz)
-                .endVertex();
-        buffer.vertex(pose, x3, y3, z3)
-                .color(r, g, b, 255)
-                .uv(uv3[0], uv3[1])
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normalMatrix, nx, ny, nz)
-                .endVertex();
+        buffer.addVertex(pose, x0, y0, z0)
+                .setColor(r, g, b, 255)
+                .setUv(uv0[0], uv0[1])
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz);
+        buffer.addVertex(pose, x1, y1, z1)
+                .setColor(r, g, b, 255)
+                .setUv(uv1[0], uv1[1])
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz);
+        buffer.addVertex(pose, x2, y2, z2)
+                .setColor(r, g, b, 255)
+                .setUv(uv2[0], uv2[1])
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz);
+        buffer.addVertex(pose, x3, y3, z3)
+                .setColor(r, g, b, 255)
+                .setUv(uv3[0], uv3[1])
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz);
     }
 
 

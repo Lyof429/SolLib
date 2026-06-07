@@ -1,7 +1,8 @@
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT' apply false
-    id 'net.neoforged.moddev.legacyforge' version '2.0.137' apply false
-    id 'me.modmuss50.mod-publish-plugin' version '1.1.0' apply false
+    // see https://fabricmc.net/develop/ for new versions
+    id 'fabric-loom' version '1.8-SNAPSHOT' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.49-beta' apply false
 }
 
 subprojects {
@@ -12,7 +13,7 @@ subprojects {
             url "https://maven.terraformersmc.com/"
         }
 
-        // Sodium (CaffeineMC's maven is only for 1.21+
+        // Sodium (CaffeineMC's maven is only for 1.21+)
         maven {
             name "Modrinth"
             url "https://api.modrinth.com/maven"
@@ -27,7 +28,7 @@ subprojects {
         // Curios
         repositories {
             maven {
-                name "Illusive Soulworks maven"
+                name "Illusive Soulworks"
                 url "https://maven.theillusivec4.top/"
             }
         }

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.core.Identifier;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -126,13 +127,13 @@ public class GsonHelperMixin {
     }
 
     @Inject(
-            method = "getAsItem(Lcom/google/gson/JsonObject;Ljava/lang/String;)Lnet/minecraft/world/item/Item;",
+            method = "getAsItem(Lcom/google/gson/JsonObject;Ljava/lang/String;)Lnet/minecraft/core/Holder;",
             at = @At("HEAD"), cancellable = true
     )
-    private static void getConfiguredItem(JsonObject json, String memberName, CallbackInfoReturnable<Item> cir) {
+    private static void getConfiguredItem(JsonObject json, String memberName, CallbackInfoReturnable<Holder<Item>> cir) {
         sol_apply(json, memberName, "", v -> {
             if (v.isJsonPrimitive() && v.getAsJsonPrimitive().isString())
-                cir.setReturnValue(BuiltInRegistries.ITEM.getOptional(Identifier.of(v.getAsString())).orElseThrow(
+                cir.setReturnValue(BuiltInRegistries.ITEM.getHolder(Identifier.of(v.getAsString())).orElseThrow(
                         () -> new JsonSyntaxException("Expected " + memberName + " to be an item, was unknown string '" + v + "'")));
         });
     }

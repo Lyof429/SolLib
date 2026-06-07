@@ -1,6 +1,6 @@
 package net.lcc.sollib.api.common.registry.holder;
 
-import net.lcc.sollib.api.common.registry.Holder;
+import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.data.entity.SpawnRestrictions;
 import net.lcc.sollib.api.common.registry.data.entity.SpawnRules;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class EntityHolder extends Holder<EntityType<?>> {
+public class EntityHolder extends SHolder<EntityType<?>> {
     private List<TagKey<EntityType<?>>> tags;
     private Supplier<LootTable.Builder> drop;
     private Supplier<AttributeSupplier.Builder> attributesBuilder;
@@ -88,7 +88,7 @@ public class EntityHolder extends Holder<EntityType<?>> {
         return this.attributesBuilder != null;
     }
 
-    public <T extends Mob> EntityHolder withSpawnRestrictions(SpawnPlacements.Type location, Heightmap.Types heightmap,
+    public <T extends Mob> EntityHolder withSpawnRestrictions(SpawnPlacementType location, Heightmap.Types heightmap,
                                                                  SpawnPlacements.SpawnPredicate<T> predicate) {
         this.spawnRestrictions = new SpawnRestrictions<>(location, heightmap, predicate);
         return this;

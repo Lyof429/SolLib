@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(PressurePlateBlock.class)
 public interface PressurePlateBlockAccessor {
     @Invoker("<init>")
-    static PressurePlateBlock create(PressurePlateBlock.Sensitivity sensitivity, BlockBehaviour.Properties properties, BlockSetType blockSetType) {
+    static PressurePlateBlock create(BlockSetType type, BlockBehaviour.Properties properties) {
         throw new UnsupportedOperationException();
     }
 }

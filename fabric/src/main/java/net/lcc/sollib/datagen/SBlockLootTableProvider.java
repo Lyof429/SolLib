@@ -5,12 +5,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.data.block.BlockModel;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.minecraft.core.HolderLookup;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class SBlockLootTableProvider extends FabricBlockLootTableProvider {
-    public SBlockLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput);
+    public SBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        super(dataOutput, registryLookup);
     }
 
     @Override

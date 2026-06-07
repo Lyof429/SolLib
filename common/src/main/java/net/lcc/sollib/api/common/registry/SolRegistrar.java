@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class SolRegistrar<T, H extends Holder<T>> {
+public class SolRegistrar<T, H extends SHolder<T>> {
     private final SolModContainer mod;
     protected final Map<String, H> instances;
     private final Constructor<H> constructor;

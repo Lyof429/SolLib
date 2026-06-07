@@ -34,18 +34,18 @@ public class SModContainerRegistry {
 
     /**
      * Loops over the {@link SolRegistrar}{@literal <T, H>} from every {@link SolModContainer},
-     * and applies <b>consumer</b> to every {@link Holder}{@literal <T>}
+     * and applies <b>consumer</b> to every {@link SHolder}{@literal <T>}
      */
-    public <T, H extends Holder<T>> void iterate(Class<H> clazz, Consumer<H> consumer) {
+    public <T, H extends SHolder<T>> void iterate(Class<H> clazz, Consumer<H> consumer) {
         for (SolModContainer mod : INSTANCES.values())
             if (mod.hasRegistrar(clazz)) mod.getRegistrar(clazz).iterate(consumer);
     }
 
     /**
      * Loops over the {@link SolRegistrar}{@literal <T, H>} from every {@link SolModContainer},
-     * and returns the first {@link Holder}{@literal <T>} that verifies <b>predicate</b>
+     * and returns the first {@link SHolder}{@literal <T>} that verifies <b>predicate</b>
      */
-    public <T, H extends Holder<T>> H find(Class<H> clazz, Predicate<H> predicate) {
+    public <T, H extends SHolder<T>> H find(Class<H> clazz, Predicate<H> predicate) {
         H result = null;
         for (SolModContainer mod : INSTANCES.values()) {
             if (mod.hasRegistrar(clazz)) result = mod.getRegistrar(clazz).find(predicate);
@@ -55,11 +55,11 @@ public class SModContainerRegistry {
     }
 
     @ApiStatus.Internal
-    public <T> void register(BiConsumer<ResourceKey<Registry<T>>, Holder<T>> consumer) {
+    public <T> void register(BiConsumer<ResourceKey<Registry<T>>, SHolder<T>> consumer) {
         for (SolModContainer mod : INSTANCES.values())
             for (SolRegistrar<?, ?> registrar : mod.registrars.values())
-                for (Holder<?> holder : registrar.instances.values())
+                for (SHolder<?> holder : registrar.instances.values())
                     if (holder.getRegistry() != null)
-                        consumer.accept((ResourceKey<Registry<T>>) holder.getRegistry().key(), (Holder<T>) holder);
+                        consumer.accept((ResourceKey<Registry<T>>) holder.getRegistry().key(), (SHolder<T>) holder);
     }
 }

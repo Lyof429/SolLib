@@ -4,7 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class Identifier {
     public static ResourceLocation of(String id) {
-        return new ResourceLocation(id);
+        return ResourceLocation.parse(id);
     }
 
     public static ResourceLocation of(String namespace, String name) {

@@ -68,7 +68,7 @@ public class LoadCondition {
 
 
     public static Resource apply(ResourceLocation id, Resource resource) {
-        if (id.getPath().endsWith(".json")) {
+        if (id.getPath().endsWith(".json") && resource != null) {
             try {
                 JsonElement elm = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonElement.class);
                 if (!elm.isJsonObject()) return resource;

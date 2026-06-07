@@ -4,17 +4,18 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public class SRecipeProvider extends FabricRecipeProvider {
-    public SRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public SRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     private static String getName(ItemLike item) {
@@ -22,7 +23,7 @@ public class SRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+    public void buildRecipes(RecipeOutput exporter) {
         SolRegistries.MOD.iterate(BlockHolder.class, holder -> {
             if (holder.getStairs() != null) {
                 stairBuilder(holder.getStairs().get(), Ingredient.of(holder.get()))

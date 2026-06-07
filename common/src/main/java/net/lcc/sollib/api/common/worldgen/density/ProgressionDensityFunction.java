@@ -1,9 +1,10 @@
 package net.lcc.sollib.api.common.worldgen.density;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lcc.sollib.core.Identifier;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,16 +38,16 @@ import java.util.List;
 public class ProgressionDensityFunction implements DensityFunction.SimpleFunction {
     public record ProgressionPoint(float value, ResourceLocation advancement) {}
 
-    public static final Codec<ProgressionPoint> POINT_CODEC = RecordCodecBuilder.create(point ->
-            point.group(
+    public static final MapCodec<ProgressionPoint> POINT_CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
                     Codec.FLOAT.fieldOf("value").forGetter(ProgressionPoint::value),
                     ExtraCodecs.NON_EMPTY_STRING.fieldOf("advancement").xmap(Identifier::of, ResourceLocation::toString)
                             .forGetter(ProgressionPoint::advancement)
-            ).apply(point, ProgressionPoint::new));
-    public static final Codec<ProgressionDensityFunction> CODEC = RecordCodecBuilder.create(instance ->
+            ).apply(instance, ProgressionPoint::new));
+    public static final MapCodec<ProgressionDensityFunction> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Codec.FLOAT.fieldOf("default_value").forGetter(ProgressionDensityFunction::getDefaultValue),
-                    ExtraCodecs.nonEmptyList(POINT_CODEC.listOf()).fieldOf("points")
+                    ExtraCodecs.nonEmptyList(POINT_CODEC.codec().listOf()).fieldOf("points")
                             .forGetter(ProgressionDensityFunction::getPoints)
             ).apply(instance, ProgressionDensityFunction::new));
     private static final KeyDispatchDataCodec<ProgressionDensityFunction> CODEC_HOLDER = KeyDispatchDataCodec.of(CODEC);
@@ -94,9 +95,9 @@ public class ProgressionDensityFunction implements DensityFunction.SimpleFunctio
         this.value = this.defaultValue;
         if (server == null) return;
 
-        Advancement advancement;
+        AdvancementHolder advancement;
         iterate : for (ProgressionPoint point : this.points) {
-            advancement = server.getAdvancements().getAdvancement(point.advancement());
+            advancement = server.getAdvancements().get(point.advancement());
             if (advancement == null)
                 continue;
 
