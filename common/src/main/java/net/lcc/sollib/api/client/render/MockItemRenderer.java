@@ -2,7 +2,6 @@ package net.lcc.sollib.api.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.lcc.sollib.api.client.render.item.SItemRendererRegistry;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class MockItemRenderer {

@@ -18,60 +18,63 @@ public class SolLogger {
     }
 
     @SafeVarargs
-    private <T> String build(T... message) {
-        StringBuilder builder = new StringBuilder("[" + this.name + "]");
-        for (T m : message)
-            builder.append(" ").append(m);
+    private <T, E> String build(T message, E... extra) {
+        StringBuilder builder = new StringBuilder("[" + this.name + "] " + message);
+        for (E e : extra)
+            builder.append(" ").append(e);
         return builder.toString();
     }
 
     /**
      * Displays a blank space between each value
-     * @param message Any number of values to log
+     * @param message The first value to log, which will be returned
+     * @param extra Any number of optional arguments to be logged alongside
      * @return The first parameter
      */
     @SafeVarargs
-    public final <T> T info(T... message) {
-        this.logger.info(this.build(message));
-        return message[0];
+    public final <T, E> T info(T message, E... extra) {
+        this.logger.info(this.build(message, extra));
+        return message;
     }
 
     /**
      * Displays a blank space between each value
-     * @param message Any number of values to log
+     * @param message The first value to log, which will be returned
+     * @param extra Any number of optional arguments to be logged alongside
      * @return The first parameter
      */
     @SafeVarargs
-    public final <T> T warn(T... message) {
-        this.logger.warn(this.build(message));
-        return message[0];
+    public final <T, E> T warn(T message, E... extra) {
+        this.logger.warn(this.build(message, extra));
+        return message;
     }
 
     /**
      * Displays a blank space between each value
-     * @param message Any number of values to log
+     * @param message The first value to log, which will be returned
+     * @param extra Any number of optional arguments to be logged alongside
      * @return The first parameter
      */
     @SafeVarargs
-    public final <T> T error(T... message) {
-        this.logger.error(this.build(message));
-        return message[0];
+    public final <T, E> T error(T message, E... extra) {
+        this.logger.error(this.build(message, extra));
+        return message;
     }
 
     /**
-     * Displays a blank space between each value <br/>
-     * Ignores consecutive identical logs, and only fires in development environment
-     * @param message Any number of values to log
+     * Displays a blank space between each value
+     * @param message The first value to log, which will be returned
+     * @param extra Any number of optional arguments to be logged alongside
      * @return The first parameter
      */
     @SafeVarargs
-    public final <T> T debug(T... message) {
+    public final <T, E> T debug(T message, E... extra) {
         if (Services.PLATFORM != null && Services.PLATFORM.isDevelopmentEnvironment()) {
             String m = this.build(message);
             if (!this.last.equals(m))
                 this.logger.warn(m);
             this.last = m;
         }
-        return message[0];
+        return message;
     }
 }

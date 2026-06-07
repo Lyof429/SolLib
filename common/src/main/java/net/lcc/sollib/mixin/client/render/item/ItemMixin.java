@@ -2,7 +2,6 @@ package net.lcc.sollib.mixin.client.render.item;
 
 import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
-import net.lcc.sollib.api.client.render.item.IItemRenderer;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
