@@ -7,6 +7,6 @@ import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface IItemRenderer {
-    void render(ItemStack stack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer,
-                int pPackedLight, int pPackedOverlay);
+    void render(ItemStack stack, ItemDisplayContext displayContext, PoseStack matrices, MultiBufferSource bufferSource,
+                int packedLight, int packedOverlay);
 }

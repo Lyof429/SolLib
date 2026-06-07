@@ -1,6 +1,9 @@
 package net.lcc.sollib;
 
+import com.mojang.math.Axis;
 import net.lcc.sollib.api.client.SolClientRegistries;
+import net.lcc.sollib.api.client.render.MockItemRenderer;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.data.reload.SimpleDataRegistry;
@@ -8,7 +11,9 @@ import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.core.DebugItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -44,11 +49,20 @@ public class SolTest {
                                         .add(12))));
         MOD.createConfig("sollib/test", 1.0, builder);
 
-        MOD.register(ItemHolder.class, "thing", () -> new Item(new Item.Properties()));
-        MOD.register(BlockHolder.class, "cube", () -> new Block(BlockBehaviour.Properties.of())).withItem();
-
         MOD.register(ItemHolder.class, "debugger", () -> new DebugItem(new Item.Properties().stacksTo(1)));
+
+        SolClientRegistries.Render.ITEM.register(stack -> stack.is(Items.DIAMOND_SWORD) && stack.isEnchanted(),
+                (stack, context, matrices, bufferSource, light, overlay) -> {
+            matrices.scale(1.005f, 1.005f, 1.005f);
+            matrices.translate(0, 0.995, 0.4975);
+            matrices.mulPose(Axis.XP.rotationDegrees(180));
+
+            MockItemRenderer.renderItem(matrices, bufferSource, light, COLOR_OVERLAY);
+        });
     }
+
+    private static final ResourceLocation COLOR_OVERLAY = SolLib.MOD.makeID("textures/models/staff/glint.png");
+
 
 
     public static void sasha() {

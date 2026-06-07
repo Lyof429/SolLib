@@ -11,7 +11,7 @@ public class SReloadRegistry {
     public static final SReloadRegistry INSTANCE = new SReloadRegistry();
     private SReloadRegistry() {}
 
-    protected static final SolLogger LOG = new SolLogger("SolLib/Data/Reload");
+    protected static final SolLogger LOG = new SolLogger("Sol/Data/Reload");
 
     private final List<IReloadListener> INSTANCES = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package net.lcc.sollib.mixin.client.render.item;
 
 import net.lcc.sollib.api.client.SolClientRegistries;
+import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lcc.sollib.api.client.render.item.IItemRenderer;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ItemMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void initItemRenderer(Item.Properties properties, CallbackInfo ci) {
-        if (this instanceof IItemRenderer renderer)
-            SolClientRegistries.Render.ITEM.register(stack -> stack.is((Item) (Object) this), renderer);
+        if (this instanceof IAddedRenderItem renderer)
+            SolClientRegistries.Render.ITEM.register(stack -> renderer.shouldRender(stack) && stack.is((Item) (Object) this),
+                    renderer);
     }
 }

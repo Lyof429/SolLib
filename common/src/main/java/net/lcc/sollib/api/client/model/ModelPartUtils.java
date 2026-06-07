@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModelPartUtils {
-    public static final SolLogger LOG = new SolLogger("SolLib/Model");
+    public static final SolLogger LOG = new SolLogger("Sol/Model");
 
     /**
      * @param texturedData LayerDefinition to extract model parts from

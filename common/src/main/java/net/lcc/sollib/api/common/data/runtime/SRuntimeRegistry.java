@@ -24,7 +24,7 @@ public class SRuntimeRegistry {
     public static final SRuntimeRegistry INSTANCE = new SRuntimeRegistry();
     private SRuntimeRegistry() {}
 
-    public static final SolLogger LOG = new SolLogger("SolLib/Data/Runtime");
+    public static final SolLogger LOG = new SolLogger("Sol/Data/Runtime");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final Map<ResourceLocation, List<RuntimeData>> instances = new HashMap<>();

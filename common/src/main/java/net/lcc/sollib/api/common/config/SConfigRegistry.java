@@ -12,7 +12,7 @@ public class SConfigRegistry {
     public static final SConfigRegistry INSTANCE = new SConfigRegistry();
     private SConfigRegistry() {}
 
-    protected static final SolLogger LOG = new SolLogger("SolLib/Config");
+    protected static final SolLogger LOG = new SolLogger("Sol/Config");
 
     private final Map<String, SolConfig> INSTANCES = new HashMap<>();
 

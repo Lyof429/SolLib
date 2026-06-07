@@ -1,8 +1,8 @@
 package net.lcc.sollib.mixin.config;
 
 import com.terraformersmc.modmenu.ModMenu;
-import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.client.ui.config.SolConfigScreen;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
