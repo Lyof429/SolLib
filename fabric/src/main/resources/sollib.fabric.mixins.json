@@ -9,6 +9,7 @@
   ],
   "client": [
     "BuiltInRegistriesClientMixin",
+    "config.ModBadgeRendererMixin",
     "config.ModMenuMixin",
     "render.block.ChunkRenderDispatcherMixin",
     "render.item.ItemRenderContextMixin"
