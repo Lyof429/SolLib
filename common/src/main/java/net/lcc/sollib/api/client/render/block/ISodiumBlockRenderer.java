@@ -4,8 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3fc;
 
-import java.util.function.BiConsumer;
-
 @FunctionalInterface
 public interface ISodiumBlockRenderer {
     /**
