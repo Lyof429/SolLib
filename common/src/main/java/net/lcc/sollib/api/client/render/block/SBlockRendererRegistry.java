@@ -69,12 +69,12 @@ public class SBlockRendererRegistry {
      * @since 1.0.0
      */
     @ApiStatus.Internal
-    public void apply(BiConsumer<Object, Object> renderDispatcher, Object level, BlockState state, BlockPos pos, Vector3fc origin, Object buffers, long seed) {
+    public void apply(Object blockRenderer, Object level, BlockState state, BlockPos pos, Vector3fc origin, Object buffers, long seed) {
         if (state == null) return;
 
         for (Map.Entry<Predicate<BlockState>, ISodiumBlockRenderer> entry : SODIUM_INSTANCES.entrySet()) {
             if (!entry.getKey().test(state)) continue;
-            entry.getValue().render(renderDispatcher, level, state, pos, origin, buffers, seed);
+            entry.getValue().render(blockRenderer, level, state, pos, origin, buffers, seed);
         }
     }
 }

@@ -1,6 +1,8 @@
 package net.lcc.sollib;
 
+import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
+import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
 import me.jellysquid.mods.sodium.client.world.WorldSlice;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -20,20 +22,27 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitialize() {
         SolLib.init();
+
         SolClientRegistries.Render.BLOCK.registerSodium(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE),
-                (render, getter, state, pos, origin, buffers, seed) -> {
-                    BlockState azaleaState = Blocks.AZALEA.defaultBlockState();
-                    WorldSlice level = (WorldSlice) getter;
-                    BlockRenderContext proxyContext = new BlockRenderContext(level);
-                    proxyContext.update(
-                            pos,
-                            new BlockPos((int) origin.x(), (int) origin.y(), (int) origin.z()),
-                            azaleaState,
-                            Minecraft.getInstance().getBlockRenderer().getBlockModel(azaleaState),
-                            seed
-                    );
-                    render.accept(proxyContext, buffers);
-                });
+                (renderer, getter, state, pos, origin, buffers, seed) -> {
+            Thread.dumpStack();
+            BlockState azaleaState = Blocks.AZALEA.defaultBlockState();
+            BlockRenderContext proxyContext = new BlockRenderContext((WorldSlice) getter);
+            proxyContext.update(
+                    pos,
+                    new BlockPos((int) origin.x(), (int) origin.y(), (int) origin.z()),
+                    azaleaState,
+                    Minecraft.getInstance().getBlockRenderer().getBlockModel(azaleaState),
+                    seed
+            );
+            ((BlockRenderer) renderer).renderModel(proxyContext, (ChunkBuildBuffers) buffers);
+        });
+        SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE),
+                (instance, state, pos, getter, poseStack, vertexConsumer, random) -> {
+            BlockState azaleaState = Blocks.AZALEA.defaultBlockState();
+            instance.renderBatched(azaleaState, pos, getter, poseStack, vertexConsumer, true, random);
+        });
+
         ResourceConditions.register(LoadCondition.CONFIG, LoadCondition::configMatches);
     }
 

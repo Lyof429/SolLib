@@ -1,6 +1,7 @@
 package net.lcc.sollib.mixin.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderContext;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
 import net.lcc.sollib.api.client.SolClientRegistries;
 import net.minecraft.client.renderer.MultiBufferSource;

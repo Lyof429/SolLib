@@ -10,5 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 @FunctionalInterface
 public interface IBlockRenderer {
-    void render(BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter getter, PoseStack poseStack, VertexConsumer vertexConsumer, RandomSource random);
+    void render(BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter getter,
+                PoseStack poseStack, VertexConsumer vertexConsumer, RandomSource random);
 }

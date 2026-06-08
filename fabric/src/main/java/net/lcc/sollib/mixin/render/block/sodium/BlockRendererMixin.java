@@ -12,14 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = BlockRenderer.class, remap = false)
 public abstract class BlockRendererMixin {
-
     @Shadow
     public abstract void renderModel(BlockRenderContext ctx, ChunkBuildBuffers buffers);
 
     @Inject(method = "renderModel", at = @At("HEAD"), remap = false, require = 0)
     private void handleSodiumBlockRender(BlockRenderContext ctx, ChunkBuildBuffers buffers, CallbackInfo ci) {
         SolClientRegistries.Render.BLOCK.apply(
-                (context, buildBuffers) -> this.renderModel((BlockRenderContext) context, (ChunkBuildBuffers) buildBuffers),
+                this,
                 ctx.world(),
                 ctx.state(),
                 ctx.pos(),

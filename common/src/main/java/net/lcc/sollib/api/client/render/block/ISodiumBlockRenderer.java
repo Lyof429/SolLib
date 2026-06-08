@@ -9,9 +9,10 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface ISodiumBlockRenderer {
     /**
-     * @param renderDispatcher represents renderModel function from Sodium's BlockRenderer to be invoked
+     * @param blockRenderer represents Sodium's BlockRenderer that should be cast on use
      * @param level represents WorldSlice that should be cast on use
      * @param buffers represents ChunkBuildBuffers that should be cast on use
      */
-    void render(BiConsumer<Object, Object> renderDispatcher, Object level, BlockState state, BlockPos pos, Vector3fc origin, Object buffers, long seed);
+    void render(Object blockRenderer, Object level, BlockState state, BlockPos pos,
+                Vector3fc origin, Object buffers, long seed);
 }
