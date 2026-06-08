@@ -26,7 +26,8 @@ public class ChunkRenderDispatcherMixin {
             )
     )
     private void handleBlockRender(
-            BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter level, PoseStack poseStack, VertexConsumer consumer, boolean checkSides, RandomSource random, ModelData data, RenderType type, Operation<Void> original
+            BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter level, PoseStack poseStack,
+            VertexConsumer consumer, boolean checkSides, RandomSource random, ModelData data, RenderType type, Operation<Void> original
     ) {
         original.call(instance, state, pos, level, poseStack, consumer, checkSides, random, data, type);
         SolClientRegistries.Render.BLOCK.apply(
