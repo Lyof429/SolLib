@@ -12,6 +12,7 @@
     "config.ModBadgeRendererMixin",
     "config.ModMenuMixin",
     "render.block.ChunkRenderDispatcherMixin",
+    "render.block.sodium.BlockRendererMixin",
     "render.item.ItemRenderContextMixin"
   ],
   "server": [
