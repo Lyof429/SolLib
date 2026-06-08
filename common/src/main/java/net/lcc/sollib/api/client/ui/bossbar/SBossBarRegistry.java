@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class SBossBarRegistry {
+    public static final SBossBarRegistry INSTANCE = new SBossBarRegistry();
+    private SBossBarRegistry() {}
+
     private final Map<Predicate<BossEvent>, IBossBarRenderer> INSTANCES = new LinkedHashMap<>();
 
     /**

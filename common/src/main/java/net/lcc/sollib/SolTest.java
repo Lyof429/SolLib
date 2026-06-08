@@ -14,11 +14,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BambooLeaves;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolTest", "soltest");
@@ -58,6 +54,7 @@ public class SolTest {
 
                     MockItemRenderer.renderItem(matrices, bufferSource, light, COLOR_OVERLAY);
                 });
+        SolClientRegistries.ITEM_MODEL.register(Items.DIAMOND);
     }
 
     private static final ResourceLocation COLOR_OVERLAY = SolLib.MOD.makeID("textures/models/staff/glint.png");

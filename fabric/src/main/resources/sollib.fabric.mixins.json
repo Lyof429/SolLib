@@ -11,7 +11,7 @@
     "BuiltInRegistriesClientMixin",
     "config.ModBadgeRendererMixin",
     "config.ModMenuMixin",
-    "render.block.ChunkRenderDispatcherMixin",
+    "render.block.BlockRenderContextMixin",
     "render.item.ItemRenderContextMixin"
   ],
   "server": [

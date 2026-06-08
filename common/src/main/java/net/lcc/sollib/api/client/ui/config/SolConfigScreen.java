@@ -39,8 +39,8 @@ public class SolConfigScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-
         this.renderMenuBackground(guiGraphics);
+
         guiGraphics.setColor(0.15f, 0.15f, 0.15f, 1);
         guiGraphics.blit(MENU_BACKGROUND, 0, 35, 0, 0.0F, 0.0F, this.width, this.height - 70, 32, 32);
         guiGraphics.setColor(1, 1, 1, 1);

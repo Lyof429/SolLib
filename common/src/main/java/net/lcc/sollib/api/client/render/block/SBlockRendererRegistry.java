@@ -11,9 +11,13 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class SBlockRendererRegistry {
+    public static final SBlockRendererRegistry INSTANCE = new SBlockRendererRegistry();
+    private SBlockRendererRegistry() {}
+
     private final Map<Predicate<BlockState>, IBlockRenderer> INSTANCES = new LinkedHashMap<>();
 
     /**
@@ -22,7 +26,7 @@ public class SBlockRendererRegistry {
      *
      * @param condition Filters the actual block state to be processed by {@link IBlockRenderer}
      * @param renderer  Management of how block state should be rendered
-     * @since 1.0.0
+     * @since 1.0
      */
     public void register(Predicate<BlockState> condition, IBlockRenderer renderer) {
         INSTANCES.put(condition, renderer);
@@ -31,18 +35,34 @@ public class SBlockRendererRegistry {
     /**
      * Processes custom renderers registered by {@link #register(Predicate, IBlockRenderer)}
      *
-     * @since 1.0.0
+     * @since 1.0
      */
     @ApiStatus.Internal
-    public void apply(BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter getter, PoseStack poseStack, VertexConsumer vertexConsumer, RandomSource random) {
+    public void apply(BlockRenderDispatcher instance, BlockState state, BlockPos pos, BlockAndTintGetter view, PoseStack poseStack, VertexConsumer vertexConsumer, RandomSource random) {
         if (state == null) return;
 
         for (Map.Entry<Predicate<BlockState>, IBlockRenderer> entry : INSTANCES.entrySet()) {
             if (!entry.getKey().test(state)) continue;
 
             poseStack.pushPose();
-            entry.getValue().render(instance, state, pos, getter, poseStack, vertexConsumer, random);
+            entry.getValue().render((p, s) -> instance.renderBatched(s, p, view, poseStack, vertexConsumer, true, random),
+                    state, pos, view, random, poseStack, vertexConsumer);
             poseStack.popPose();
+        }
+    }
+
+    /**
+     * Processes custom renderers registered by {@link #register(Predicate, IBlockRenderer)} in case Sodium is present
+     *
+     * @since 1.0
+     */
+    @ApiStatus.Internal
+    public void apply(BiConsumer<BlockPos, BlockState> renderer, BlockAndTintGetter view, BlockState state, BlockPos pos, long seed) {
+        if (state == null) return;
+
+        for (Map.Entry<Predicate<BlockState>, IBlockRenderer> entry : INSTANCES.entrySet()) {
+            if (!entry.getKey().test(state)) continue;
+            entry.getValue().render(renderer, state, pos, view, RandomSource.create(seed), null, null);
         }
     }
 }
