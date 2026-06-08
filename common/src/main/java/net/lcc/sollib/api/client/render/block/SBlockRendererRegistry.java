@@ -57,12 +57,12 @@ public class SBlockRendererRegistry {
      * @since 1.0
      */
     @ApiStatus.Internal
-    public void apply(BiConsumer<BlockPos, BlockState> renderer, BlockAndTintGetter view, BlockState state, BlockPos pos, long seed) {
+    public void apply(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, long seed) {
         if (state == null) return;
 
         for (Map.Entry<Predicate<BlockState>, IBlockRenderer> entry : INSTANCES.entrySet()) {
             if (!entry.getKey().test(state)) continue;
-            entry.getValue().render(renderer, state, pos, view, RandomSource.create(seed), null, null);
+            entry.getValue().render(renderer, state, pos, null, RandomSource.create(seed), null, null);
         }
     }
 }

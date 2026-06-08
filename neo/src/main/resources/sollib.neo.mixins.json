@@ -9,7 +9,9 @@
     "registry.FireBlockMixin"
   ],
   "client": [
-    "config.ModListScreen"
+    "config.ModListScreen",
+    "render.block.SectionCompilerMixin",
+    "render.block.BlockRendererMixin"
   ],
   "server": [
   ],
