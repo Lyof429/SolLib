@@ -13,7 +13,7 @@
     "config.ModMenuMixin",
     "render.block.BlockRenderContextMixin",
     "render.block.ChunkRenderDispatcherMixin",
-    "render.block.sodium.BlockRendererMixin",
+    "render.block.BlockRendererMixin",
     "render.item.ItemRenderContextMixin"
   ],
   "server": [

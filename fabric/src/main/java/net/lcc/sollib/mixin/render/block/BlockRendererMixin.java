@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin.render.block.sodium;
+package net.lcc.sollib.mixin.render.block;
 
 import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
