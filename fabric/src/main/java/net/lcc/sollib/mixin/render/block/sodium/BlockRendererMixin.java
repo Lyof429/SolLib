@@ -3,7 +3,7 @@ package net.lcc.sollib.mixin.render.block.sodium;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
-import net.lcc.sollib.api.client.SolClientFabricRegistries;
+import net.lcc.sollib.api.client.SolClientRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public abstract class BlockRendererMixin {
 
     @Inject(method = "renderModel", at = @At("HEAD"), remap = false, require = 0)
     private void handleSodiumBlockRender(BlockRenderContext ctx, ChunkBuildBuffers buffers, CallbackInfo ci) {
-        SolClientFabricRegistries.Render.SODIUM_BLOCK.apply(
+        SolClientRegistries.Render.BLOCK.apply(
                 (context, buildBuffers) -> this.renderModel((BlockRenderContext) context, (ChunkBuildBuffers) buildBuffers),
                 ctx.world(),
                 ctx.state(),
