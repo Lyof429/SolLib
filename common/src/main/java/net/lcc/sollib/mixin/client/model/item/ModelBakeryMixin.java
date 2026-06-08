@@ -22,8 +22,8 @@ public abstract class ModelBakeryMixin {
     protected abstract void loadTopLevel(ModelResourceLocation location);
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void loadPotionTextures(BlockColors blockColors, ProfilerFiller profiler, Map<ResourceLocation, BlockModel> jsonUnbakedModels,
-                                   Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, CallbackInfo ci) {
+    public void loadHandModels(BlockColors blockColors, ProfilerFiller profiler, Map<ResourceLocation, BlockModel> jsonUnbakedModels,
+                               Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, CallbackInfo ci) {
         profiler.push("sollib");
         SolClientRegistries.ITEM_MODEL.load(this::loadTopLevel);
         profiler.pop();
