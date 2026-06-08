@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class SItemRendererRegistry {
+    public static final SItemRendererRegistry INSTANCE = new SItemRendererRegistry();
+    private SItemRendererRegistry() {}
+
     private final Map<Predicate<ItemStack>, IItemRenderer> INSTANCES = new LinkedHashMap<>();
 
     /**

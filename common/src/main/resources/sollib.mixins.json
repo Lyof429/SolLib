@@ -20,8 +20,10 @@
   "client": [
     "access.ItemRendererAccessor",
     "client.BossHealthOverlayMixin",
-    "client.model.EntityModelMixin",
-    "client.model.ModelPartMixin",
+    "client.model.entity.EntityModelMixin",
+    "client.model.entity.ModelPartMixin",
+    "client.model.item.ItemRendererMixin",
+    "client.model.item.ModelBakeryMixin",
     "client.render.item.ItemMixin",
     "client.render.item.ItemRendererMixin"
   ],

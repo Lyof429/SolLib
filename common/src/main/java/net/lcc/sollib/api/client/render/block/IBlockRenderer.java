@@ -9,23 +9,16 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiConsumer;
+
 @FunctionalInterface
 public interface IBlockRenderer {
     /**
-     * Renders a BlockState at the specified BlockPos <br/>
-     * Implementation varies depending on Sodium presence, prefer using this over {@link BlockRenderDispatcher} or something else
-     */
-    @FunctionalInterface
-    interface ARenderer {
-        void renderBlock(BlockPos pos, BlockState state);
-    }
-
-    /**
      *
-     * @param renderer An {@link ARenderer}, whose implementation depends on rendering mods present
+     * @param renderer A block renderer
      * @param poseStack Will be null if Sodium is present!
      * @param vertexConsumer Will be null if Sodium is present!
      */
-    void render(ARenderer renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter,
+    void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter,
                 RandomSource random, @Nullable PoseStack poseStack, @Nullable VertexConsumer vertexConsumer);
 }

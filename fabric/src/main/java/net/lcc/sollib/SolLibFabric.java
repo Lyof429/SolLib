@@ -17,12 +17,6 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     public void onInitialize() {
         SolLib.init();
 
-        SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE),
-                (renderer, state, pos, getter, poseStack, vertexConsumer, random) -> {
-            BlockState azaleaState = Blocks.AZALEA.defaultBlockState();
-            renderer.renderBlock(pos, azaleaState);
-        });
-
         ResourceConditions.register(LoadCondition.CONFIG, LoadCondition::configMatches);
     }
 

@@ -1,6 +1,6 @@
-package net.lcc.sollib.api.client.model;
+package net.lcc.sollib.api.client.model.entity;
 
-import net.lcc.sollib.api.client.model.inject.IModelPartExtension;
+import net.lcc.sollib.api.client.model.entity.inject.IModelPartExtension;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -16,7 +16,7 @@ public class ModelPartUtils {
     /**
      * @param texturedData LayerDefinition to extract model parts from
      * @return {@code List<ModelPart>}
-     * @since 1.0.0
+     * @since 1.0
      */
     public static List<ModelPart> collectAllModelParts(LayerDefinition texturedData) {
         ModelPart root = texturedData.bakeRoot();
@@ -30,7 +30,7 @@ public class ModelPartUtils {
      * @param parts    List of model parts to look into
      * @return {@link ModelPart}
      * @throws NullPointerException in cases of absence of looking part, method may return null
-     * @since 1.0.0
+     * @since 1.0
      */
     @Nullable
     public static ModelPart getPart(Triple<Float, Float, Float> partSize, List<ModelPart> parts) {
@@ -46,7 +46,7 @@ public class ModelPartUtils {
      * @param parts List of model parts to look into
      * @return {@link ModelPart}
      * @throws NullPointerException in cases of absence of looking part, method may return null
-     * @since 1.0.0
+     * @since 1.0
      */
     @Nullable
     public static ModelPart getPart(String partName, List<ModelPart> parts) {
@@ -60,7 +60,7 @@ public class ModelPartUtils {
     /**
      * @param current ModelPart to extract child parts from
      * @param out Result of model parts extraction
-     * @since 1.0.0
+     * @since 1.0
      */
     private static void collectRecursive(ModelPart current, List<ModelPart> out) {
         out.add(current);
