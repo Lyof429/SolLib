@@ -46,4 +46,4 @@ A functional interface for boss bar rendering.
 - `guiGraphics` Renders the given BossBar at the given x and y.
 - `x` The position of rendered element on abscissa axis.
 - `y` The position of rendered element on ordinate axis.
-- `bossEvent` Currently used BossEvent
+- `bossEvent` Currently used BossEvent.

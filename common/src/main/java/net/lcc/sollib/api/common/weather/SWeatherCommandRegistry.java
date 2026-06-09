@@ -21,7 +21,7 @@ public class SWeatherCommandRegistry {
      * Registers a new weather type to the /weather command
      * @param name The subcommand name
      * @param action A consumer taking the source and the duration (in ticks)
-     * @since 1.0.0
+     * @since 1.0
      */
     public void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
         INSTANCES.put(name, action);
@@ -29,7 +29,7 @@ public class SWeatherCommandRegistry {
 
     /**
      * Internal method to inject all registered weather types into the builder
-     * @since 1.0.0
+     * @since 1.0
      */
     @ApiStatus.Internal
     public void apply(LiteralArgumentBuilder<CommandSourceStack> builder) {
