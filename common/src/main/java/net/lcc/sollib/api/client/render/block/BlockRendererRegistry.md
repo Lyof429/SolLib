@@ -15,6 +15,8 @@ Any BlockState which satisfies `@param condition` will be affected.
 
 This method is automatically called for any Block implementing IAddedRenderBlock.
 
+If using a PoseStack based rendering, they will automatically be pushed and then popped.
+
 ```java
 // Renders an extra azalea bush on fully grown bamboos
 SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO)
@@ -29,8 +31,9 @@ SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO)
 
 ### IBlockRenderer
 
-`void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter,
-                RandomSource random, @Nullable PoseStack poseStack, @Nullable VertexConsumer vertexConsumer);`
+```java
+void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter, RandomSource random, @Nullable PoseStack poseStack, @Nullable VertexConsumer vertexConsumer);
+```
 
 A functional interface for block rendering.
 - `renderer` Renders the given BlockState at the given BlockPos. Implementation varies depending on Sodium presence.
@@ -42,6 +45,11 @@ A functional interface for block rendering.
 - `vertexConsumer` Currently used VertexConsumer. Will be null if Sodium rendering is used.
 
 ### IAddedRenderBlock
+
+```java
+void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter, RandomSource random, @Nullable PoseStack poseStack, @Nullable VertexConsumer vertexConsumer);
+boolean shouldAddRender(BlockState state);
+```
 
 An extension of IBlockRenderer with a built in rendering predicate.
 

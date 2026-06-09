@@ -19,5 +19,3 @@ The base missing model will be used in case it can't be found, and a warning wil
 // Sets minecraft:diamond to have a custom held model
 SolClientRegistries.ITEM_MODEL.registerHeld(Items.DIAMOND);
 ```
-
----
