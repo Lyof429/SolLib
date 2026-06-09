@@ -13,11 +13,11 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface IBlockRenderer {
     /**
-     *
      * @param renderer A block renderer
+     * @param getter Will be null if Sodium is present!
      * @param poseStack Will be null if Sodium is present!
      * @param vertexConsumer Will be null if Sodium is present!
      */
-    void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, BlockAndTintGetter getter,
+    void render(BiConsumer<BlockPos, BlockState> renderer, BlockState state, BlockPos pos, @Nullable BlockAndTintGetter getter,
                 RandomSource random, @Nullable PoseStack poseStack, @Nullable VertexConsumer vertexConsumer);
 }

@@ -9,7 +9,6 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitialize() {
         SolLib.init();
-
         //ResourceConditions.register(LoadCondition.CONFIG, LoadCondition::configMatches);
     }
 
