@@ -58,7 +58,7 @@ static JsonObject open(ResourceLocation id, Resource resource);
 
 ---
 
-### SimpleDataRegistry\<T>
+## SimpleDataRegistry\<T>
 
 A helper class and simple use of IReloadListener.
 
