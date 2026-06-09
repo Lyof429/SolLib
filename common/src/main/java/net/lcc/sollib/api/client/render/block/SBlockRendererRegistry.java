@@ -22,7 +22,7 @@ public class SBlockRendererRegistry {
 
     /**
      * Manages registration of block state renderers introduced in SolLib <br/>
-     * Automatically called on Block subclasses that implement {@link IBlockRenderer}
+     * Automatically called on Block subclasses that implement {@link IAddedRenderBlock}
      *
      * @param condition Filters the actual block state to be processed by {@link IBlockRenderer}
      * @param renderer  Management of how block state should be rendered

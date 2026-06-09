@@ -9,6 +9,7 @@
     "access.MobEffectAccessor",
     "access.PressurePlateBlockAccessor",
     "access.StairBlockAccessor",
+    "client.render.block.BlockMixin",
     "common.config.GsonHelperMixin",
     "common.data.MultiPackResourceManagerMixin",
     "common.data.ReloadableServerResourcesMixin",
