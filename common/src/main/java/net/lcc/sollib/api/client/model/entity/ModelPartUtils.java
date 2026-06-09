@@ -4,7 +4,9 @@ import net.lcc.sollib.api.client.model.entity.inject.IModelPartExtension;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.util.RandomSource;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class ModelPartUtils {
      * @return {@code List<ModelPart>}
      * @since 1.0
      */
+    @ApiStatus.Internal
     public static List<ModelPart> collectAllModelParts(LayerDefinition texturedData) {
         ModelPart root = texturedData.bakeRoot();
         List<ModelPart> parts = new ArrayList<>();
@@ -27,7 +30,7 @@ public class ModelPartUtils {
 
     /**
      * @param partSize Estimate size of required model part to look up for
-     * @param parts    List of model parts to look into
+     * @param parts List of model parts to look into
      * @return {@link ModelPart}
      * @throws NullPointerException in cases of absence of looking part, method may return null
      * @since 1.0
@@ -58,10 +61,22 @@ public class ModelPartUtils {
     }
 
     /**
+     * @param parts List of model parts to look into
+     * @param random Random source
+     * @return {@link ModelPart}
+     * @since 1.0
+     */
+    @Nullable
+    public static ModelPart getRandomPart(List<ModelPart> parts, RandomSource random) {
+        return parts.get(random.nextInt(parts.size()));
+    }
+
+    /**
      * @param current ModelPart to extract child parts from
      * @param out Result of model parts extraction
      * @since 1.0
      */
+    @ApiStatus.Internal
     private static void collectRecursive(ModelPart current, List<ModelPart> out) {
         out.add(current);
         for (ModelPart child : ((IModelPartExtension) (Object) current).getChildren().values())
