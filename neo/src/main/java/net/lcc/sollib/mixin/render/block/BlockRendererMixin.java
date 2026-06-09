@@ -20,7 +20,7 @@ public abstract class BlockRendererMixin {
     @Inject(method = "renderModel", at = @At("HEAD"), remap = false, require = 0)
     private void handleSodiumBlockRender(BakedModel model, BlockState state, BlockPos pos, BlockPos origin, CallbackInfo ci) {
         SolClientRegistries.Render.BLOCK.apply(
-                (p, s) -> this.renderModel(Minecraft.getInstance().getBlockRenderer().getBlockModel(s), s, p, pos),
+                (p, s) -> this.renderModel(Minecraft.getInstance().getBlockRenderer().getBlockModel(s), s, p, origin),
                 state,
                 pos,
                 pos.asLong()

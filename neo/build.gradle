@@ -39,7 +39,6 @@ dependencies {
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"  // :api
     // Sodium
     compileOnly "maven.modrinth:sodium:${sodium_version_neoforge}"
-    runtimeOnly "maven.modrinth:sodium:${sodium_version_neoforge}"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
