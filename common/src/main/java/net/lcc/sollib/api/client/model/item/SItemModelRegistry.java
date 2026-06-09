@@ -1,7 +1,5 @@
 package net.lcc.sollib.api.client.model.item;
 
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -12,9 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class SItemModelRegistry {
@@ -26,7 +22,7 @@ public class SItemModelRegistry {
     /**
      * Registers an item to have a different held model
      */
-    public void register(ItemLike item) {
+    public void registerHeld(ItemLike item) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(item.asItem());
         INSTANCES.putIfAbsent(item.asItem(),
                 new ModelResourceLocation(id.getNamespace(), id.getPath() + "_in_hand", "inventory"));

@@ -12,8 +12,8 @@
     "config.ModBadgeRendererMixin",
     "config.ModMenuMixin",
     "render.block.BlockRenderContextMixin",
-    "render.block.ChunkRenderDispatcherMixin",
     "render.block.BlockRendererMixin",
+    "render.block.ChunkRenderDispatcherMixin",
     "render.item.ItemRenderContextMixin"
   ],
   "server": [

@@ -8,7 +8,7 @@ public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolTest", "soltest");
 
     public static void lyof() {
-        SolClientRegistries.ITEM_MODEL.register(Items.DIAMOND);
+        SolClientRegistries.ITEM_MODEL.registerHeld(Items.DIAMOND);
     }
 
 
