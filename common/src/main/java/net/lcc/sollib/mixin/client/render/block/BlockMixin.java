@@ -15,7 +15,7 @@ public class BlockMixin {
     private void initBlockRenderer(BlockBehaviour.Properties properties, CallbackInfo ci) {
         if (this instanceof IAddedRenderBlock renderer)
             SolClientRegistries.Render.BLOCK.register(
-                    state -> renderer.shouldRender(state) && state.is((Block) (Object) this),
+                    state -> renderer.shouldAddRender(state) && state.is((Block) (Object) this),
                     renderer
             );
     }
