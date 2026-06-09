@@ -18,7 +18,7 @@ import java.util.Map;
  * <pre>
  * {@code
  *     SolReloadRegistry.register(manager -> {
- *         SolLib.LOGGER.info("Hello World!");
+ *         SolLib.MOD.getLogger().info("Hello World!");
  *     });
  * }
  * </pre> <br/>
