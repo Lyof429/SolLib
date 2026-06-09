@@ -9,7 +9,6 @@
     "access.MobEffectAccessor",
     "access.PressurePlateBlockAccessor",
     "access.StairBlockAccessor",
-    "client.render.block.BlockMixin",
     "common.config.GsonHelperMixin",
     "common.data.MultiPackResourceManagerMixin",
     "common.data.ReloadableServerResourcesMixin",
@@ -25,6 +24,7 @@
     "client.model.entity.ModelPartMixin",
     "client.model.item.ItemRendererMixin",
     "client.model.item.ModelBakeryMixin",
+    "client.render.block.BlockMixin",
     "client.render.item.ItemMixin",
     "client.render.item.ItemRendererMixin"
   ],
