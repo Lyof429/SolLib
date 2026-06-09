@@ -1,6 +1,5 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
@@ -12,10 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BambooLeaves;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
@@ -53,11 +48,6 @@ public class SolLibNeo {
                         json -> holder.getSpawn().createBiomeModifier(json, id));
             }
         });
-        SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO) && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE),
-                (renderer, state, pos, getter, poseStack, vertexConsumer, random) -> {
-                    BlockState azaleaState = Blocks.AZALEA.defaultBlockState();
-                    renderer.accept(pos, azaleaState);
-                });
     }
 
     @SubscribeEvent

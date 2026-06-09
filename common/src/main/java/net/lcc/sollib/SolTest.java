@@ -1,18 +1,13 @@
 package net.lcc.sollib;
 
-import com.mojang.math.Axis;
-import net.lcc.sollib.api.client.SolClientRegistries;
-import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -45,28 +40,8 @@ public class SolTest {
                 .withFuel(12).withTags(ItemTags.ANVIL).withModel(ModelTemplates.FLAT_ITEM);
         MOD.register(BlockHolder.class, "chaos_cube", () -> new Block(BlockBehaviour.Properties.of()))
                 .withItem().withWall().dropsSelf();
-
-        SolClientRegistries.Render.ITEM.register(stack -> stack.is(Items.DIAMOND_SWORD) && stack.isEnchanted(),
-                (stack, context, matrices, bufferSource, light, overlay) -> {
-                    matrices.scale(1.005f, 1.005f, 1.005f);
-                    matrices.translate(0, 0.995, 0.4975);
-                    matrices.mulPose(Axis.XP.rotationDegrees(180));
-
-                    MockItemRenderer.renderItem(matrices, bufferSource, light, COLOR_OVERLAY);
-                });
-        SolClientRegistries.ITEM_MODEL.register(Items.DIAMOND);
     }
 
-    private static final ResourceLocation COLOR_OVERLAY = SolLib.MOD.makeID("textures/models/staff/glint.png");
-
-
-
     public static void sasha() {
-        /*SolClientRegistries.Render.BLOCK.register(state -> state.is(Blocks.BAMBOO)
-                && state.getValue(BlockStateProperties.BAMBOO_LEAVES).equals(BambooLeaves.LARGE),
-                (instance, state, pos, getter, poseStack, vertexConsumer, random) -> {
-            BlockState state1 = Blocks.AZALEA.defaultBlockState();
-            instance.renderBatched(state1, pos, getter, poseStack, vertexConsumer, true, random);
-        });*/
     }
 }
