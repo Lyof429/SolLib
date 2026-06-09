@@ -7,7 +7,7 @@ Main class to register custom model types for items.
 
 ---
 
-### `registerHeld(ItemLike item)`
+### `void registerHeld(ItemLike item)`
 
 Registers the item to have a different model when held in hand (akin to tridents and spyglasses).
 
