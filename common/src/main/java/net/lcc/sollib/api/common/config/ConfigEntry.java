@@ -102,6 +102,7 @@ public class ConfigEntry<T> implements Supplier<T> {
             else this.cache = this.fallback;
         } catch (Exception ignored) {
             this.fail();
+            this.cache = this.fallback;
         }
     }
 
