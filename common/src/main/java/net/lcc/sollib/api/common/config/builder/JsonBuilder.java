@@ -211,6 +211,7 @@ public class JsonBuilder implements IJsonBuilder {
         this.builder.append("\"").append(key).append("\": [");
         consumer.accept(new ArrayBuilder());
 
+        this.currentPath = String.join(".", this.path);
         this.path.pop();
         this.indent--;
         this.jump(false);
