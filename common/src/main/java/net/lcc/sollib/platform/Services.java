@@ -32,7 +32,7 @@ public class Services {
 
                     SolLib.MOD.getLogger().info("Loaded", loadedService, "for service", clazz);
                     return loadedService;
-                } catch (Exception ignored) {}
+                } catch (Throwable ignored) {}
             }
 
             T loadedService = fallback.getConstructor().newInstance();
