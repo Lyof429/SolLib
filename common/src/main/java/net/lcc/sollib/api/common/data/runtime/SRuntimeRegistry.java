@@ -97,7 +97,7 @@ public class SRuntimeRegistry {
     @ApiStatus.Internal
     public Resource apply(ResourceLocation target, Resource original) {
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
-        original = LoadCondition.apply(target, original);
+        if (original != null) original = LoadCondition.apply(target, original);
 
         if (!instances.containsKey(target)) return original;
 
