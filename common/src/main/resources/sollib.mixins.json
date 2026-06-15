@@ -12,7 +12,6 @@
     "common.config.GsonHelperMixin",
     "common.data.MultiPackResourceManagerMixin",
     "common.data.ReloadableServerResourcesMixin",
-    "common.weather.WeatherCommandMixin",
     "common.worldgen.density.MinecraftServerMixin",
     "common.worldgen.density.PlayerAdvancementsMixin",
     "common.worldgen.density.PlayerListMixin"
