@@ -1,6 +1,5 @@
 package net.lcc.sollib;
 
-import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
@@ -8,11 +7,9 @@ import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lcc.sollib.core.Identifier;
-import net.lcc.sollib.platform.Services;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 

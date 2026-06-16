@@ -2,8 +2,6 @@ package net.lcc.sollib.mixin.client.render.block;
 
 import net.lcc.sollib.api.client.SolClientRegistries;
 import net.lcc.sollib.api.client.render.block.IAddedRenderBlock;
-import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Mixin;

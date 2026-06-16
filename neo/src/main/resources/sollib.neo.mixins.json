@@ -10,8 +10,8 @@
   ],
   "client": [
     "config.ModListScreen",
-    "render.block.SectionCompilerMixin",
-    "render.block.BlockRendererMixin"
+    "render.block.BlockRendererMixin",
+    "render.block.SectionCompilerMixin"
   ],
   "server": [
   ],

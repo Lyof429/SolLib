@@ -1,12 +1,10 @@
 package net.lcc.sollib.core;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.neoforge.common.brewing.IBrewingRecipe;
 import org.jetbrains.annotations.NotNull;
 
