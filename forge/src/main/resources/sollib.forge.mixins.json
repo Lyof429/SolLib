@@ -6,7 +6,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "registry.AxeItemMixin",
-    "registry.FireBlockMixin"
+    "registry.FireBlockMixin",
+    "weather.WeatherCommandMixin"
   ],
   "client": [
     "config.ConfigScreenHandlerMixin",
