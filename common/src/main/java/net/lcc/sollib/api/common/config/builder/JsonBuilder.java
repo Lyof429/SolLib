@@ -20,8 +20,8 @@ public class JsonBuilder implements IJsonBuilder {
         StringBuilder result = new StringBuilder();
 
         for (String line : json.split("\n")) {
-            if (!line.strip().startsWith("//"))
-                result.append(line).append("\n");
+            if (line.strip().startsWith("//")) result.append("\n");
+            else result.append(line).append("\n");
         }
 
         return GSON.fromJson(result.toString(), JsonElement.class);
