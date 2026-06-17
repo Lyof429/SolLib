@@ -37,7 +37,10 @@ public class SolConfig {
             if (line.startsWith("{")) started = true;
             else if (started) {
                 if (line.startsWith("}")) started = false;
-                else builder.append("\n").append(line.substring(2));
+                else {
+                    if (line.length() >= 2) builder.append("\n").append(line.substring(2));
+                    else builder.append("\n").append(line);
+                }
             }
         }
 
@@ -51,6 +54,8 @@ public class SolConfig {
         StringBuilder builder = new StringBuilder("{");
 
         for (String line : json.split("\n")) {
+            builder.append("\n");
+
             if (line.startsWith("version")) {
                 try {
                     version.set(Double.parseDouble(line.split(":")[1].strip()));
@@ -61,7 +66,7 @@ public class SolConfig {
                 } catch (Exception ignored) {}
             }
 
-            else builder.append("\n  ").append(line);
+            else builder.append("  ").append(line);
         }
 
         return builder.append("\n}").toString();
