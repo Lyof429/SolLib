@@ -1,4 +1,4 @@
-package net.lcc.sollib.mixin.common.weather;
+package net.lcc.sollib.mixin.weather;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,8 +20,7 @@ public class WeatherCommandMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;"
-            ),
-            remap = false
+            )
     )
     private static LiteralCommandNode<CommandSourceStack> injectAllCustomWeathers(
             CommandDispatcher<CommandSourceStack> dispatcher,
