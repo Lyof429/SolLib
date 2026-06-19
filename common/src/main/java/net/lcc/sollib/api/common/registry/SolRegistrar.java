@@ -30,8 +30,8 @@ public class SolRegistrar<T, H extends Holder<T>> {
             H holder = this.constructor.newInstance(this.mod, name, supplier);
             instances.putIfAbsent(name, holder);
             return holder;
-        } catch (Exception ignored) {
-            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to register \"" + name + "\"\n", e);
         }
     }
 
