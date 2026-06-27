@@ -46,6 +46,7 @@ legacyForge {
 }
 
 sourceSets.main.resources.srcDirs += project(":common").file("src/main/generated")
+jarJar.enabled(true)
 
 dependencies {
     compileOnly project(":common")
@@ -55,6 +56,11 @@ dependencies {
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
     compileOnly 'org.jetbrains:annotations:26.0.2-1'
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    // MixinSquared
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7-beta.3"))
+    implementation(jarJar(group: "com.github.bawnorton.mixinsquared", name: "mixinsquared-forge", version: "0.3.7-beta.3")) {
+        //jarJar.p
+    }
 
     // Curios
     modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}"  // :api

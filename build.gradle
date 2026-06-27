@@ -6,13 +6,19 @@ plugins {
 
 subprojects {
     repositories {
+        // MixinSquared
+        maven {
+            name = "MixinSquared"
+            url = "https://maven.bawnorton.com/releases"
+        }
+
         // Mod Menu, EMI and Trinkets
         maven {
             name "TerraformersMC"
             url "https://maven.terraformersmc.com/"
         }
 
-        // Sodium (CaffeineMC's maven is only for 1.21+
+        // Sodium (CaffeineMC's maven is only for 1.21+)
         maven {
             name "Modrinth"
             url "https://api.modrinth.com/maven"

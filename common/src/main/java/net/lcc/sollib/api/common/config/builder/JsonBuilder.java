@@ -109,6 +109,11 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     @Override
+    public IJsonBuilder comment() {
+        return this.comment("");
+    }
+
+    @Override
     public IJsonBuilder comment(String comment) {
         this.comments.addLast(comment);
         return this;
@@ -235,6 +240,18 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     public class ArrayBuilder implements IArrayBuilder {
+        @Override
+        public IArrayBuilder comment() {
+            return this.comment("");
+        }
+
+        @Override
+        public IArrayBuilder comment(String comment) {
+            JsonBuilder self = JsonBuilder.this;
+            self.comment(comment);
+            return this;
+        }
+
         protected void append(String value) {
             JsonBuilder self = JsonBuilder.this;
 

@@ -11,6 +11,7 @@ public interface IJsonBuilder {
     JsonObject toJson();
 
     String getCurrentPath();
+    IJsonBuilder comment();
     IJsonBuilder comment(String comment);
     <T> IJsonBuilder bind(ConfigEntry<T> entry);
 
@@ -24,6 +25,8 @@ public interface IJsonBuilder {
     IJsonBuilder addArray(String key, Iterable<?> value);
 
     interface IArrayBuilder {
+        IArrayBuilder comment();
+        IArrayBuilder comment(String comment);
         IArrayBuilder add(String value);
         IArrayBuilder add(Number value);
         IArrayBuilder add(boolean value);
