@@ -58,12 +58,12 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     // MixinSquared
     compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7-beta.3"))
-    implementation(jarJar(group: "com.github.bawnorton.mixinsquared", name: "mixinsquared-forge", version: "0.3.7-beta.3")) {
-        //jarJar.p
-    }
+    implementation(jarJar(group: "com.github.bawnorton.mixinsquared", name: "mixinsquared-forge", version: "0.3.7-beta.3"))
 
     // Curios
     modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}"  // :api
+
+    modImplementation "curse.maven:alltheleaks-1091339:7235989"
 }
 
 jar {

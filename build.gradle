@@ -18,12 +18,6 @@ subprojects {
             url "https://maven.terraformersmc.com/"
         }
 
-        // Sodium (CaffeineMC's maven is only for 1.21+)
-        maven {
-            name "Modrinth"
-            url "https://api.modrinth.com/maven"
-        }
-
         // Trinkets
         maven {
             name "Ladysnake Libs"
@@ -36,6 +30,16 @@ subprojects {
                 name "Illusive Soulworks maven"
                 url "https://maven.theillusivec4.top/"
             }
+        }
+
+        // Sodium (CaffeineMC's maven is only for 1.21+)
+        maven {
+            name "Modrinth"
+            url "https://api.modrinth.com/maven"
+        }
+        maven {
+            name = "Curseforge"
+            url "https://cursemaven.com"
         }
     }
 }

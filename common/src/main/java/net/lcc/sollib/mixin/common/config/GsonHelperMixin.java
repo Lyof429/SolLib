@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.Consumer;
 
+/**
+ * Disabled for now as it crashes with AllTheLeaks, and the dev said it could cause problems with other mods too
+ */
 @SuppressWarnings("deprecation")
 @Mixin(GsonHelper.class)
 public class GsonHelperMixin {
