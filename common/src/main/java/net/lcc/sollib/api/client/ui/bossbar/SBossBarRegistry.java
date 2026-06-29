@@ -25,19 +25,21 @@ public class SBossBarRegistry {
     }
 
     /**
+     * Redeclaration of vanilla GUI_BARS_LOCATION from BossHealthOverlay
+     */
+    private static final ResourceLocation GUI_BARS_LOCATION = new ResourceLocation("textures/gui/bars.png");
+    /**
      * Variant of {@link #register(Predicate, IBossBarRenderer)} of boss bar render registration with default placement
      * Processes only custom texture to render for boss bar
      * @since 1.0
      */
     public void register(Predicate<BossEvent> condition, ResourceLocation texture) {
         INSTANCES.put(condition, ((guiGraphics, x, y, bossEvent) -> {
-            guiGraphics.blit(texture, x, y, 0, bossEvent.getColor().ordinal() * 5 * 2 + 5, (int)(bossEvent.getProgress() * 183.0F), 5);
-            guiGraphics.blit(texture, x, y - 2, 0, 0, 183, 9, 183, 9);
-
             int progressWidth = (int) (bossEvent.getProgress() * 183.0F);
-            if (progressWidth > 0) {
-                guiGraphics.blit(texture, x, y - 2, 0, 9, progressWidth, 9, 183, 9);
-            }
+            guiGraphics.blit(GUI_BARS_LOCATION, x, y, 0, bossEvent.getColor().ordinal() * 5 * 2 + 5, progressWidth, 5);
+            guiGraphics.blit(texture, x, y - 2, 0, 0, 183, 9, 183, 9);
+            if (progressWidth > 0)
+                guiGraphics.blit(GUI_BARS_LOCATION, x, y - 2, 0, 9, progressWidth, 9, 183, 9);
         }));
     }
 
