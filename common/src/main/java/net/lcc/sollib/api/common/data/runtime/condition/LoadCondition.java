@@ -56,12 +56,10 @@ import net.minecraft.util.GsonHelper;
  * </pre>
  */
 public class LoadCondition {
-    public static final ResourceLocation CONFIG = SolLib.MOD.makeID("config");
-
     public static boolean configMatches(JsonObject json) {
         try {
             return SolRegistries.CONFIG.get(GsonHelper.getAsString(json, "entry"), true);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             return true;
         }
     }
