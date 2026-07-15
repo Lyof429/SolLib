@@ -79,7 +79,6 @@ public class LoadCondition {
 
         try {
             JsonObject cjson = SRuntimeRegistry.GSON.fromJson(new String(csupplier.get().readAllBytes()), JsonObject.class);
-            SRuntimeRegistry.LOG.info("Found " + cjson);
 
             if (!cjson.has("load_condition")) return true;
 
@@ -91,25 +90,7 @@ public class LoadCondition {
 
         return true;
     }
-/*
-    public static Resource apply(ResourceLocation id, Resource resource) {
-        if (id.getPath().endsWith(".json")) {
-            try {
-                JsonElement elm = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonElement.class);
-                if (!elm.isJsonObject()) return resource;
-                JsonObject json = elm.getAsJsonObject();
-                if (!json.has("sollib:load_condition")) return resource;
 
-                JsonObject condition = GsonHelper.getAsJsonObject(json, "sollib:load_condition");
-                return shouldLoad(condition) ? resource : null;
-            } catch (Exception e) {
-                SRuntimeRegistry.LOG.error("Error while reading load condition for data " + id);
-                e.printStackTrace();
-            }
-        }
-        return resource;
-    }
-*/
     public static boolean shouldLoad(JsonObject condition) {
         String type = condition.get("type").getAsString();
 
