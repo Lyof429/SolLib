@@ -3,7 +3,6 @@ package net.lcc.sollib.api.common.data.runtime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.api.common.data.runtime.condition.LoadCondition;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -97,10 +96,6 @@ public class SRuntimeRegistry {
     @ApiStatus.Internal
     public Resource apply(ResourceLocation target, Resource original) {
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
-        /*if (original != null) {
-            original = LoadCondition.apply(target, original);
-        }*/
-
         if (!instances.containsKey(target)) return original;
 
         LOG.info("Applying configured data:", target);

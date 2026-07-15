@@ -3,7 +3,6 @@ package net.lcc.sollib.mixin.common.data;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.data.runtime.condition.LoadCondition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
@@ -41,5 +40,27 @@ public class FallbackResourceManagerMixin {
         //IoSupplier<InputStream> resource = original.call(instance, packType, id);
         //return SolTest.MOD.getLogger().info( resource != null && LoadCondition.shouldLoad(id, instance, packType) ? resource : null );
         return original.stream().filter(r -> LoadCondition.shouldLoad(id, r.source(), this.type)).toList();
+    }
+
+    @WrapOperation(
+            method = "listResources",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/PackResources;listResources(Lnet/minecraft/server/packs/PackType;Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/server/packs/PackResources$ResourceOutput;)V")
+    )
+    private void listConditionedResources(PackResources instance, PackType packType, String namespace, String path, PackResources.ResourceOutput resourceOutput, Operation<Void> original) {
+        original.call(instance, packType, namespace, path, (PackResources.ResourceOutput) (id, resource) -> {
+            if (resource != null && LoadCondition.shouldLoad(id, instance, packType))
+                resourceOutput.accept(id, resource);
+        });
+    }
+
+    @WrapOperation(
+            method = "listPackResources",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/PackResources;listResources(Lnet/minecraft/server/packs/PackType;Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/server/packs/PackResources$ResourceOutput;)V")
+    )
+    private void listConditionedResourceStacks(PackResources instance, PackType packType, String namespace, String path, PackResources.ResourceOutput resourceOutput, Operation<Void> original) {
+        original.call(instance, packType, namespace, path, (PackResources.ResourceOutput) (id, resource) -> {
+            if (resource != null && LoadCondition.shouldLoad(id, instance, packType))
+                resourceOutput.accept(id, resource);
+        });
     }
 }

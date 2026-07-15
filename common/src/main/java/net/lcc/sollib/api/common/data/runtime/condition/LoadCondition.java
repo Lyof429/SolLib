@@ -3,7 +3,6 @@ package net.lcc.sollib.api.common.data.runtime.condition;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
@@ -13,10 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -76,8 +73,6 @@ public class LoadCondition {
 
 
     public static boolean shouldLoad(ResourceLocation id, PackResources pack, PackType type) {
-        SRuntimeRegistry.LOG.info("Loading conditions for " + id + " in " + pack.packId());
-
         ResourceLocation cid = Identifier.of(id.getNamespace(), id.getPath() + ".sol");
         IoSupplier<InputStream> csupplier = pack.getResource(type, cid);
         if (csupplier == null) return true;

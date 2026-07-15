@@ -1,7 +1,6 @@
 package net.lcc.sollib.mixin.common.data;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;

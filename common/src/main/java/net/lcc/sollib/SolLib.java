@@ -10,7 +10,5 @@ public class SolLib {
 
     public static void init() {
         MOD.register(DensityFunctionHolder.class, "progression", () -> ProgressionDensityFunction.CODEC);
-
-        SolTest.lyof();
     }
 }
