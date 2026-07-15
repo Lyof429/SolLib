@@ -3,7 +3,6 @@ package net.lcc.sollib.api.common.data.runtime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.api.common.data.runtime.condition.LoadCondition;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
