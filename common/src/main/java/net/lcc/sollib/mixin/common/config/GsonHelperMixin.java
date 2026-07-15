@@ -20,7 +20,7 @@ import java.math.BigInteger;
 import java.util.function.Consumer;
 
 /**
- * Disabled for now as it crashes with AllTheLeaks, and the dev said it could cause problems with other mods too
+ * Disabled for now as it crashes with AllTheLeaks
  */
 @SuppressWarnings("deprecation")
 @Mixin(GsonHelper.class)

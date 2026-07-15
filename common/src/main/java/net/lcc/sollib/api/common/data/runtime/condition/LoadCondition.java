@@ -3,13 +3,21 @@ package net.lcc.sollib.api.common.data.runtime.condition;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.SolLib;
+import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
+import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <b>Any</b> datapack file can be given load conditions, and will only actually be read if they are met. <br>
@@ -67,6 +75,28 @@ public class LoadCondition {
     }
 
 
+    public static boolean shouldLoad(ResourceLocation id, PackResources pack, PackType type) {
+        SRuntimeRegistry.LOG.info("Loading conditions for " + id + " in " + pack.packId());
+
+        ResourceLocation cid = Identifier.of(id.getNamespace(), id.getPath() + ".sol");
+        IoSupplier<InputStream> csupplier = pack.getResource(type, cid);
+        if (csupplier == null) return true;
+
+        try {
+            JsonObject cjson = SRuntimeRegistry.GSON.fromJson(new String(csupplier.get().readAllBytes()), JsonObject.class);
+            SRuntimeRegistry.LOG.info("Found " + cjson);
+
+            if (!cjson.has("load_condition")) return true;
+
+            JsonObject c = GsonHelper.getAsJsonObject(cjson, "load_condition");
+            return shouldLoad(c);
+        } catch (Exception e) {
+            SRuntimeRegistry.LOG.error("Error while reading load condition for data " + id + '\n' + e);
+        }
+
+        return true;
+    }
+/*
     public static Resource apply(ResourceLocation id, Resource resource) {
         if (id.getPath().endsWith(".json")) {
             try {
@@ -84,7 +114,7 @@ public class LoadCondition {
         }
         return resource;
     }
-
+*/
     public static boolean shouldLoad(JsonObject condition) {
         String type = condition.get("type").getAsString();
 
