@@ -9,6 +9,7 @@
     "access.MobEffectAccessor",
     "access.PressurePlateBlockAccessor",
     "access.StairBlockAccessor",
+    "common.data.FallbackResourceManagerMixin",
     "common.data.MultiPackResourceManagerMixin",
     "common.data.ReloadableServerResourcesMixin",
     "common.worldgen.density.MinecraftServerMixin",

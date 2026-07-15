@@ -6,10 +6,15 @@ import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry;
+import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.util.GsonHelper;
+
+import java.io.InputStream;
 
 /**
  * <b>Any</b> datapack file can be given load conditions, and will only actually be read if they are met. <br>
@@ -56,6 +61,8 @@ import net.minecraft.util.GsonHelper;
  * </pre>
  */
 public class LoadCondition {
+    public static final ResourceLocation CONFIG = SolLib.MOD.makeID("config");
+
     public static boolean configMatches(JsonObject json) {
         try {
             return SolRegistries.CONFIG.get(GsonHelper.getAsString(json, "entry"), true);
@@ -65,22 +72,23 @@ public class LoadCondition {
     }
 
 
-    public static Resource apply(ResourceLocation id, Resource resource) {
-        if (id.getPath().endsWith(".json") && resource != null) {
-            try {
-                JsonElement elm = SRuntimeRegistry.GSON.fromJson(new String(resource.open().readAllBytes()), JsonElement.class);
-                if (!elm.isJsonObject()) return resource;
-                JsonObject json = elm.getAsJsonObject();
-                if (!json.has("sollib:load_condition")) return resource;
+    public static boolean shouldLoad(ResourceLocation id, PackResources pack, PackType type) {
+        ResourceLocation cid = Identifier.of(id.getNamespace(), id.getPath() + ".sol");
+        IoSupplier<InputStream> csupplier = pack.getResource(type, cid);
+        if (csupplier == null) return true;
 
-                JsonObject condition = GsonHelper.getAsJsonObject(json, "sollib:load_condition");
-                return shouldLoad(condition) ? resource : null;
-            } catch (Exception e) {
-                SRuntimeRegistry.LOG.error("Error while reading load condition for data " + id);
-                e.printStackTrace();
-            }
+        try {
+            JsonObject cjson = SRuntimeRegistry.GSON.fromJson(new String(csupplier.get().readAllBytes()), JsonObject.class);
+
+            if (!cjson.has("load_condition")) return true;
+
+            JsonObject c = GsonHelper.getAsJsonObject(cjson, "load_condition");
+            return shouldLoad(c);
+        } catch (Exception e) {
+            SRuntimeRegistry.LOG.error("Error while reading load condition for data " + id + '\n' + e);
         }
-        return resource;
+
+        return true;
     }
 
     public static boolean shouldLoad(JsonObject condition) {
@@ -88,11 +96,11 @@ public class LoadCondition {
 
         return switch (type) {
             case "dependency" ->
-                Services.PLATFORM.isModLoaded(GsonHelper.getAsString(condition, "mod"));
+                    Services.PLATFORM.isModLoaded(GsonHelper.getAsString(condition, "mod"));
             case "config" ->
-                configMatches(condition);
+                    configMatches(condition);
             case "not" ->
-                !shouldLoad(GsonHelper.getAsJsonObject(condition, "value"));
+                    !shouldLoad(GsonHelper.getAsJsonObject(condition, "value"));
             case "and" -> {
                 for (JsonElement c : GsonHelper.getAsJsonArray(condition, "values")) {
                     if (!(c instanceof JsonObject o))
