@@ -17,6 +17,7 @@
     "common.worldgen.density.PlayerListMixin"
   ],
   "client": [
+    "access.AbstractScrollWidgetAccessor",
     "access.ItemRendererAccessor",
     "client.BossHealthOverlayMixin",
     "client.model.entity.EntityModelMixin",

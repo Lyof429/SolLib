@@ -4,17 +4,21 @@ import net.lcc.sollib.api.common.config.SolConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ConfigListWidget extends AbstractScrollWidget {
     public static final int BUTTON_SIZE = 24;
 
     private final List<ConfigWidget> widgets;
+    private ConfigWidget selected;
+    protected Consumer<SolConfig> onSelected;
 
-    public ConfigListWidget(int x, int y, int width, int height, Iterable<SolConfig> configs) {
+    public ConfigListWidget(int x, int y, int width, int height, Iterable<SolConfig> configs, Consumer<SolConfig> onSelected) {
         super(x, y, width, height, Component.translatable("gui.sollib.config.configs"));
 
         y += 1;
@@ -23,6 +27,8 @@ public class ConfigListWidget extends AbstractScrollWidget {
             this.widgets.add(new ConfigWidget(this, x + 1, y, width - 2, BUTTON_SIZE, config));
             y += BUTTON_SIZE;
         }
+        this.selected = null;
+        this.onSelected = onSelected;
     }
 
     @Override
@@ -56,6 +62,8 @@ public class ConfigListWidget extends AbstractScrollWidget {
 
         for (ConfigWidget b : this.widgets) {
             if (b.isHovered()) {
+                this.selected = b;
+                this.onSelected.accept(b.getConfig());
                 b.mouseClicked(mouseX, mouseY, button);
                 return true;
             }
@@ -71,13 +79,11 @@ public class ConfigListWidget extends AbstractScrollWidget {
     }
 
     public void reload() {
-        for (ConfigWidget widget : this.widgets) {
-            widget.getConfig().init();
+        for (ConfigWidget widget : this.widgets)
             widget.reload();
-        }
     }
 
-    protected int getScrollAmount() {
-        return (int) this.scrollAmount();
+    public ConfigWidget getSelected() {
+        return this.selected;
     }
 }

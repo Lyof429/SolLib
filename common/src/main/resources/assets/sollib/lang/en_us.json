@@ -2,6 +2,7 @@
   "gui.sollib.badge": "Sol",
   "gui.sollib.config.configs": "Configs",
   "gui.sollib.config.reload": "Reload",
-  "gui.sollib.config.edit": "Edit",
+  "gui.sollib.config.save": "Save",
+  "gui.sollib.config.open": "Open",
   "gui.sollib.config.reset": "Reset"
 }
