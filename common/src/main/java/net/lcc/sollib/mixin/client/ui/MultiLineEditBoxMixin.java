@@ -2,7 +2,6 @@ package net.lcc.sollib.mixin.client.ui;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.client.ui.config.StyledMultiLineEditBox;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

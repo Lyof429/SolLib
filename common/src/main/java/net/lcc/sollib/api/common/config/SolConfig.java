@@ -116,6 +116,7 @@ public class SolConfig {
         this.contentBuilder.toJson(builder);
         String json = builder.toString();
         this.content.text = SolConfig.fromJson(json, this.content);
+        this.content.version = this.version;
 
         // Only continue processing if the file was accessed correctly
         if (this.content.result == LoadResult.GOOD) {
