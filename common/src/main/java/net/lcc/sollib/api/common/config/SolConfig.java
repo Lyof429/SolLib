@@ -1,8 +1,8 @@
 package net.lcc.sollib.api.common.config;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
@@ -19,18 +19,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SolConfig {
     /**
      * Converts {@code json} from a JSON to a SolConfig formatted string
      */
-    public static String fromJson(String json, double version) {
+    public static String fromJson(String json, Content content) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n// This config file uses a custom defined parser.")
                 .append("\n//   That's why there are comments here and stray values below, they wouldn't be valid in any other .json file")
                 .append("\n//   To add a comment yourself, just start a line with // like here")
-                .append("\n\nversion: ").append(version).append("\nreset: ").append(false);
+                .append("\n\nversion: ").append(content.version).append("\nreset: ").append(false);
 
         boolean started = false;
         for (String line : json.split("\n")) {
@@ -50,19 +49,21 @@ public class SolConfig {
     /**
      * Converts {@code json} from a SolConfig formatted string to a JSON
      */
-    public static String toJson(String json, AtomicDouble version, AtomicBoolean reset) {
+    public static String toJson(Content content) {
         StringBuilder builder = new StringBuilder("{");
+        boolean b = true;
 
-        for (String line : json.split("\n")) {
-            builder.append("\n");
+        for (String line : content.text.split("\n")) {
+            if (b) b = false;
+            else builder.append("\n");
 
-            if (line.startsWith("version")) {
+            if (line.startsWith("version:")) {
                 try {
-                    version.set(Double.parseDouble(line.split(":")[1].strip()));
+                    content.version = Double.parseDouble(line.split(":")[1].strip());
                 } catch (Exception ignored) {}
-            } else if (line.startsWith("reset")) {
+            } else if (line.startsWith("reset:")) {
                 try {
-                    reset.set(Boolean.parseBoolean(line.split(":")[1].strip()));
+                    content.reset = Boolean.parseBoolean(line.split(":")[1].strip());
                 } catch (Exception ignored) {}
             }
 
@@ -76,16 +77,14 @@ public class SolConfig {
     private final String name;
     private final double version;
     private final IConfigurable contentBuilder;
-    private JsonElement content;
-    private LoadType loadResult;
+    private final Content content;
     private final Map<String, ConfigEntry<?>> entries;
 
     public SolConfig(String name, double version, IConfigurable contentBuilder) {
         this.name = name;
         this.version = version;
         this.contentBuilder = contentBuilder;
-        this.content = new JsonObject();
-        this.loadResult = LoadType.GOOD;
+        this.content = new Content();
         this.entries = new HashMap<>();
 
         SolRegistries.CONFIG.register(this);
@@ -96,8 +95,9 @@ public class SolConfig {
     }
 
     public void init(boolean force) {
-        this.content = new JsonObject();
-        this.loadResult = LoadType.GOOD;
+        this.content.json = new JsonObject();
+        this.content.result = LoadResult.GOOD;
+        this.content.version = this.version;
 
         Path path = Services.PLATFORM.getConfigDirectory();
 
@@ -109,19 +109,18 @@ public class SolConfig {
                     Files.createDirectory(path);
                 } catch (IOException e) {
                     SConfigRegistry.LOG.error(this.getName(), ": Error while accessing config file\n", e);
-                    this.loadResult = LoadType.ERROR;
+                    this.content.result = LoadResult.ERROR;
                 }
             }
         }
 
         IJsonBuilder builder = new JsonBuilder(this);
         this.contentBuilder.toJson(builder);
-        String content = builder.toString();
-        AtomicDouble version = new AtomicDouble(this.version);
-        AtomicBoolean reset = new AtomicBoolean(false);
+        String json = builder.toString();
+        this.content.text = SolConfig.fromJson(json, this.content);
 
         // Only continue processing if the file was accessed correctly
-        if (this.loadResult == LoadType.GOOD) {
+        if (this.content.result == LoadResult.GOOD) {
             File file = path.toFile();
             boolean create = !file.isFile();
 
@@ -131,37 +130,38 @@ public class SolConfig {
                     file.createNewFile();
 
                     FileWriter writer = new FileWriter(file);
-                    writer.write(SolConfig.fromJson(content, this.version));
+                    writer.write(this.content.text);
                     writer.close();
 
-                    SConfigRegistry.LOG.debug(this.getName(), ": Config file created");
+                    SConfigRegistry.LOG.info(this.getName(), ": Config file created");
                 }
 
-                content = SolConfig.toJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), version, reset);
+                this.content.text = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                json = SolConfig.toJson(this.content);
 
             } catch (IOException e) {
                 SConfigRegistry.LOG.error(this.getName(), ": Error while creating config file\n", e);
-                this.loadResult = LoadType.ERROR;
+                this.content.result = LoadResult.ERROR;
             }
 
-            if (reset.get()) this.init(true);
+            if (this.content.reset) this.init(true);
 
-            if (this.loadResult == LoadType.GOOD && this.version > version.get())
-                this.loadResult = LoadType.OUTDATED;
+            if (this.content.result == LoadResult.GOOD && this.version > this.content.version)
+                this.content.result = LoadResult.OUTDATED;
         }
 
         try {
-            this.content = JsonBuilder.toJson(content);
+            this.content.json = JsonBuilder.toJson(json);
         } catch (Exception e) {
             SConfigRegistry.LOG.error(this.getName(), ": Error while reading config file\n", e);
-            this.loadResult = LoadType.ERROR;
+            this.content.result = LoadResult.ERROR;
         }
 
-        if (this.loadResult.message != null)
-            SConfigRegistry.LOG.warn(this.getName(), ":", this.loadResult.message);
+        if (this.content.result.message != null)
+            SConfigRegistry.LOG.warn(this.getName(), ":", this.content.result.message);
 
         for (ConfigEntry<?> entry : this.entries.values())
-            entry.withContent(this.content);
+            entry.withContent(this.content.json);
     }
 
     public void openFile() {
@@ -176,6 +176,28 @@ public class SolConfig {
         }
     }
 
+    public void writeFile(String text) {
+        try {
+            Path path = Services.PLATFORM.getConfigDirectory();
+            for (String dir : this.getSuffixName().split("/"))
+                path = path.resolve(dir);
+
+            File file = path.toFile();
+
+            file.delete();
+            file.createNewFile();
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(text);
+            writer.close();
+
+            SConfigRegistry.LOG.info(this.getName(), ": Config file created");
+            this.init();
+        } catch (Exception e) {
+            SConfigRegistry.LOG.error(this.getName(), ": Error while opening config file\n", e);
+        }
+    }
+
     public String getName() {
         return this.name;
     }
@@ -184,12 +206,12 @@ public class SolConfig {
         return this.name + ".sol.json";
     }
 
-    public LoadType getLoadResult() {
-        return this.loadResult;
+    public Content getContent() {
+        return this.content;
     }
 
     protected void addEntry(String path, ConfigEntry<?> entry) {
-        entry.withContent(this.content);
+        entry.withContent(this.content.json);
         this.entries.remove(path);
         this.entries.put(path, entry);
     }
@@ -198,7 +220,7 @@ public class SolConfig {
         if (this.entries.containsKey(path))
             return (T) this.entries.get(path).get();
 
-        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content);
+        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content.json);
         this.addEntry(path, entry);
         return entry.get();
     }
@@ -207,8 +229,17 @@ public class SolConfig {
         if (this.entries.containsKey(path))
             return this.entries.get(path).getRaw();
 
-        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content);
+        ConfigEntry<T> entry = new ConfigEntry<>(this, path, fallback).withContent(this.content.json);
         this.addEntry(path, entry);
         return entry.getRaw();
+    }
+
+
+    public static class Content {
+        public LoadResult result = LoadResult.GOOD;
+        public String text = "";
+        public JsonElement json = new JsonObject();
+        public double version = 0;
+        public boolean reset = false;
     }
 }

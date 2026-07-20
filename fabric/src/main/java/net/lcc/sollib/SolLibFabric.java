@@ -1,5 +1,7 @@
 package net.lcc.sollib;
 
+import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.gui.ModMenuOptionsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,6 +11,7 @@ public class SolLibFabric implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitialize() {
         SolLib.init();
+
         //ResourceConditions.register(LoadCondition.CONFIG, LoadCondition::configMatches);
     }
 

@@ -1,14 +1,13 @@
 package net.lcc.sollib.api.client.ui.config;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.lcc.sollib.api.common.config.LoadType;
+import net.lcc.sollib.api.common.config.LoadResult;
 import net.lcc.sollib.api.common.config.SolConfig;
-import net.minecraft.ChatFormatting;
+import net.lcc.sollib.mixin.access.AbstractScrollWidgetAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -17,10 +16,6 @@ import net.minecraft.util.Mth;
 public class ConfigWidget extends AbstractWidget {
     private final ConfigListWidget self;
     private final SolConfig config;
-    private LoadType loadResult;
-
-    private Button edit;
-    private Button reset;
 
     public ConfigWidget(ConfigListWidget self, int x, int y, int width, int height, SolConfig config) {
         super(x, y, width, height, Component.literal(config.getName()));
@@ -35,31 +30,22 @@ public class ConfigWidget extends AbstractWidget {
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public void reload() {
-        this.loadResult = this.config.getLoadResult();
-
-        this.setTooltip(this.loadResult.message == null
-                ? null : Tooltip.create(Component.literal(this.loadResult.message)));
-
-        int buttonSize = (this.width / 2 - 12 - 4) / 2;
-        this.edit = new ScrollingButton(this.getX() + this.width / 2 + 8, super.getY() + 4,
-                buttonSize, this.getHeight() - 8,
-                Component.translatable("gui.sollib.config.edit"),
-                button -> this.config.openFile());
-        this.reset = new ScrollingButton(this.getX() + this.width - buttonSize - 4, super.getY() + 4,
-                buttonSize, this.getHeight() - 8,
-                Component.translatable("gui.sollib.config.reset").withStyle(ChatFormatting.DARK_RED), button -> {
-            this.config.init(true);
-            this.reload();
-        });
+        this.config.init();
+        this.setTooltip(this.getLoadResult().message == null
+                ? null : Tooltip.create(Component.literal(this.getLoadResult().message)));
     }
 
     @Override
     public int getY() {
-        return super.getY() - self.getScrollAmount();
+        return super.getY() - (int) ((AbstractScrollWidgetAccessor) self).getScrollAmount();
     }
 
-    protected SolConfig getConfig() {
+    public SolConfig getConfig() {
         return this.config;
+    }
+
+    protected LoadResult getLoadResult() {
+        return this.config.getContent().result;
     }
 
     @Override
@@ -70,20 +56,17 @@ public class ConfigWidget extends AbstractWidget {
         RenderSystem.enableDepthTest();
 
         int sx = this.getX(), sy = this.getY(), ex = this.getX() + this.width, ey = this.getY() + this.height;
-        if (this.isHovered()) guiGraphics.fill(sx, sy, ex, ey, 0xffffffff);
-        guiGraphics.fill(sx + 1, sy + 1, ex - 1, ey - 1, this.loadResult.color);
+        if (this.isHovered() || this == self.getSelected()) guiGraphics.fill(sx, sy, ex, ey, 0xffffffff);
+        guiGraphics.fill(sx + 1, sy + 1, ex - 1, ey - 1, this.getLoadResult().color);
 
-        if (this.loadResult.message != null) {
-            guiGraphics.fill(sx + this.width / 2, sy + 4, sx + this.width / 2 + 4, ey - 10, 0xff000000);
-            guiGraphics.fill(sx + this.width / 2, ey - 8, sx + this.width / 2 + 4, ey - 4, 0xff000000);
+        if (this.getLoadResult().message != null) {
+            guiGraphics.fill(ex - 8, sy + 4, ex - 4, ey - 10, 0xff000000);
+            guiGraphics.fill(ex - 8, ey - 8, ex - 4, ey - 4, 0xff000000);
         }
 
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.active ? 16777215 : 10526880;
         this.renderString(guiGraphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
-
-        this.edit.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.reset.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     protected void renderString(GuiGraphics guiGraphics, Font font, int color) {
@@ -94,30 +77,5 @@ public class ConfigWidget extends AbstractWidget {
         guiGraphics.enableScissor(minX, minY, maxX, maxY);
         guiGraphics.drawString(font, this.getMessage(), minX, j, color);
         guiGraphics.disableScissor();
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean r = super.mouseClicked(mouseX, mouseY, button);
-        if (!r) return false;
-
-        if (this.edit.isHovered())
-            this.edit.mouseClicked(mouseX, mouseY, button);
-        else if (this.reset.isHovered())
-            this.reset.mouseClicked(mouseX, mouseY, button);
-
-        return true;
-    }
-
-
-    public class ScrollingButton extends Button {
-        public ScrollingButton(int x, int y, int width, int height, Component message, OnPress onPress) {
-            super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
-        }
-
-        @Override
-        public int getY() {
-            return super.getY() - self.getScrollAmount();
-        }
     }
 }

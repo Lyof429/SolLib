@@ -17,35 +17,14 @@ public class SolTest {
     public static final SolModContainer MOD = new SolModContainer("SolTest", "soltest");
 
     public static void lyof() {
-        ConfigEntry<String> hello = new ConfigEntry<>("world");
-        ConfigEntry<Boolean> exists = new ConfigEntry<>(true);
-
-        IConfigurable builder = it -> it
-                .addObject("category", a -> a
-                        .comment("This is a comment")
-                        .add("hello", "world")
-                        .add("number", 5)
-                        );
-        MOD.createConfig("sollib/test", 1.0, builder);
-
-        MOD.register(ItemHolder.class, "thingie", () -> new Item(new Item.Properties()))
-                .withFuel(12)
-                .withTags(ItemTags.ANVIL)
-                .withModel(ModelTemplates.FLAT_ITEM);
-        MOD.register(BlockHolder.class, "block_block", () -> new Block(BlockBehaviour.Properties.of()))
-                .withItem(item -> item.withFuel(200))
-                .withSlab().withStairs().withWall()
-                .withFlammability(20, 5)
-                .dropsSelf();
-
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "recipe/dropper"), json -> {
-            if (json == null) return null;
-
-            json.getAsJsonObject("key")
-                    .getAsJsonObject("#")
-                    .addProperty("item", "minecraft:copper_ingot");
-            return json;
-        });
+        SolLib.MOD.createConfig("soltest", 1, builder -> builder
+                .addObject("main", main -> main
+                        .comment("This needs testing")
+                        .add("text", "hello world")
+                        .comment("Here be the universe")
+                        .add("answer", 42)
+                )
+        );
     }
 
     public static void sasha() {
