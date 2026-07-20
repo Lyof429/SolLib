@@ -1,22 +1,14 @@
 package net.lcc.sollib.api.client.ui.config;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.MalformedJsonException;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.config.SConfigRegistry;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.platform.Services;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -33,7 +25,7 @@ public class SolConfigScreen extends Screen {
 
     private String lastText;
     private Component fileStatus;
-    private int line, column;
+    private int errorLine, errorColumn;
 
     public SolConfigScreen(SolModContainer modContainer, Screen previous) {
         super(Component.literal(modContainer.getName()));
@@ -42,8 +34,8 @@ public class SolConfigScreen extends Screen {
 
         this.lastText = "";
         this.fileStatus = Component.empty();
-        this.line = -1;
-        this.column = -1;
+        this.errorLine = -1;
+        this.errorColumn = -1;
     }
 
     @Override
@@ -54,20 +46,11 @@ public class SolConfigScreen extends Screen {
                 this.width / 4 - 10, this.height / 2, this.modContainer.getConfigs(), this::onConfigSelected);
         this.addRenderableWidget(this.configList);
 
-        this.editBox = new MultiLineEditBox(this.font, this.width / 4 + 30, 50, 3 * this.width / 4  - 50,
-                this.height - 130, Component.literal("Select a file to edit"), Component.literal("Edit")) {
-            @Override
-            protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-                SolConfigScreen self = SolConfigScreen.this;
-                if (self.line != -1) {
-                    int sy = this.getY() + this.innerPadding();
-                    guiGraphics.fill(this.getX(), sy + self.font.lineHeight*self.line,
-                            this.getX() + this.width, sy + self.font.lineHeight*(self.line+1), 0xff990000);
-                }
-
-                super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
-            }
-        };
+        this.editBox = StyledMultiLineEditBox.of(this.font, this.width / 4 + 30, 50, 3 * this.width / 4  - 50,
+                this.height - 130, Component.literal("Select a file to edit"), Component.literal("Edit"))
+                .sol_withTextHighlight((text, line, index) -> index == this.errorLine ? 0x990000 : -1)
+                .sol_withTextColor((text, line, index) -> line.strip().startsWith("//") ? 0x777777 : -1)
+                .sol_withTextColor((text, line, index) -> line.startsWith("version:") || line.startsWith("reset:") ? 0xbb7700 : -1).build();
         this.addRenderableWidget(this.editBox);
 
         int buttonSize = (3 * this.width / 4 - 40 - 30) / 6;
@@ -115,8 +98,8 @@ public class SolConfigScreen extends Screen {
 
         if (this.editBox != null && !this.editBox.getValue().equals(this.lastText)) {
             this.lastText = this.editBox.getValue();
-            this.line = -1;
-            this.column = -1;
+            this.errorLine = -1;
+            this.errorColumn = -1;
 
             SolConfig.Content result = new SolConfig.Content();
             result.text = this.lastText;
@@ -130,10 +113,10 @@ public class SolConfigScreen extends Screen {
                     int atIdx = msg.indexOf("at line");
                     msg = msg.substring(atIdx);
 
-                    this.line = Integer.parseInt(msg.substring(msg.indexOf("at line") + 7, msg.indexOf("column")).strip());
-                    this.column = Integer.parseInt(msg.substring(msg.indexOf("column") + 6, msg.indexOf("path")).strip()) - 2;
+                    this.errorLine = Integer.parseInt(msg.substring(msg.indexOf("at line") + 7, msg.indexOf("column")).strip());
+                    this.errorColumn = Integer.parseInt(msg.substring(msg.indexOf("column") + 6, msg.indexOf("path")).strip()) - 2;
                 }
-                fileStatus = Component.literal("JSON Error: line " + this.line + ", column " + this.column).withStyle(ChatFormatting.RED);
+                fileStatus = Component.literal("JSON Error: line " + this.errorLine + ", column " + this.errorColumn).withStyle(ChatFormatting.RED);
             }
         }
     }

@@ -27,7 +27,8 @@
     "client.render.block.BlockMixin",
     "client.render.item.GuiGraphicsMixin",
     "client.render.item.ItemMixin",
-    "client.render.item.ItemRendererMixin"
+    "client.render.item.ItemRendererMixin",
+    "client.ui.MultiLineEditBoxMixin"
   ],
   "server": [
   ],
