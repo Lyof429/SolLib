@@ -29,31 +29,32 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
 
     @Shadow @Final private MultilineTextField textField;
     @Shadow @Final private Font font;
-    @Unique private final List<ColorProvider> textColors = new ArrayList<>();
-    @Unique private final List<ColorProvider> textHighlights = new ArrayList<>();
 
-    @Unique private int index;
-    @Unique private int displayIndex;
-    @Unique private String line;
-    @Unique private boolean hadNewLine = true;
+    @Unique private final List<ColorProvider> sol_textColors = new ArrayList<>();
+    @Unique private final List<ColorProvider> sol_textHighlights = new ArrayList<>();
+
+    @Unique private int sol_index;
+    @Unique private int sol_displayIndex;
+    @Unique private String sol_line;
+    @Unique private boolean sol_hadNewLine = true;
 
     @Override
     public StyledMultiLineEditBox sol_withTextColor(ColorProvider provider) {
-        this.textColors.add(provider);
+        this.sol_textColors.add(provider);
         return this;
     }
 
     @Override
     public StyledMultiLineEditBox sol_withTextHighlight(ColorProvider provider) {
-        this.textHighlights.add(provider);
+        this.sol_textHighlights.add(provider);
         return this;
     }
 
     @Inject(method = "renderContents", at = @At("HEAD"))
     private void beginRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        this.index = 0;
-        this.displayIndex = -1;
-        this.line = "";
+        this.sol_index = 0;
+        this.sol_displayIndex = -1;
+        this.sol_line = "";
     }
 
     @WrapOperation(method = "renderContents", at = @At(
@@ -64,24 +65,24 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
         MultilineTextField.StringView o = (MultilineTextField.StringView) original.call(instance);
         String s = this.textField.value();
 
-        this.displayIndex += 1;
-        if (this.hadNewLine) {
-            this.index += 1;
-            this.line = "";
+        this.sol_displayIndex += 1;
+        if (this.sol_hadNewLine) {
+            this.sol_index += 1;
+            this.sol_line = "";
         }
-        this.line += s.substring(o.beginIndex(), o.endIndex()) + "\n";
+        this.sol_line += s.substring(o.beginIndex(), o.endIndex()) + "\n";
 
-        for (ColorProvider provider : this.textHighlights) {
-            int c = provider.getColor(s.substring(o.beginIndex(), o.endIndex()), this.line, this.index);
+        for (ColorProvider provider : this.sol_textHighlights) {
+            int c = provider.getColor(s.substring(o.beginIndex(), o.endIndex()), this.sol_line, this.sol_index);
             if (c == -1) continue;
 
             int sy = this.getY() + this.innerPadding();
-            guiGraphics.fill(this.getX(), sy + this.font.lineHeight*this.displayIndex,
-                    this.getX() + this.width, sy + this.font.lineHeight*(this.displayIndex+1), c + 0xff000000);
+            guiGraphics.fill(this.getX(), sy + this.font.lineHeight*this.sol_displayIndex,
+                    this.getX() + this.width, sy + this.font.lineHeight*(this.sol_displayIndex +1), c + 0xff000000);
             break;
         }
 
-        this.hadNewLine = o.endIndex() >= s.length() || s.charAt(o.endIndex()) == '\n';
+        this.sol_hadNewLine = o.endIndex() >= s.length() || s.charAt(o.endIndex()) == '\n';
         return (E) o;
     }
 
@@ -90,8 +91,8 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
             target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;III)I"
     ))
     private int drawTextColor(GuiGraphics instance, Font font, String text, int x, int y, int color, Operation<Integer> original) {
-        for (ColorProvider provider : this.textColors) {
-            int c = provider.getColor(text, this.line, this.index);
+        for (ColorProvider provider : this.sol_textColors) {
+            int c = provider.getColor(text, this.sol_line, this.sol_index);
             if (c == -1) continue;
 
             color = c + 0xff000000;
