@@ -11,6 +11,7 @@ public interface StyledMultiLineEditBox {
 
     StyledMultiLineEditBox sol_withTextColor(ColorProvider provider);
     StyledMultiLineEditBox sol_withTextHighlight(ColorProvider provider);
+    StyledMultiLineEditBox sol_withLineIndex(boolean enable);
 
     default MultiLineEditBox build() {
         return (MultiLineEditBox) this;

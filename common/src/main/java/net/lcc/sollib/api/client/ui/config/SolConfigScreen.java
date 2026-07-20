@@ -25,6 +25,7 @@ public class SolConfigScreen extends Screen {
 
     private String lastText;
     private Component fileStatus;
+    private Component errorMessage;
     private int errorLine, errorColumn;
 
     public SolConfigScreen(SolModContainer modContainer, Screen previous) {
@@ -43,11 +44,12 @@ public class SolConfigScreen extends Screen {
         super.init();
 
         this.configList = new ConfigListWidget(20, this.height / 4,
-                this.width / 4 - 10, this.height / 2, this.modContainer.getConfigs(), this::onConfigSelected);
+                this.width / 4 - 30, this.height / 2, this.modContainer.getConfigs(), this::onConfigSelected);
         this.addRenderableWidget(this.configList);
 
         this.editBox = StyledMultiLineEditBox.of(this.font, this.width / 4 + 30, 50, 3 * this.width / 4  - 50,
                 this.height - 130, Component.literal("Select a file to edit"), Component.literal("Edit"))
+                .sol_withLineIndex(true)
                 .sol_withTextHighlight((text, line, index) -> index == this.errorLine ? 0x990000 : -1)
                 .sol_withTextColor((text, line, index) -> line.strip().startsWith("//") ? 0x777777 : -1)
                 .sol_withTextColor((text, line, index) -> line.startsWith("version:") || line.startsWith("reset:") ? 0xbb7700 : -1).build();
@@ -85,8 +87,19 @@ public class SolConfigScreen extends Screen {
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 16777215);
 
-        if (this.configList.getSelected() != null)
+        if (this.configList.getSelected() != null) {
             guiGraphics.drawString(this.font, this.fileStatus, this.width / 4 + 30, this.height - 80 + 17, 16777215);
+
+            if (this.errorMessage != null
+                    && mouseX >= this.width / 4 + 30
+                    && mouseY >= this.height - 70
+                    && mouseX <= this.width / 4 + 30 + this.font.width(this.fileStatus)
+                    && mouseY <= this.height - 70 + this.font.lineHeight*2
+            )
+                this.setTooltipForNextRenderPass(this.errorMessage);
+        }
+
+        //guiGraphics.drawString(this.font, "the what", 10, 10, 16777215);
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
@@ -98,6 +111,7 @@ public class SolConfigScreen extends Screen {
 
         if (this.editBox != null && !this.editBox.getValue().equals(this.lastText)) {
             this.lastText = this.editBox.getValue();
+            this.errorMessage = null;
             this.errorLine = -1;
             this.errorColumn = -1;
 
@@ -106,17 +120,19 @@ public class SolConfigScreen extends Screen {
             String json = SolConfig.toJson(result);
             try {
                 JsonBuilder.toJson(json);
-                fileStatus = Component.literal("JSON Status: Valid").withStyle(ChatFormatting.GREEN);
+                this.fileStatus = Component.literal("JSON Status: Valid").withStyle(ChatFormatting.GREEN);
             } catch (Exception e) {
                 String msg = e.getMessage();
                 if (msg.contains("at line")) {
                     int atIdx = msg.indexOf("at line");
+                    this.errorMessage = Component.literal(msg);
+
                     msg = msg.substring(atIdx);
 
                     this.errorLine = Integer.parseInt(msg.substring(msg.indexOf("at line") + 7, msg.indexOf("column")).strip());
                     this.errorColumn = Integer.parseInt(msg.substring(msg.indexOf("column") + 6, msg.indexOf("path")).strip()) - 2;
                 }
-                fileStatus = Component.literal("JSON Error: line " + this.errorLine + ", column " + this.errorColumn).withStyle(ChatFormatting.RED);
+                this.fileStatus = Component.literal("JSON Error: line " + this.errorLine + ", column " + this.errorColumn).withStyle(ChatFormatting.RED);
             }
         }
     }
@@ -129,7 +145,7 @@ public class SolConfigScreen extends Screen {
     }
 
     public void onConfigSelected(SolConfig config) {
-        if (this.editBox != null && config != null) {
+        if (config != null) {
             this.editBox.setValue(config.getContent().text);
         }
 
@@ -137,20 +153,24 @@ public class SolConfigScreen extends Screen {
             this.saveButton.active = config != null;
             this.openButton.active = config != null;
             this.resetButton.active = config != null;
+            this.editBox.active = config != null;
         }
     }
 
     public void onButtonClick(Button button) {
         if (this.configList == null || this.configList.getSelected() == null) return;
 
-        if (button == this.saveButton)
+        if (button == this.saveButton) {
             this.configList.getSelected().getConfig().writeFile(this.editBox.getValue());
+            this.configList.getSelected().reload();
+        }
 
         else if (button == this.openButton)
             this.configList.getSelected().getConfig().openFile();
 
         else if (button == this.resetButton) {
             this.configList.getSelected().getConfig().init(true);
+            this.configList.getSelected().reload();
             this.onConfigSelected(this.configList.getSelected().getConfig());
         }
 
