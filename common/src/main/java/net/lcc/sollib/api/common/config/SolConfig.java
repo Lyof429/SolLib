@@ -26,7 +26,7 @@ public class SolConfig {
      */
     public static String fromJson(String json, Content content) {
         StringBuilder builder = new StringBuilder();
-        builder.append("\n// This config file uses a custom defined parser.")
+        builder.append("// This config file uses a custom defined parser.")
                 .append("\n//   That's why there are comments here and stray values below, they wouldn't be valid in any other .json file")
                 .append("\n//   To add a comment yourself, just start a line with // like here")
                 .append("\n\nversion: ").append(content.version).append("\nreset: ").append(false);

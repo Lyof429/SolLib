@@ -32,6 +32,7 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
 
     @Unique private final List<ColorProvider> sol_textColors = new ArrayList<>();
     @Unique private final List<ColorProvider> sol_textHighlights = new ArrayList<>();
+    @Unique private boolean sol_shouldShowLines = false;
 
     @Unique private int sol_index;
     @Unique private int sol_displayIndex;
@@ -48,6 +49,26 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
     public StyledMultiLineEditBox sol_withTextHighlight(ColorProvider provider) {
         this.sol_textHighlights.add(provider);
         return this;
+    }
+
+    @Override
+    public StyledMultiLineEditBox sol_withLineIndex(boolean enable) {
+        this.sol_shouldShowLines = enable;
+        return this;
+    }
+
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (this.visible && this.sol_shouldShowLines) {
+            this.renderBackground(guiGraphics);
+            guiGraphics.enableScissor(this.getX() - 50, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1);
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(0.0, -this.scrollAmount(), 0.0);
+            this.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+            guiGraphics.pose().popPose();
+            guiGraphics.disableScissor();
+            this.renderDecorations(guiGraphics);
+        } else super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Inject(method = "renderContents", at = @At("HEAD"))
@@ -72,15 +93,20 @@ public abstract class MultiLineEditBoxMixin extends AbstractScrollWidget impleme
         }
         this.sol_line += s.substring(o.beginIndex(), o.endIndex()) + "\n";
 
+        int sy = this.getY() + this.innerPadding();
         for (ColorProvider provider : this.sol_textHighlights) {
             int c = provider.getColor(s.substring(o.beginIndex(), o.endIndex()), this.sol_line, this.sol_index);
             if (c == -1) continue;
 
-            int sy = this.getY() + this.innerPadding();
-            guiGraphics.fill(this.getX(), sy + this.font.lineHeight*this.sol_displayIndex,
-                    this.getX() + this.width, sy + this.font.lineHeight*(this.sol_displayIndex +1), c + 0xff000000);
+            guiGraphics.fill(this.getX() + 1, sy + this.font.lineHeight*this.sol_displayIndex,
+                    this.getX() + this.width, sy + this.font.lineHeight*(this.sol_displayIndex+1), c + 0xff000000);
             break;
         }
+
+        if (this.sol_hadNewLine && this.sol_shouldShowLines)
+            guiGraphics.drawString(this.font, String.valueOf(this.sol_index),
+                    this.getX() - 4 - this.font.width(String.valueOf(this.sol_index)),
+                    sy + this.font.lineHeight*this.sol_displayIndex, 0xff999999);
 
         this.sol_hadNewLine = o.endIndex() >= s.length() || s.charAt(o.endIndex()) == '\n';
         return (E) o;

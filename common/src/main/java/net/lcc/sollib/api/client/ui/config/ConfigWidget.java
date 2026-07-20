@@ -71,7 +71,7 @@ public class ConfigWidget extends AbstractWidget {
 
     protected void renderString(GuiGraphics guiGraphics, Font font, int color) {
         int minX = this.getX() + 4, minY = this.getY(),
-                maxX = this.getX() + this.width / 2 - 2, maxY = this.getY() + this.getHeight();
+                maxX = this.getX() + this.width - 10, maxY = this.getY() + this.getHeight();
         int j = (minY + maxY - 9) / 2 + 1;
 
         guiGraphics.enableScissor(minX, minY, maxX, maxY);
