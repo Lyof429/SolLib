@@ -96,6 +96,7 @@ public class SolConfig {
     public void init(boolean force) {
         this.content.json = new JsonObject();
         this.content.result = LoadResult.GOOD;
+        this.content.version = this.version;
 
         Path path = Services.PLATFORM.getConfigDirectory();
 
@@ -116,7 +117,6 @@ public class SolConfig {
         this.contentBuilder.toJson(builder);
         String json = builder.toString();
         this.content.text = SolConfig.fromJson(json, this.content);
-        this.content.version = this.version;
 
         // Only continue processing if the file was accessed correctly
         if (this.content.result == LoadResult.GOOD) {
