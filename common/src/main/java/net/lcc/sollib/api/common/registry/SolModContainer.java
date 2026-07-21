@@ -1,5 +1,6 @@
 package net.lcc.sollib.api.common.registry;
 
+import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
@@ -65,10 +66,13 @@ public class SolModContainer {
     }
 
     public SolConfig createConfig(String name, double version, IConfigurable contentBuilder) {
-        SolConfig c = new SolConfig(name, version, contentBuilder);
-        c.init();
-        this.configs.putIfAbsent(name, c);
-        return c;
+        return this.createConfig(new SolConfig(name, version, contentBuilder));
+    }
+
+    public SolConfig createConfig(SolConfig config) {
+        config.init();
+        this.configs.putIfAbsent(config.getName(), config);
+        return config;
     }
 
     public Iterable<SolConfig> getConfigs() {
