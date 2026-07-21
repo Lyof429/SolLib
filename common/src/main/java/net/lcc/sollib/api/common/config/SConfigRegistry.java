@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class SConfigRegistry {
@@ -23,6 +24,13 @@ public class SConfigRegistry {
     @Nullable
     public SolConfig get(String name) {
         return INSTANCES.get(name);
+    }
+
+    /**
+     * @return An iterator over every registered SolConfig
+     */
+    public Iterable<SolConfig> getAll() {
+        return INSTANCES.values();
     }
 
     /**
