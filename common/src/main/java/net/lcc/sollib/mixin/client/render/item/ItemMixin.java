@@ -14,7 +14,7 @@ public class ItemMixin {
     private void initItemRenderer(Item.Properties properties, CallbackInfo ci) {
         if (this instanceof IAddedRenderItem renderer)
             SolClientRegistries.Render.ITEM.register(
-                    stack -> renderer.shouldRender(stack) && stack.is((Item) (Object) this),
+                    stack -> renderer.shouldAddRender(stack) && stack.is((Item) (Object) this),
                     renderer
             );
     }

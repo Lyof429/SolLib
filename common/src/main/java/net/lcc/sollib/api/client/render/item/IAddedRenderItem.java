@@ -5,5 +5,5 @@ import net.minecraft.world.item.ItemStack;
 public interface IAddedRenderItem extends IItemRenderer {
     float PX_UNIT = 1/16f;
 
-    boolean shouldRender(ItemStack stack);
+    boolean shouldAddRender(ItemStack stack);
 }
