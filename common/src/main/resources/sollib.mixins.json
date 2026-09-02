@@ -18,8 +18,10 @@
   ],
   "client": [
     "access.AbstractScrollWidgetAccessor",
+    "access.BossHealthOverlayAccessor",
     "access.ItemRendererAccessor",
     "client.BossHealthOverlayMixin",
+    "client.MinecraftMixin",
     "client.model.entity.EntityModelMixin",
     "client.model.entity.ModelPartMixin",
     "client.model.item.ItemRendererMixin",
