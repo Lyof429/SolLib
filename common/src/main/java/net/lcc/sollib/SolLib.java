@@ -1,7 +1,6 @@
 package net.lcc.sollib;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.registry.SolModContainer;

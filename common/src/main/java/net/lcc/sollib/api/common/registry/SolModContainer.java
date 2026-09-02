@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.common.registry;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;

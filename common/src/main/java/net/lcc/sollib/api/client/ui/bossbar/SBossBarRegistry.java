@@ -111,38 +111,15 @@ public class SBossBarRegistry {
         BOSS_MUSIC.put(condition, music);
     }
 
-    private final Map<UUID, Music> musicCache = new HashMap<>();
-    private final Set<UUID> noMusicCache = new HashSet<>();
-
     @ApiStatus.Internal
     public Music getCustomBossMusic(BossHealthOverlayAccessor overlay) {
         for (LerpingBossEvent event : overlay.getEvents().values()) {
-            UUID id = event.getId();
-
-            if (noMusicCache.contains(id)) continue;
-
-            if (musicCache.containsKey(id)) return musicCache.get(id);
-
-            if (event.getProgress() % 2 == 0){
-                cleanupStaleCaches(overlay);
-            }
-
-            Music calculatedMusic = getMusic(event);
-            if (calculatedMusic != null) {
-                musicCache.put(id, calculatedMusic);
-                return calculatedMusic;
-            } else {
-                noMusicCache.add(id);
+            Music music = getMusic(event);
+            if (music != null) {
+                return music;
             }
         }
         return null;
-    }
-
-    @ApiStatus.Internal
-    public void cleanupStaleCaches(BossHealthOverlayAccessor overlay) {
-        Set<UUID> activeBosses = overlay.getEvents().keySet();
-        musicCache.keySet().retainAll(activeBosses);
-        noMusicCache.retainAll(activeBosses);
     }
 
     @ApiStatus.Internal
