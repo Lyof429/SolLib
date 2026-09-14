@@ -4,22 +4,34 @@ import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.core.Identifier;
+import net.lcc.sollib.datagen.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 @Mod(SolLib.MOD_ID)
@@ -70,12 +82,33 @@ public class SolLibNeo {
     public static void register(EntityAttributeCreationEvent event) {
         SolRegistries.MOD.iterate(EntityHolder.class, holder -> {
             if (holder.hasAttributes()) {
-                // Forge is picky and wants its own attributes, else it explodes
+                // NeoForge is picky and wants its own attributes, else it explodes
                 AttributeSupplier.Builder builder = holder.getAttributes();
                 builder.add(NeoForgeMod.SWIM_SPEED)
                         .add(NeoForgeMod.NAMETAG_DISTANCE);
                 event.put((EntityType<? extends LivingEntity>) holder.get(), builder.build());
             }
         });
+    }
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+        BlockTagsProvider blockTagsProvider = new SBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
+        generator.addProvider(event.includeServer(), blockTagsProvider);
+        generator.addProvider(event.includeServer(), new SItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
+        generator.addProvider(event.includeServer(), new SEntityTagProvider(packOutput, lookupProvider, existingFileHelper));
+
+        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(SBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(SEntityLootTableProvider::new, LootContextParamSets.ENTITY)), lookupProvider));
+
+        generator.addProvider(event.includeServer(), new SRecipeProvider(packOutput, lookupProvider));
+
+        generator.addProvider(event.includeClient(), new SItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new SBlockStateProvider(packOutput, existingFileHelper));
     }
 }

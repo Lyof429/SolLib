@@ -2,7 +2,6 @@ package net.lcc.sollib.api.common.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.lcc.sollib.SolTest;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.config.builder.IJsonBuilder;

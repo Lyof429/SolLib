@@ -1,8 +1,12 @@
 package net.lcc.sollib.api.client.ui.bossbar;
 
+import net.lcc.sollib.mixin.access.BossHealthOverlayAccessor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.sounds.Music;
 import net.minecraft.world.BossEvent;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,7 +18,9 @@ public class SBossBarRegistry {
     private SBossBarRegistry() {
     }
 
-    private final Map<Predicate<BossEvent>, IBossBarRenderer> INSTANCES = new LinkedHashMap<>();
+    private final Map<Predicate<BossEvent>, IBossBarRenderer> BOSSBAR_RENDERER = new LinkedHashMap<>();
+    private final Map<Predicate<BossEvent>, IBossBarTextModifier> TEXT_MODIFIERS = new LinkedHashMap<>();
+    private final Map<Predicate<BossEvent>, Music> BOSS_MUSIC = new LinkedHashMap<>();
 
     /**
      * Manages registration of custom boss bar render introduced in SolLib
@@ -24,14 +30,30 @@ public class SBossBarRegistry {
      * @since 1.0
      */
     public void register(Predicate<BossEvent> condition, IBossBarRenderer renderer) {
-        INSTANCES.put(condition, renderer);
+        BOSSBAR_RENDERER.put(condition, renderer);
     }
 
     /**
      * Redeclaration of vanilla BAR_BACKGROUND_SPRITES and BAR_PROGRESS_SPRITES from BossHealthOverlay
      */
-    private static final ResourceLocation[] BAR_BACKGROUND_SPRITES = new ResourceLocation[]{ResourceLocation.withDefaultNamespace("boss_bar/pink_background"), ResourceLocation.withDefaultNamespace("boss_bar/blue_background"), ResourceLocation.withDefaultNamespace("boss_bar/red_background"), ResourceLocation.withDefaultNamespace("boss_bar/green_background"), ResourceLocation.withDefaultNamespace("boss_bar/yellow_background"), ResourceLocation.withDefaultNamespace("boss_bar/purple_background"), ResourceLocation.withDefaultNamespace("boss_bar/white_background")};
-    private static final ResourceLocation[] BAR_PROGRESS_SPRITES = new ResourceLocation[]{ResourceLocation.withDefaultNamespace("boss_bar/pink_progress"), ResourceLocation.withDefaultNamespace("boss_bar/blue_progress"), ResourceLocation.withDefaultNamespace("boss_bar/red_progress"), ResourceLocation.withDefaultNamespace("boss_bar/green_progress"), ResourceLocation.withDefaultNamespace("boss_bar/yellow_progress"), ResourceLocation.withDefaultNamespace("boss_bar/purple_progress"), ResourceLocation.withDefaultNamespace("boss_bar/white_progress")};
+    private static final ResourceLocation[] BAR_BACKGROUND_SPRITES = new ResourceLocation[]{
+            ResourceLocation.withDefaultNamespace("boss_bar/pink_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/blue_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/red_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/green_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/yellow_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/purple_background"),
+            ResourceLocation.withDefaultNamespace("boss_bar/white_background")
+    };
+    private static final ResourceLocation[] BAR_PROGRESS_SPRITES = new ResourceLocation[]{
+            ResourceLocation.withDefaultNamespace("boss_bar/pink_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/blue_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/red_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/green_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/yellow_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/purple_progress"),
+            ResourceLocation.withDefaultNamespace("boss_bar/white_progress")
+    };
 
     /**
      * Variant of {@link #register(Predicate, IBossBarRenderer)} of boss bar render registration with default placement
@@ -40,13 +62,17 @@ public class SBossBarRegistry {
      * @since 1.0
      */
     public void register(Predicate<BossEvent> condition, ResourceLocation texture) {
-        INSTANCES.put(condition, ((guiGraphics, x, y, bossEvent) -> {
-            int progress = Mth.lerpDiscrete(bossEvent.getProgress(), 0, 182);
-            guiGraphics.blitSprite(BAR_BACKGROUND_SPRITES[bossEvent.getColor().ordinal()], 182, 5, 0, 0, x, y, 182, 5);
-            guiGraphics.blitSprite(texture, 183, 9, 0, 0, x, y - 2, 183, 9);
-            if (progress > 0)
-                guiGraphics.blitSprite(BAR_PROGRESS_SPRITES[bossEvent.getColor().ordinal()], 182, 5, 0, 0, x, y, progress, 5);
-        }));
+        BOSSBAR_RENDERER.put(condition, (guiGraphics, x, y, bossEvent) -> {
+            int progressWidth = (int) (bossEvent.getProgress() * 183.0F);
+            int colorIndex = bossEvent.getColor().ordinal();
+
+            guiGraphics.blitSprite(BAR_BACKGROUND_SPRITES[colorIndex], x, y, 182, 5);
+
+            if (progressWidth > 0) {
+                guiGraphics.blitSprite(BAR_PROGRESS_SPRITES[colorIndex], 182, 5, 0, 0, x, y, progressWidth, 5);
+            }
+            guiGraphics.blit(texture, x, y - 2, 0, 0, 183, 9, 183, 9);
+        });
     }
 
     /**
@@ -55,8 +81,67 @@ public class SBossBarRegistry {
      * @since 1.0
      *
      */
+    @ApiStatus.Internal
     public IBossBarRenderer getRenderer(BossEvent bossEvent) {
-        for (Map.Entry<Predicate<BossEvent>, IBossBarRenderer> entry : INSTANCES.entrySet()) {
+        for (Map.Entry<Predicate<BossEvent>, IBossBarRenderer> entry : BOSSBAR_RENDERER.entrySet()) {
+            if (entry.getKey().test(bossEvent)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+    /**
+     * Registers a modifier to change the text displayed above a boss bar.
+     *
+     * @param condition Filters the actual boss bar event.
+     * @param modifier  The modifier logic that supplies the new Component.
+     * @since 1.4
+     */
+    public void registerTextModifier(Predicate<BossEvent> condition, IBossBarTextModifier modifier) {
+        TEXT_MODIFIERS.put(condition, modifier);
+    }
+
+    /**
+     * Processes custom text modifiers registered by {@link #registerTextModifier(Predicate, IBossBarTextModifier)} to alter the rendered boss bar text properties
+     *
+     * @since 1.4
+     */
+    @ApiStatus.Internal
+    public BossBarTextState getModifiedTextState(BossEvent bossEvent, BossBarTextState initialState, GuiGraphics guiGraphics) {
+        BossBarTextState currentState = initialState;
+        for (Map.Entry<Predicate<BossEvent>, IBossBarTextModifier> entry : TEXT_MODIFIERS.entrySet()) {
+            if (entry.getKey().test(bossEvent)) {
+                currentState = entry.getValue().modify(bossEvent, currentState, guiGraphics);
+            }
+        }
+        return currentState;
+    }
+
+    /**
+     * Registers a music type to be played on active boss event.
+     *
+     * @param condition Filters the actual boss bar event.
+     * @param music     The music type to be played on active boss event.
+     * @since 1.4
+     */
+    public void registerMusic(Predicate<BossEvent> condition, Music music) {
+        BOSS_MUSIC.put(condition, music);
+    }
+
+    @ApiStatus.Internal
+    public Music getCustomBossMusic(BossHealthOverlayAccessor overlay) {
+        for (LerpingBossEvent event : overlay.getEvents().values()) {
+            Music music = getMusic(event);
+            if (music != null) {
+                return music;
+            }
+        }
+        return null;
+    }
+
+    @ApiStatus.Internal
+    public Music getMusic(BossEvent bossEvent) {
+        for (Map.Entry<Predicate<BossEvent>, Music> entry : BOSS_MUSIC.entrySet()) {
             if (entry.getKey().test(bossEvent)) {
                 return entry.getValue();
             }
