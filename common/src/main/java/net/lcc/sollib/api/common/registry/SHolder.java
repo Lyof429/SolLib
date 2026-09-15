@@ -1,6 +1,7 @@
 package net.lcc.sollib.api.common.registry;
 
 import net.lcc.sollib.platform.Services;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
@@ -11,6 +12,7 @@ public class SHolder<T> implements Supplier<T> {
     protected String name;
 
     private T cachedEntry;
+    private Holder<T> cachedEntryHolder;
     private final Supplier<T> entrySupplier;
 
     public SHolder(SolModContainer mod, String name, Supplier<T> entrySupplier) {
@@ -33,6 +35,23 @@ public class SHolder<T> implements Supplier<T> {
         this.cachedEntry = entry;
 
         return entry;
+    }
+
+    /**
+     * Retrieves the cached entry if it exists, otherwise calls the supplier to create a new entry, and wraps it in a holder.
+     * @return A holder of the cached entry, or of a new entry if the cached entry does not exist.
+     * If {@link getRegistry()} returns null, the holder will be direct.
+     */
+    public Holder<T> getAsHolder() {
+        if (this.cachedEntryHolder != null) return this.cachedEntryHolder;
+
+        T value = this.get();
+        Holder<T> holder = Holder.direct(value);
+        if (this.getRegistry() != null)
+            holder = this.getRegistry().wrapAsHolder(value);
+
+        this.cachedEntryHolder = holder;
+        return holder;
     }
 
     /**

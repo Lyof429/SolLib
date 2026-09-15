@@ -85,12 +85,12 @@ public class EffectHolder extends SHolder<MobEffect> {
         this.craftingIngredient = ingredient;
 
         this.potion = new SHolder<>(this.mod, this.name,
-                () -> new Potion(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()), duration)));
+                () -> new Potion(new MobEffectInstance(this.getAsHolder(), duration)));
         this.longPotion = hasLong ? new SHolder<>(this.mod, "long_" + this.name,
-                () -> new Potion(name, new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()),
+                () -> new Potion(name, new MobEffectInstance(this.getAsHolder(),
                         duration * 8 / 3))) : null;
         this.strongPotion = hasStrong ? new SHolder<>(this.mod, "strong_" + this.name,
-                () -> new Potion(name, new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.get()),
+                () -> new Potion(name, new MobEffectInstance(this.getAsHolder(),
                         duration / 2, 1))) : null;
 
         if (Services.PLATFORM.getPlatformName().equals("Fabric"))
@@ -120,20 +120,21 @@ public class EffectHolder extends SHolder<MobEffect> {
     }
 
     public Supplier<Holder<Potion>> getPotion() {
-        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.potion.get());
+        return this.hasPotion() ? this.potion::getAsHolder : null;
     }
 
     public Supplier<Holder<Potion>> getLongPotion() {
-        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.longPotion.get());
+        return this.hasLongPotion() ? this.longPotion::getAsHolder : null;
     }
 
     public Supplier<Holder<Potion>> getStrongPotion() {
-        return () -> BuiltInRegistries.POTION.wrapAsHolder(this.strongPotion.get());
+        return this.hasStrongPotion() ? this.strongPotion::getAsHolder : null;
     }
 
     @ApiStatus.Internal
     public void registerPotion(Consumer<SHolder<Potion>> registrar) {
-        registrar.accept(this.potion);
+        if (this.potion != null)
+            registrar.accept(this.potion);
         if (this.longPotion != null)
             registrar.accept(this.longPotion);
         if (this.strongPotion != null)
