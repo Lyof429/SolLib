@@ -1,20 +1,11 @@
 package net.lcc.sollib;
 
-import com.google.common.collect.Iterables;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
-import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lcc.sollib.api.common.registry.holder.DensityFunctionHolder;
 import net.lcc.sollib.api.common.worldgen.density.ProgressionDensityFunction;
-import net.lcc.sollib.api.event.SEventListener;
-import net.lcc.sollib.api.event.SEventType;
 import net.lcc.sollib.api.event.SEvents;
-import net.lcc.sollib.core.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class SolLib {
     public static final String MOD_ID = "sollib";

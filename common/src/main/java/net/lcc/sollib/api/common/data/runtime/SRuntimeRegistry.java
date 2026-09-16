@@ -159,8 +159,6 @@ public class SRuntimeRegistry implements SEventListener {
 
     @Override
     public void onConfigBuild(SolConfig.BuildEvent event) {
-        LOG.info("config build", event.configName());
-
         if (!event.configName().equals(SolLib.MOD_ID)) return;
 
         event.builder().addObject("runtime_data", config -> config

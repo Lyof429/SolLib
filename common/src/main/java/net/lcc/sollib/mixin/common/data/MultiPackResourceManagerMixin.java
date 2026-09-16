@@ -28,7 +28,7 @@ public class MultiPackResourceManagerMixin {
     private void tailInit(PackType type, List<PackResources> packs, CallbackInfo ci) {
         SolRegistries.Data.RUNTIME.clean();
         SolRegistries.CONFIG.reload();
-        SEvents.ON_PRELOAD.emit((ResourceManager) (Object) this);
+        //SEvents.ON_PRELOAD.emit((ResourceManager) (Object) this);
     }
 
 
