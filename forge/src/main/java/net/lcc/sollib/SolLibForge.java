@@ -5,24 +5,36 @@ import net.lcc.sollib.api.common.registry.holder.EffectHolder;
 import net.lcc.sollib.api.common.registry.holder.EntityHolder;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.core.PotionRecipe;
+import net.lcc.sollib.datagen.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.data.BlockTagsProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 @Mod(SolLib.MOD_ID)
@@ -95,5 +107,27 @@ public class SolLibForge {
                     BrewingRecipeRegistry.addRecipe(new PotionRecipe(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get()));
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+        BlockTagsProvider blockTagsProvider = new SBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
+        generator.addProvider(event.includeServer(), blockTagsProvider);
+        generator.addProvider(event.includeServer(), new SItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
+        generator.addProvider(event.includeServer(), new SEntityTagProvider(packOutput, lookupProvider, existingFileHelper));
+
+        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(SBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(SEntityLootTableProvider::new, LootContextParamSets.ENTITY))));
+
+        generator.addProvider(event.includeServer(), new SRecipeProvider(packOutput));
+
+        generator.addProvider(event.includeClient(), new SItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new SBlockStateProvider(packOutput, existingFileHelper));
     }
 }
