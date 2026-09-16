@@ -13,7 +13,6 @@ import java.util.function.BiConsumer;
 
 public class SWeatherCommandRegistry {
     public static final SWeatherCommandRegistry INSTANCE = new SWeatherCommandRegistry();
-    private SWeatherCommandRegistry() {}
 
     private final Map<String, BiConsumer<CommandSourceStack, Integer>> INSTANCES = new HashMap<>();
 

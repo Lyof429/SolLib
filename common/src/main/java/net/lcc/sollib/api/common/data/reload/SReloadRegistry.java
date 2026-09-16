@@ -1,15 +1,18 @@
 package net.lcc.sollib.api.common.data.reload;
 
 import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.api.event.SEventListener;
+import net.lcc.sollib.api.event.SEventType;
+import net.lcc.sollib.api.event.SEvents;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class SReloadRegistry {
+public class SReloadRegistry implements SEventListener {
     public static final SReloadRegistry INSTANCE = new SReloadRegistry();
-    private SReloadRegistry() {}
 
     protected static final SolLogger LOG = new SolLogger("Sol/Data/Reload");
 
@@ -23,32 +26,30 @@ public class SReloadRegistry {
         INSTANCES.add(listener);
     }
 
-    /**
-     * Calls preload on every registered IReloadListener <br/>
-     * Automatically called before resource reload
-     */
-    @ApiStatus.Internal
-    public void preload(ResourceManager manager) {
-        for (IReloadListener listener : INSTANCES) {
-            try {
-                listener.preload(manager);
-            } catch (Exception e) {
-                LOG.error(listener, ": Error while running preload", e);
-            }
-        }
+    @Override
+    public void registerEvents(Consumer<SEventType<?>> registrar) {
+        registrar.accept(SEvents.ON_RELOAD);
+        registrar.accept(SEvents.ON_PRELOAD);
     }
 
-    /**
-     * Calls reload on every registered IReloadListener <br/>
-     * Automatically called after resource reload
-     */
-    @ApiStatus.Internal
-    public void reload(ResourceManager manager) {
+    @Override
+    public void onReload(ResourceManager manager) {
         for (IReloadListener listener : INSTANCES) {
             try {
                 listener.reload(manager);
             } catch (Exception e) {
                 LOG.error(listener, ": Error while running reload", e);
+            }
+        }
+    }
+
+    @Override
+    public void onPreload(ResourceManager manager) {
+        for (IReloadListener listener : INSTANCES) {
+            try {
+                listener.preload(manager);
+            } catch (Exception e) {
+                LOG.error(listener, ": Error while running preload", e);
             }
         }
     }

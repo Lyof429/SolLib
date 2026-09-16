@@ -16,7 +16,6 @@ import java.util.function.Predicate;
 
 public class SBlockRendererRegistry {
     public static final SBlockRendererRegistry INSTANCE = new SBlockRendererRegistry();
-    private SBlockRendererRegistry() {}
 
     private final Map<Predicate<BlockState>, IBlockRenderer> INSTANCES = new LinkedHashMap<>();
 

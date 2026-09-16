@@ -178,7 +178,7 @@ public class JsonBuilder implements IJsonBuilder {
         this.currentValue = new JsonObject();
 
         if (this.indent == 0 && this.config != null)
-            this.comment("").comment(key.toUpperCase().replace('_', ' '));
+            this.comment().comment(key.toUpperCase().replace('_', ' '));
         this.jump(true);
 
         this.indent++;

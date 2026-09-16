@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 
 public class SItemModelRegistry {
     public static final SItemModelRegistry INSTANCE = new SItemModelRegistry();
-    private SItemModelRegistry() {}
 
     private final Map<Item, ModelResourceLocation> INSTANCES = new HashMap<>();
 

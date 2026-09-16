@@ -2,15 +2,18 @@ package net.lcc.sollib.api.common.config;
 
 import com.google.gson.JsonElement;
 import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.api.event.SEventListener;
+import net.lcc.sollib.api.event.SEventType;
+import net.lcc.sollib.api.event.SEvents;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class SConfigRegistry {
+public class SConfigRegistry implements SEventListener {
     public static final SConfigRegistry INSTANCE = new SConfigRegistry();
-    private SConfigRegistry() {}
 
     protected static final SolLogger LOG = new SolLogger("Sol/Config");
 
@@ -72,5 +75,10 @@ public class SConfigRegistry {
         LOG.info("Loaded", INSTANCES.size(), "configs");
         for (SolConfig config : INSTANCES.values())
             config.init();
+    }
+
+    @Override
+    public void registerEvents(Consumer<SEventType<?>> registrar) {
+        registrar.accept(SEvents.ON_CONFIG_BUILD);
     }
 }

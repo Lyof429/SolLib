@@ -6,6 +6,7 @@ import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.builder.IConfigurable;
 import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;
+import net.lcc.sollib.api.event.SEvents;
 import net.lcc.sollib.platform.Services;
 import net.minecraft.Util;
 import org.apache.commons.io.FileUtils;
@@ -115,6 +116,7 @@ public class SolConfig {
 
         IJsonBuilder builder = new JsonBuilder(this);
         this.contentBuilder.toJson(builder);
+        SEvents.ON_CONFIG_BUILD.emit(new BuildEvent(this.name, builder));
         String json = builder.toString();
         this.content.text = SolConfig.fromJson(json, this.content);
 
@@ -241,4 +243,6 @@ public class SolConfig {
         public double version = 0;
         public boolean reset = false;
     }
+
+    public record BuildEvent(String configName, IJsonBuilder builder) {}
 }
