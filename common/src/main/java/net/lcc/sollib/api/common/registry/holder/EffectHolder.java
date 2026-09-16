@@ -119,16 +119,16 @@ public class EffectHolder extends SHolder<MobEffect> {
         return this.craftingIngredient;
     }
 
-    public Supplier<Holder<Potion>> getPotion() {
-        return this.hasPotion() ? this.potion::getAsHolder : null;
+    public SHolder<Potion> getPotion() {
+        return this.hasPotion() ? this.potion : null;
     }
 
-    public Supplier<Holder<Potion>> getLongPotion() {
-        return this.hasLongPotion() ? this.longPotion::getAsHolder : null;
+    public SHolder<Potion> getLongPotion() {
+        return this.hasLongPotion() ? this.longPotion : null;
     }
 
-    public Supplier<Holder<Potion>> getStrongPotion() {
-        return this.hasStrongPotion() ? this.strongPotion::getAsHolder : null;
+    public SHolder<Potion> getStrongPotion() {
+        return this.hasStrongPotion() ? this.strongPotion : null;
     }
 
     @ApiStatus.Internal

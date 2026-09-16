@@ -1,0 +1,3 @@
+net.lcc.sollib.api.common.config.SConfigRegistry
+net.lcc.sollib.api.common.data.reload.SReloadRegistry
+net.lcc.sollib.api.common.data.runtime.SRuntimeRegistry

@@ -12,7 +12,6 @@ import java.util.function.Predicate;
 
 public class SModContainerRegistry {
     public static final SModContainerRegistry INSTANCE = new SModContainerRegistry();
-    private SModContainerRegistry() {}
 
     protected final Map<String, SolModContainer> INSTANCES = new HashMap<>();
 

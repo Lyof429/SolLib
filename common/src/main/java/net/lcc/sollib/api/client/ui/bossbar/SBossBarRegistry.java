@@ -15,9 +15,6 @@ import java.util.function.Predicate;
 public class SBossBarRegistry {
     public static final SBossBarRegistry INSTANCE = new SBossBarRegistry();
 
-    private SBossBarRegistry() {
-    }
-
     private final Map<Predicate<BossEvent>, IBossBarRenderer> BOSSBAR_RENDERER = new LinkedHashMap<>();
     private final Map<Predicate<BossEvent>, IBossBarTextModifier> TEXT_MODIFIERS = new LinkedHashMap<>();
     private final Map<Predicate<BossEvent>, Music> BOSS_MUSIC = new LinkedHashMap<>();

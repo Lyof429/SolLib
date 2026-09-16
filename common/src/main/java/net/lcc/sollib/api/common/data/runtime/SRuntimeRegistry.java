@@ -2,31 +2,41 @@ package net.lcc.sollib.api.common.data.runtime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.lcc.sollib.SolLib;
+import net.lcc.sollib.api.common.config.ConfigEntry;
+import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.api.event.SEventListener;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class SRuntimeRegistry {
+public class SRuntimeRegistry implements SEventListener {
     public static final SRuntimeRegistry INSTANCE = new SRuntimeRegistry();
-    private SRuntimeRegistry() {}
 
     public static final SolLogger LOG = new SolLogger("Sol/Data/Runtime");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final Map<ResourceLocation, List<RuntimeData>> instances = new HashMap<>();
+
+    private static final ConfigEntry<Set<ResourceLocation>> blacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
+        Set<ResourceLocation> result = new HashSet<>();
+        for (JsonElement elm : json.getAsJsonArray())
+            result.add(Identifier.of(elm.getAsString()));
+        return result;
+    });
+    private static final ConfigEntry<Boolean> enableLog = new ConfigEntry<>(true);
 
     /**
      * Dynamically removes the specified data if activationRule is met (on each reload)
@@ -97,8 +107,14 @@ public class SRuntimeRegistry {
     public Resource apply(ResourceLocation target, Resource original) {
         if (original != null && original.source() instanceof RuntimeResourcePack) return original;
         if (!instances.containsKey(target)) return original;
+        if (blacklist.get().contains(target)) {
+            if (enableLog.get())
+                LOG.info("Skipped runtime data \"" + target + "\" because it was blacklisted in configs");
+            return original;
+        }
 
-        LOG.info("Applying configured data:", target);
+        if (enableLog.get())
+            LOG.info("Applying runtime data:", target);
 
         String result;
         try {
@@ -139,5 +155,22 @@ public class SRuntimeRegistry {
     public void clean() {
         instances.forEach(sol_removeEphemeral);
         instances.entrySet().removeIf(sol_isEmpty);
+    }
+
+    @Override
+    public void onConfigBuild(SolConfig.BuildEvent event) {
+        LOG.info("config build", event.configName());
+
+        if (!event.configName().equals(SolLib.MOD_ID)) return;
+
+        event.builder().addObject("runtime_data", config -> config
+                .comment("If false, disables \"Applying runtime data\" messages in logs")
+                .add("log", true)
+                .comment("Any file id in this list will be ignored when applying runtime data")
+                .comment("  It should never be the case, but if a file fails to load properly, try adding it here and see if it fixes the issue")
+                .bind(enableLog)
+                .addArray("blacklist", List.of())
+                .bind(blacklist)
+        );
     }
 }

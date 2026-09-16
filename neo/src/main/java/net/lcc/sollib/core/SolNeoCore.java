@@ -40,12 +40,12 @@ public class SolNeoCore {
     public static void register(RegisterBrewingRecipesEvent event) {
         SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
             if (holder.hasPotion()) {
-                event.getBuilder().addRecipe(new PotionRecipe(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get()));
+                event.getBuilder().addRecipe(new PotionRecipe(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().getAsHolder()));
 
                 if (holder.hasLongPotion())
-                    event.getBuilder().addRecipe(new PotionRecipe(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get()));
+                    event.getBuilder().addRecipe(new PotionRecipe(holder.getPotion().getAsHolder(), Items.REDSTONE, holder.getLongPotion().getAsHolder()));
                 if (holder.hasStrongPotion())
-                    event.getBuilder().addRecipe(new PotionRecipe(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get()));
+                    event.getBuilder().addRecipe(new PotionRecipe(holder.getPotion().getAsHolder(), Items.GLOWSTONE_DUST, holder.getStrongPotion().getAsHolder()));
             }
         });
     }

@@ -70,7 +70,7 @@ public class SolLogger {
     @SafeVarargs
     public final <T, E> T debug(T message, E... extra) {
         if (Services.PLATFORM != null && Services.PLATFORM.isDevelopmentEnvironment()) {
-            String m = this.build(message);
+            String m = this.build(message, extra);
             if (!this.last.equals(m))
                 this.logger.warn(m);
             this.last = m;

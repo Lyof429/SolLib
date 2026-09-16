@@ -64,12 +64,12 @@ public class SolFabricCore {
         FabricBrewingRecipeRegistryBuilder.BUILD.register(builder -> {
             SolRegistries.MOD.iterate(EffectHolder.class, holder -> {
                 if (holder.hasPotion()) {
-                    builder.addMix(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().get());
+                    builder.addMix(holder.getCraftingBase().get(), holder.getCraftingIngredient().get().asItem(), holder.getPotion().getAsHolder());
 
                     if (holder.hasLongPotion())
-                        builder.addMix(holder.getPotion().get(), Items.REDSTONE, holder.getLongPotion().get());
+                        builder.addMix(holder.getPotion().getAsHolder(), Items.REDSTONE, holder.getLongPotion().getAsHolder());
                     if (holder.hasStrongPotion())
-                        builder.addMix(holder.getPotion().get(), Items.GLOWSTONE_DUST, holder.getStrongPotion().get());
+                        builder.addMix(holder.getPotion().getAsHolder(), Items.GLOWSTONE_DUST, holder.getStrongPotion().getAsHolder());
                 }
             });
         });
