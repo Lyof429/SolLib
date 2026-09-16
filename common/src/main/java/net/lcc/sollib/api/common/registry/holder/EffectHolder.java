@@ -115,24 +115,25 @@ public class EffectHolder extends Holder<MobEffect> {
         return this.craftingIngredient;
     }
 
-    public Supplier<Potion> getPotion() {
+    public Holder<Potion> getPotion() {
         return this.potion;
     }
 
-    public Supplier<Potion> getLongPotion() {
+    public Holder<Potion> getLongPotion() {
         return this.longPotion;
     }
 
-    public Supplier<Potion> getStrongPotion() {
+    public Holder<Potion> getStrongPotion() {
         return this.strongPotion;
     }
 
     @ApiStatus.Internal
     public void registerPotion(Consumer<Holder<Potion>> registrar) {
-        registrar.accept(this.potion);
-        if (this.longPotion != null)
+        if (this.hasPotion())
+            registrar.accept(this.potion);
+        if (this.hasLongPotion())
             registrar.accept(this.longPotion);
-        if (this.strongPotion != null)
+        if (this.hasStrongPotion())
             registrar.accept(this.strongPotion);
     }
 }
