@@ -34,7 +34,7 @@ public class SReloadRegistry implements SEventListener {
 
     @Override
     public void onReload(ResourceManager manager) {
-        for (IReloadListener listener : INSTANCES) {
+        for (IReloadListener listener : INSTANCE.INSTANCES) {
             try {
                 listener.reload(manager);
             } catch (Exception e) {
@@ -45,7 +45,7 @@ public class SReloadRegistry implements SEventListener {
 
     @Override
     public void onPreload(ResourceManager manager) {
-        for (IReloadListener listener : INSTANCES) {
+        for (IReloadListener listener : INSTANCE.INSTANCES) {
             try {
                 listener.preload(manager);
             } catch (Exception e) {
