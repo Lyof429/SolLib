@@ -16,14 +16,13 @@ import java.util.function.Consumer;
 
 public class SItemModelRegistry {
     public static final SItemModelRegistry INSTANCE = new SItemModelRegistry();
-    private SItemModelRegistry() {}
 
     private final Map<Item, ModelResourceLocation> INSTANCES = new HashMap<>();
 
     /**
-     * Registers an item to have a different held model
+     * Registers an item to have a different in hand model
      */
-    public void registerHeld(ItemLike item) {
+    public void addInHandModel(ItemLike item) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(item.asItem());
         INSTANCES.putIfAbsent(item.asItem(),
                 new ModelResourceLocation(Identifier.of(id.getNamespace(), id.getPath() + "_in_hand"), "inventory"));

@@ -8,10 +8,11 @@
     "access.ButtonBlockAccessor",
     "access.MobEffectAccessor",
     "access.PressurePlateBlockAccessor",
+    "access.SimpleReloadInstanceAccessor",
     "access.StairBlockAccessor",
     "common.data.FallbackResourceManagerMixin",
     "common.data.MultiPackResourceManagerMixin",
-    "common.data.ReloadableServerResourcesMixin",
+    "common.data.SimpleReloadInstanceMixin",
     "common.worldgen.density.MinecraftServerMixin",
     "common.worldgen.density.PlayerAdvancementsMixin",
     "common.worldgen.density.PlayerListMixin"

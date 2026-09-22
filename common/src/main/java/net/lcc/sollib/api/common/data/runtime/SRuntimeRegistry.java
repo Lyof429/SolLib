@@ -11,6 +11,7 @@ import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.event.SEventListener;
 import net.lcc.sollib.core.Identifier;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import org.jetbrains.annotations.ApiStatus;
 
