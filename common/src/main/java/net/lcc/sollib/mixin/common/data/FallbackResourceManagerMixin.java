@@ -3,7 +3,7 @@ package net.lcc.sollib.mixin.common.data;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lcc.sollib.api.common.data.runtime.condition.LoadCondition;
+import net.lcc.sollib.api.common.data.runtime.metadata.SMetadata;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -29,7 +29,7 @@ public class FallbackResourceManagerMixin {
     private IoSupplier<InputStream> getConditionedResource(PackResources instance, PackType packType,
                                                            ResourceLocation id, Operation<IoSupplier<InputStream>> original) {
         IoSupplier<InputStream> resource = original.call(instance, packType, id);
-        return resource != null && LoadCondition.shouldLoad(id, instance, packType) ? resource : null;
+        return resource != null && SMetadata.Condition.shouldLoad(id, instance, packType) ? resource : null;
     }
 
     @ModifyReturnValue(
@@ -37,9 +37,7 @@ public class FallbackResourceManagerMixin {
             at = @At("RETURN")
     )
     private List<Resource> getConditionedResourceStack(List<Resource> original, ResourceLocation id) {
-        //IoSupplier<InputStream> resource = original.call(instance, packType, id);
-        //return SolTest.MOD.getLogger().info( resource != null && LoadCondition.shouldLoad(id, instance, packType) ? resource : null );
-        return original.stream().filter(r -> LoadCondition.shouldLoad(id, r.source(), this.type)).toList();
+        return original.stream().filter(r -> SMetadata.Condition.shouldLoad(id, r.source(), this.type)).toList();
     }
 
     @WrapOperation(
@@ -48,7 +46,7 @@ public class FallbackResourceManagerMixin {
     )
     private void listConditionedResources(PackResources instance, PackType packType, String namespace, String path, PackResources.ResourceOutput resourceOutput, Operation<Void> original) {
         original.call(instance, packType, namespace, path, (PackResources.ResourceOutput) (id, resource) -> {
-            if (resource != null && LoadCondition.shouldLoad(id, instance, packType))
+            if (resource != null && SMetadata.Condition.shouldLoad(id, instance, packType))
                 resourceOutput.accept(id, resource);
         });
     }
@@ -59,7 +57,7 @@ public class FallbackResourceManagerMixin {
     )
     private void listConditionedResourceStacks(PackResources instance, PackType packType, String namespace, String path, PackResources.ResourceOutput resourceOutput, Operation<Void> original) {
         original.call(instance, packType, namespace, path, (PackResources.ResourceOutput) (id, resource) -> {
-            if (resource != null && LoadCondition.shouldLoad(id, instance, packType))
+            if (resource != null && SMetadata.Condition.shouldLoad(id, instance, packType))
                 resourceOutput.accept(id, resource);
         });
     }
