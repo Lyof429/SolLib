@@ -1,6 +1,5 @@
 package net.lcc.sollib.mixin.common.data;
 
-import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.event.SEvents;
 import net.lcc.sollib.mixin.access.SimpleReloadInstanceAccessor;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -22,8 +21,6 @@ public class SimpleReloadInstanceMixin {
     @Inject(method = "create", at = @At("HEAD"))
     private static void headReload(ResourceManager manager, List<PreparableReloadListener> listeners, Executor backgroundExecutor,
                                        Executor gameExecutor, CompletableFuture<Unit> alsoWaitedFor, boolean profiled, CallbackInfoReturnable<ReloadInstance> cir) {
-        Thread.dumpStack();
-        SolLib.MOD.getLogger().info("CLIENT");
         SEvents.ON_PRELOAD.emit(manager);
     }
 
