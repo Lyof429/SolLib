@@ -1,6 +1,5 @@
 package net.lcc.sollib.api.event;
 
-import net.lcc.sollib.api.common.data.reload.SReloadRegistry;
 import net.lcc.sollib.api.common.logger.SolLogger;
 
 import java.util.ArrayList;

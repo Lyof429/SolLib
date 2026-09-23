@@ -2,10 +2,8 @@ package net.lcc.sollib.api.event;
 
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.config.SolConfig;
-import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
 import net.lcc.sollib.platform.Services;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 
