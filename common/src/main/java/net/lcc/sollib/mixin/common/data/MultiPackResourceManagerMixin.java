@@ -2,13 +2,11 @@ package net.lcc.sollib.mixin.common.data;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.event.SEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +26,6 @@ public class MultiPackResourceManagerMixin {
     private void tailInit(PackType type, List<PackResources> packs, CallbackInfo ci) {
         SolRegistries.CONFIG.reload();
         SolRegistries.Data.RUNTIME.clean();
-        SEvents.ON_PRELOAD.emit((ResourceManager) (Object) this);
     }
 
 

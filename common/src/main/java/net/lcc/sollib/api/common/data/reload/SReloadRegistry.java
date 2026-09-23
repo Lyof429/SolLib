@@ -5,7 +5,6 @@ import net.lcc.sollib.api.event.SEventListener;
 import net.lcc.sollib.api.event.SEventType;
 import net.lcc.sollib.api.event.SEvents;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,7 +21,7 @@ public class SItemModelRegistry {
     /**
      * Registers an item to have a different held model
      */
-    public void registerHeld(ItemLike item) {
+    public void addInHandModel(ItemLike item) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(item.asItem());
         INSTANCES.putIfAbsent(item.asItem(),
                 new ModelResourceLocation(id.getNamespace(), id.getPath() + "_in_hand", "inventory"));

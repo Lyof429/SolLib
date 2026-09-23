@@ -8,7 +8,8 @@ import net.minecraft.sounds.Music;
 import net.minecraft.world.BossEvent;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class SBossBarRegistry {
