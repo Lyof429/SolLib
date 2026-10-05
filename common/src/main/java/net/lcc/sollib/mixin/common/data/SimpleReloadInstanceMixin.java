@@ -1,5 +1,6 @@
 package net.lcc.sollib.mixin.common.data;
 
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.event.SEvents;
 import net.lcc.sollib.mixin.access.SimpleReloadInstanceAccessor;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -18,12 +19,20 @@ import java.util.concurrent.Executor;
 
 @Mixin(SimpleReloadInstance.class)
 public class SimpleReloadInstanceMixin {
+    /**
+     * Config reloading and reload listener preloading
+     */
     @Inject(method = "create", at = @At("HEAD"))
     private static void headReload(ResourceManager manager, List<PreparableReloadListener> listeners, Executor backgroundExecutor,
                                        Executor gameExecutor, CompletableFuture<Unit> alsoWaitedFor, boolean profiled, CallbackInfoReturnable<ReloadInstance> cir) {
+        SolRegistries.Data.RUNTIME.clean();
+        SolRegistries.CONFIG.reload();
         SEvents.ON_PRELOAD.emit(manager);
     }
 
+    /**
+     * Reload listener reloading
+     */
     @Inject(method = "create", at = @At("RETURN"))
     private static <S> void tailReload(ResourceManager manager, List<PreparableReloadListener> listeners, Executor backgroundExecutor,
                                    Executor gameExecutor, CompletableFuture<Unit> alsoWaitedFor, boolean profiled, CallbackInfoReturnable<ReloadInstance> cir) {

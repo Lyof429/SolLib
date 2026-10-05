@@ -19,16 +19,6 @@ import java.util.function.Predicate;
 
 @Mixin(MultiPackResourceManager.class)
 public class MultiPackResourceManagerMixin {
-    /**
-     * Config reloading and reload listener preloading
-     */
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void tailInit(PackType type, List<PackResources> packs, CallbackInfo ci) {
-        SolRegistries.Data.RUNTIME.clean();
-        SolRegistries.CONFIG.reload();
-    }
-
-
     // Using predefined lambdas so we don't have to allocate them each time
     @Unique private static final Predicate<Map.Entry<ResourceLocation, Resource>> sol_isNull
             = entry -> entry.getValue() == null;
