@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
@@ -38,6 +39,7 @@ public class BlockHolder extends Holder<Block> {
     private Flammability flammability;
     private Supplier<Block> stripResult;
     private final Map<BlockModel, BlockHolder> blockset;
+    private String setPrefix;
 
     public BlockHolder(SolModContainer mod, String name, Supplier<Block> entrySupplier) {
         super(mod, name, entrySupplier);
@@ -51,6 +53,7 @@ public class BlockHolder extends Holder<Block> {
         this.flammability = null;
         this.stripResult = null;
         this.blockset = new HashMap<>();
+        this.setPrefix = name;
     }
 
     @Override
@@ -184,8 +187,13 @@ public class BlockHolder extends Holder<Block> {
     }
 
 
+    public BlockHolder withSetPrefix(String prefix) {
+        this.setPrefix = prefix;
+        return this;
+    }
+
     public BlockHolder withStairs() {
-        BlockHolder stairs = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_stairs",
+        BlockHolder stairs = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_stairs",
                         () -> StairBlockAccessor.create(this.get().defaultBlockState(), BlockBehaviour.Properties.copy(this.get())))
                 .withModel(BlockModel.STAIRS)
                 .withItem(it -> it.withTags(ItemTags.STAIRS))
@@ -205,7 +213,7 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withSlab() {
-        BlockHolder slab = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_slab",
+        BlockHolder slab = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_slab",
                         () -> new SlabBlock(BlockBehaviour.Properties.copy(this.get())))
                 .withModel(BlockModel.SLAB)
                 .withItem(it -> it.withTags(ItemTags.SLABS))
@@ -225,7 +233,7 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withWall() {
-        BlockHolder wall = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_wall",
+        BlockHolder wall = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_wall",
                         () -> new WallBlock(BlockBehaviour.Properties.copy(this.get())))
                 .withModel(BlockModel.WALL)
                 .withItem(it -> it.withTags(ItemTags.WALLS))
@@ -245,8 +253,8 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withButton(BlockSetType type, int ticksPressed, boolean arrowCanPress) {
-        BlockHolder button = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_button", 
-                        () -> ButtonBlockAccessor.create(BlockBehaviour.Properties.copy(this.get()), type, ticksPressed, arrowCanPress))
+        BlockHolder button = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_button",
+                        () -> ButtonBlockAccessor.create(BlockBehaviour.Properties.copy(this.get()).noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY), type, ticksPressed, arrowCanPress))
                 .withModel(BlockModel.BUTTON)
                 .withItem(it -> it.withTags(ItemTags.BUTTONS))
                 .withTags(BlockTags.BUTTONS);
@@ -264,8 +272,8 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withPressurePlate(PressurePlateBlock.Sensitivity sensitivity, BlockSetType type) {
-        BlockHolder pressurePlate = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_pressure_plate",
-                        () -> PressurePlateBlockAccessor.create(sensitivity, BlockBehaviour.Properties.copy(this.get()), type))
+        BlockHolder pressurePlate = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_pressure_plate",
+                        () -> PressurePlateBlockAccessor.create(sensitivity, BlockBehaviour.Properties.copy(this.get()).noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY), type))
                 .withModel(BlockModel.PRESSURE_PLATE)
                 .withItem()
                 .withTags(BlockTags.PRESSURE_PLATES);
@@ -283,7 +291,7 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withFence() {
-        BlockHolder fence = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_fence",
+        BlockHolder fence = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_fence",
                         () -> new FenceBlock(BlockBehaviour.Properties.copy(this.get())))
                 .withModel(BlockModel.FENCE)
                 .withItem(it -> it.withTags(ItemTags.FENCES))
@@ -303,7 +311,7 @@ public class BlockHolder extends Holder<Block> {
     }
 
     public BlockHolder withFenceGate(WoodType woodType) {
-        BlockHolder fenceGate = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_fence_gate",
+        BlockHolder fenceGate = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_fence_gate",
                         () -> new FenceGateBlock(BlockBehaviour.Properties.copy(this.get()), woodType))
                 .withModel(BlockModel.FENCE_GATE)
                 .withItem(it -> it.withTags(ItemTags.FENCE_GATES))
