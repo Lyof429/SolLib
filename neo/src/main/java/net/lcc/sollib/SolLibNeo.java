@@ -56,7 +56,7 @@ public class SolLibNeo {
                                 "tags/worldgen/biome/" + id.getPath() + "_can_spawn.json"),
                         json -> holder.getSpawn().createTag(json, id));
                 SolRegistries.Data.RUNTIME.addJson(Identifier.of(id.getNamespace(),
-                                "forge/biome_modifier/" + id.getPath() + ".json"),
+                                "neoforge/biome_modifier/" + id.getPath() + ".json"),
                         json -> holder.getSpawn().createBiomeModifier(json, id));
             }
         });

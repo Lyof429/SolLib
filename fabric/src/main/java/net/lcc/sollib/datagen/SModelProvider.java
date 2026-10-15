@@ -43,7 +43,7 @@ public class SModelProvider extends FabricModelProvider {
                     case TRAPDOOR -> generator.createTrapdoor(holder.get());
                     case FLUID -> generator.createNonTemplateModelBlock(holder.get());
                 }
-            } else {
+            } else if (!holder.getBlockSet().isEmpty()) {
                 BlockModelGenerators.BlockFamilyProvider familyProvider = generator.family(holder.get());
                 for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                     switch (entry.getKey()) {

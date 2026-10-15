@@ -19,10 +19,12 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -38,12 +40,13 @@ public class BlockHolder extends SHolder<Block> {
     private Flammability flammability;
     private Supplier<Block> stripResult;
     private final Map<BlockModel, BlockHolder> blockset;
+    private String setPrefix;
 
     public BlockHolder(SolModContainer mod, String name, Supplier<Block> entrySupplier) {
         super(mod, name, entrySupplier);
 
         this.item = null;
-        this.tags = List.of();
+        this.tags = new ArrayList<>();
         this.drop = null;
         this.dropCount = null;
         this.model = null;
@@ -51,6 +54,7 @@ public class BlockHolder extends SHolder<Block> {
         this.flammability = null;
         this.stripResult = null;
         this.blockset = new HashMap<>();
+        this.setPrefix = name;
     }
 
     @Override
@@ -78,7 +82,8 @@ public class BlockHolder extends SHolder<Block> {
      */
     @SafeVarargs
     public final BlockHolder withTags(TagKey<Block>... tags) {
-        this.tags = List.of(tags);
+        for (TagKey<Block> tag : tags)
+            if (!this.tags.contains(tag)) this.tags.add(tag);
         return this;
     }
 
@@ -184,8 +189,13 @@ public class BlockHolder extends SHolder<Block> {
     }
 
 
+    public BlockHolder withSetPrefix(String prefix) {
+        this.setPrefix = prefix;
+        return this;
+    }
+
     public BlockHolder withStairs() {
-        BlockHolder stairs = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_stairs",
+        BlockHolder stairs = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_stairs",
                         () -> StairBlockAccessor.create(this.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(this.get())))
                 .withModel(BlockModel.STAIRS)
                 .withItem(it -> it.withTags(ItemTags.STAIRS))
@@ -205,7 +215,7 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withSlab() {
-        BlockHolder slab = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_slab",
+        BlockHolder slab = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_slab",
                         () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(this.get())))
                 .withModel(BlockModel.SLAB)
                 .withItem(it -> it.withTags(ItemTags.SLABS))
@@ -225,7 +235,7 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withWall() {
-        BlockHolder wall = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_wall",
+        BlockHolder wall = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_wall",
                         () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(this.get())))
                 .withModel(BlockModel.WALL)
                 .withItem(it -> it.withTags(ItemTags.WALLS))
@@ -245,8 +255,8 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withButton(BlockSetType type, int ticksPressed) {
-        BlockHolder button = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_button", 
-                        () -> ButtonBlockAccessor.create(type, ticksPressed, BlockBehaviour.Properties.ofFullCopy(this.get())))
+        BlockHolder button = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_button", 
+                        () -> ButtonBlockAccessor.create(type, ticksPressed, BlockBehaviour.Properties.ofFullCopy(this.get()).noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY)))
                 .withModel(BlockModel.BUTTON)
                 .withItem(it -> it.withTags(ItemTags.BUTTONS))
                 .withTags(BlockTags.BUTTONS);
@@ -264,8 +274,8 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withPressurePlate(BlockSetType type) {
-        BlockHolder pressurePlate = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_pressure_plate",
-                        () -> PressurePlateBlockAccessor.create(type, BlockBehaviour.Properties.ofFullCopy(this.get())))
+        BlockHolder pressurePlate = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_pressure_plate",
+                        () -> PressurePlateBlockAccessor.create(type, BlockBehaviour.Properties.ofFullCopy(this.get()).noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY)))
                 .withModel(BlockModel.PRESSURE_PLATE)
                 .withItem()
                 .withTags(BlockTags.PRESSURE_PLATES);
@@ -283,7 +293,7 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withFence() {
-        BlockHolder fence = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_fence",
+        BlockHolder fence = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_fence",
                         () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(this.get())))
                 .withModel(BlockModel.FENCE)
                 .withItem(it -> it.withTags(ItemTags.FENCES))
@@ -303,7 +313,7 @@ public class BlockHolder extends SHolder<Block> {
     }
 
     public BlockHolder withFenceGate(WoodType woodType) {
-        BlockHolder fenceGate = this.mod.getRegistrar(BlockHolder.class).register(this.name + "_fence_gate",
+        BlockHolder fenceGate = this.mod.getRegistrar(BlockHolder.class).register(this.setPrefix + "_fence_gate",
                         () -> new FenceGateBlock(woodType, BlockBehaviour.Properties.ofFullCopy(this.get())))
                 .withModel(BlockModel.FENCE_GATE)
                 .withItem(it -> it.withTags(ItemTags.FENCE_GATES))

@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -34,7 +35,7 @@ public class EntityHolder extends SHolder<EntityType<?>> {
 
     public EntityHolder(SolModContainer mod, String name, Supplier<EntityType<?>> entrySupplier) {
         super(mod, name, entrySupplier);
-        this.tags = List.of();
+        this.tags = new ArrayList<>();
         this.drop = null;
         this.attributesBuilder = null;
         this.spawnRestrictions = null;
@@ -53,7 +54,8 @@ public class EntityHolder extends SHolder<EntityType<?>> {
      */
     @SafeVarargs
     public final EntityHolder withTags(TagKey<EntityType<?>>... tags) {
-        this.tags = List.of(tags);
+        for (TagKey<EntityType<?>> tag : tags)
+            if (!this.tags.contains(tag)) this.tags.add(tag);
         return this;
     }
 

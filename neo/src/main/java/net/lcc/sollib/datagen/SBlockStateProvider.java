@@ -43,9 +43,10 @@ public class SBlockStateProvider extends BlockStateProvider {
                     case FLUID ->
                             simpleBlock(block, models().getBuilder(name(block)).texture("particle", blockTexture(block)));
                 }
-            } else {
+            } else if (!holder.getBlockSet().isEmpty()) {
                 Block baseBlock = holder.get();
                 ResourceLocation texture = blockTexture(baseBlock);
+                simpleBlock(baseBlock);
                 for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                     Block childBlock = entry.getValue().get();
                     switch (entry.getKey()) {

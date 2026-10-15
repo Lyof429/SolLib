@@ -8,6 +8,7 @@ import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -23,7 +24,7 @@ public class ItemHolder extends SHolder<Item> {
     public ItemHolder(SolModContainer mod, String name, Supplier<Item> entrySupplier) {
         super(mod, name, entrySupplier);
 
-        this.tags = List.of();
+        this.tags = new ArrayList<>();
         this.model = null;
         this.fuelDuration = 0;
     }
@@ -56,7 +57,8 @@ public class ItemHolder extends SHolder<Item> {
      */
     @SafeVarargs
     public final ItemHolder withTags(TagKey<Item>... tags) {
-        this.tags = List.of(tags);
+        for (TagKey<Item> tag : tags)
+            if (!this.tags.contains(tag)) this.tags.add(tag);
         return this;
     }
 
