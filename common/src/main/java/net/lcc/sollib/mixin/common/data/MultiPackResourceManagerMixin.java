@@ -2,7 +2,6 @@ package net.lcc.sollib.mixin.common.data;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.data.runtime.RuntimeResourcePack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -17,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 @Mixin(MultiPackResourceManager.class)
 public class MultiPackResourceManagerMixin {
@@ -37,11 +35,6 @@ public class MultiPackResourceManagerMixin {
     @ModifyReturnValue(method = "getResourceStack", at = @At("RETURN"))
     private List<Resource> getRuntimeResourceStack(List<Resource> original, ResourceLocation id) {
         return original.stream().map(resource -> SolRegistries.Data.RUNTIME.apply(id, resource)).filter(Objects::nonNull).toList();
-    }
-
-    @ModifyReturnValue(method = "listPacks", at = @At("RETURN"))
-    private Stream<PackResources> listRuntimePack(Stream<PackResources> original) {
-        return Stream.concat(original, Stream.of(RuntimeResourcePack.INSTANCE));
     }
 
     @ModifyReturnValue(method = "listResources", at = @At("RETURN"))

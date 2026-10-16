@@ -146,29 +146,6 @@ public class SRuntimeRegistry implements SEventListener {
         return matching;
     }
 
-    @ApiStatus.Internal
-    public boolean provides(ResourceLocation target) {
-        return instances.containsKey(target) && !blacklist.get().contains(target);
-    }
-
-    @ApiStatus.Internal
-    public Set<String> getNamespaces() {
-        Set<String> namespaces = new HashSet<>();
-        for (ResourceLocation id : instances.keySet())
-            if (this.provides(id)) namespaces.add(id.getNamespace());
-        return namespaces;
-    }
-
-    @ApiStatus.Internal
-    public List<ResourceLocation> findMatching(String namespace, String startingPath) {
-        List<ResourceLocation> matching = new ArrayList<>();
-        for (ResourceLocation id : instances.keySet()) {
-            if (id.getNamespace().equals(namespace) && id.getPath().startsWith(startingPath + "/") && this.provides(id))
-                matching.add(id);
-        }
-        return matching;
-    }
-
     private static final BiConsumer<ResourceLocation, List<RuntimeData>> sol_removeEphemeral
             = (id, list) -> list.removeIf(RuntimeData::isEphemeral);
     private static final Predicate<Map.Entry<ResourceLocation, List<RuntimeData>>> sol_isEmpty
