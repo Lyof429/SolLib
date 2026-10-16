@@ -1,17 +1,13 @@
 package net.lcc.sollib.mixin.common.data;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.Resource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -27,33 +23,35 @@ public class MultiPackResourceManagerMixin {
     @Unique private static final Predicate<Map.Entry<ResourceLocation, List<Resource>>> sol_isEmpty
             = entry -> entry.getValue().isEmpty();
 
-    @ModifyReturnValue(method = "getResource", at = @At("RETURN"))
-    private Optional<Resource> getRuntimeResource(Optional<Resource> original, ResourceLocation id) {
-        return Optional.ofNullable(SolRegistries.Data.RUNTIME.apply(id, original.orElse(null)));
+    @WrapMethod(method = "getResource")
+    private Optional<Resource> getRuntimeResource(ResourceLocation id, Operation<Optional<Resource>> original) {
+        return Optional.ofNullable(SolRegistries.Data.RUNTIME.apply(id, original.call(id).orElse(null)));
     }
 
-    @ModifyReturnValue(method = "getResourceStack", at = @At("RETURN"))
-    private List<Resource> getRuntimeResourceStack(List<Resource> original, ResourceLocation id) {
-        return original.stream().map(resource -> SolRegistries.Data.RUNTIME.apply(id, resource)).filter(Objects::nonNull).toList();
+    @WrapMethod(method = "getResourceStack")
+    private List<Resource> getRuntimeResourceStack(ResourceLocation id, Operation<List<Resource>> original) {
+        return original.call(id).stream().map(resource -> SolRegistries.Data.RUNTIME.apply(id, resource)).toList();
     }
 
-    @ModifyReturnValue(method = "listResources", at = @At("RETURN"))
-    private Map<ResourceLocation, Resource> listRuntimeResources(Map<ResourceLocation, Resource> original,
-                                                                 String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
+    @WrapMethod(method = "listResources")
+    private Map<ResourceLocation, Resource> listRuntimeResources(String startingPath, Predicate<ResourceLocation> allowedPathPredicate,
+                                                                 Operation<Map<ResourceLocation, Resource>> original) {
+        Map<ResourceLocation, Resource> result = original.call(startingPath, allowedPathPredicate);
         for (ResourceLocation id : SolRegistries.Data.RUNTIME.findMatching(startingPath, allowedPathPredicate))
-            original.putIfAbsent(id, null);
-        original.replaceAll(SolRegistries.Data.RUNTIME::apply);
-        original.entrySet().removeIf(sol_isNull);
-        return original;
+            result.putIfAbsent(id, null);
+        result.replaceAll(SolRegistries.Data.RUNTIME::apply);
+        result.entrySet().removeIf(sol_isNull);
+        return result;
     }
 
-    @ModifyReturnValue(method = "listResourceStacks", at = @At("RETURN"))
-    private Map<ResourceLocation, List<Resource>> listRuntimeResourceStacks(Map<ResourceLocation, List<Resource>> original,
-                                                                            String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
+    @WrapMethod(method = "listResourceStacks")
+    private Map<ResourceLocation, List<Resource>> listRuntimeResourceStacks(String startingPath, Predicate<ResourceLocation> allowedPathPredicate,
+                                                                            Operation<Map<ResourceLocation, List<Resource>>> original) {
+        Map<ResourceLocation, List<Resource>> result = original.call(startingPath, allowedPathPredicate);
         for (ResourceLocation id : SolRegistries.Data.RUNTIME.findMatching(startingPath, allowedPathPredicate))
-            original.putIfAbsent(id, Collections.singletonList(null));
-        original.replaceAll(sol_replaceList);
-        original.entrySet().removeIf(sol_isEmpty);
-        return original;
+            result.putIfAbsent(id, Collections.singletonList(null));
+        result.replaceAll(sol_replaceList);
+        result.entrySet().removeIf(sol_isEmpty);
+        return result;
     }
 }
