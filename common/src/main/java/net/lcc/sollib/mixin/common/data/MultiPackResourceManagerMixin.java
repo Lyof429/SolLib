@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-@Mixin(MultiPackResourceManager.class)
+@Mixin(value = MultiPackResourceManager.class, priority = 100)
 public class MultiPackResourceManagerMixin {
     // Using predefined lambdas so we don't have to allocate them each time
     @Unique private static final Predicate<Map.Entry<ResourceLocation, Resource>> sol_isNull
