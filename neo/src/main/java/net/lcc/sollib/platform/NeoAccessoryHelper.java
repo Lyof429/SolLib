@@ -20,7 +20,8 @@ public class NeoAccessoryHelper implements IAccessoryHelper {
 
         Map<String, ItemStack> result = new HashMap<>();
         for (Map.Entry<String, ICurioStacksHandler> entry : inventory.get().getCurios().entrySet())
-            result.put(entry.getKey(), entry.getValue().getStacks().getStackInSlot(0));
+            if (entry.getValue().getStacks().getSlots() > 0)
+                result.put(entry.getKey(), entry.getValue().getStacks().getStackInSlot(0));
 
         return result;
     }
