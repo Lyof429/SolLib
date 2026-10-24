@@ -33,7 +33,7 @@ public class WeatherCommandMixin {
     }
 
     @Inject(method = "setClear", at = @At("TAIL"))
-    private static void onClearWeather(CommandSourceStack source, int duration, CallbackInfoReturnable<Integer> cir) {
-        SolRegistries.WEATHER.clear(source);
+    private static void onClearWeather(CommandSourceStack source, int time, CallbackInfoReturnable<Integer> cir) {
+        SolRegistries.WEATHER.clear(source, time);
     }
 }
