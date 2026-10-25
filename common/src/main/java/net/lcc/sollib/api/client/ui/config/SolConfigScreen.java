@@ -99,8 +99,6 @@ public class SolConfigScreen extends Screen {
                 this.setTooltipForNextRenderPass(this.errorMessage);
         }
 
-        //guiGraphics.drawString(this.font, "the what", 10, 10, 16777215);
-
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
