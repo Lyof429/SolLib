@@ -6,7 +6,12 @@ import net.minecraft.network.chat.Component;
 
 public interface StyledMultiLineEditBox {
     static StyledMultiLineEditBox of(Font font, int x, int y, int width, int height, Component placeholder, Component message) {
-        return (StyledMultiLineEditBox) new MultiLineEditBox(font, x, y, width, height, placeholder, message);
+        return (StyledMultiLineEditBox) (Object) new MultiLineEditBox(font, x, y, width, height, placeholder, message) {
+            @Override
+            protected double scrollRate() {
+                return super.scrollRate() * 5;
+            }
+        };
     }
 
     StyledMultiLineEditBox sol_withTextColor(ColorProvider provider);
