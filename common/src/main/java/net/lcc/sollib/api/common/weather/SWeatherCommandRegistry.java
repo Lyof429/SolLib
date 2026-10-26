@@ -7,14 +7,15 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.TimeArgument;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class SWeatherCommandRegistry {
     public static final SWeatherCommandRegistry INSTANCE = new SWeatherCommandRegistry();
+    public static final int DEFAULT_DURATION = -1;
 
-    private final Map<String, BiConsumer<CommandSourceStack, Integer>> INSTANCES = new HashMap<>();
+    private final Map<String, Entry> INSTANCES = new LinkedHashMap<>();
 
     /**
      * Registers a new weather type to the /weather command
@@ -23,7 +24,11 @@ public class SWeatherCommandRegistry {
      * @since 1.0.0
      */
     public void register(String name, BiConsumer<CommandSourceStack, Integer> action) {
-        INSTANCES.put(name, action);
+        this.register(name, action, (source, duration) -> action.accept(source, 0));
+    }
+
+    public void register(String name, BiConsumer<CommandSourceStack, Integer> action, BiConsumer<CommandSourceStack, Integer> clearAction) {
+        INSTANCES.put(name, new Entry(action, clearAction));
     }
 
     /**
@@ -32,14 +37,13 @@ public class SWeatherCommandRegistry {
      */
     @ApiStatus.Internal
     public void apply(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        for (Map.Entry<String, BiConsumer<CommandSourceStack, Integer>> entry : INSTANCES.entrySet()) {
-            String name = entry.getKey();
-            BiConsumer<CommandSourceStack, Integer> action = entry.getValue();
+        for (Map.Entry<String, Entry> entry : INSTANCES.entrySet()) {
+            BiConsumer<CommandSourceStack, Integer> action = entry.getValue().action();
 
             builder.then(
-                    Commands.literal(name)
+                    Commands.literal(entry.getKey())
                             .executes(ctx -> {
-                                action.accept(ctx.getSource(), -1);
+                                action.accept(ctx.getSource(), DEFAULT_DURATION);
                                 return 1;
                             })
                             .then(
@@ -55,7 +59,9 @@ public class SWeatherCommandRegistry {
     }
 
     @ApiStatus.Internal
-    public void clear(CommandSourceStack source) {
-        INSTANCES.values().forEach(action -> action.accept(source, 0));
+    public void clear(CommandSourceStack source, int duration) {
+        INSTANCES.values().forEach(entry -> entry.clearAction().accept(source, duration));
     }
+
+    private record Entry(BiConsumer<CommandSourceStack, Integer> action, BiConsumer<CommandSourceStack, Integer> clearAction) { }
 }
