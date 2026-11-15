@@ -74,6 +74,14 @@ public class BlockHolder extends Holder<Block> {
         return this;
     }
 
+    public boolean hasItem() {
+        return this.item != null;
+    }
+
+    public ItemHolder getItem() {
+        return this.item;
+    }
+
 
     /**
      * Registers this item to the supplied tags
@@ -327,6 +335,18 @@ public class BlockHolder extends Holder<Block> {
 
     public BlockHolder getFenceGate() {
         return this.blockset.get(BlockModel.FENCE_GATE);
+    }
+
+    public BlockHolder withSign(BlockHolder standing, BlockHolder wall) {
+        this.blockset.put(BlockModel.SIGN, standing);
+        this.blockset.put(BlockModel.WALL_SIGN, wall);
+        return this;
+    }
+
+    public BlockHolder withHangingSign(BlockHolder hanging, BlockHolder wall) {
+        this.blockset.put(BlockModel.HANGING_SIGN, hanging);
+        this.blockset.put(BlockModel.WALL_HANGING_SIGN, wall);
+        return this;
     }
 
     public Map<BlockModel, BlockHolder> getBlockSet() {

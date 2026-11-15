@@ -6,7 +6,9 @@ import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.registry.data.block.BlockModel;
 import net.lcc.sollib.api.common.registry.holder.BlockHolder;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.lcc.sollib.core.Identifier;
 import net.minecraft.core.Direction;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.blockstates.MultiVariantGenerator;
@@ -56,6 +58,16 @@ public class SModelProvider extends FabricModelProvider {
                         case FENCE_GATE -> familyProvider.fenceGate(entry.getValue().get());
                     }
                 }
+                if (holder.getBlockSet().containsKey(BlockModel.SIGN) && holder.getBlockSet().containsKey(BlockModel.WALL_SIGN))
+                    familyProvider.generateFor(new BlockFamily.Builder(holder.get()).sign(
+                            holder.getBlockSet().get(BlockModel.SIGN).get(),
+                            holder.getBlockSet().get(BlockModel.WALL_SIGN).get()).getFamily());
+                if (holder.getBlockSet().containsKey(BlockModel.HANGING_SIGN) && holder.getBlockSet().containsKey(BlockModel.WALL_HANGING_SIGN))
+                    generator.createHangingSign(holder.get(),
+                            holder.getBlockSet().get(BlockModel.HANGING_SIGN).get(),
+                            holder.getBlockSet().get(BlockModel.WALL_HANGING_SIGN).get());
+            } else if (holder.hasItem() && holder.getItem().hasBlockModel()) {
+                generator.delegateItemModel(holder.get(), Identifier.mutate(holder.getID(), p -> "block/" + p));
             }
         });
     }

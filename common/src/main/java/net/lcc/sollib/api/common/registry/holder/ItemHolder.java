@@ -19,6 +19,7 @@ public class ItemHolder extends Holder<Item> {
     private int fuelDuration;
     private List<TagKey<Item>> tags;
     private ModelTemplate model;
+    private boolean delegateModel;
 
     public ItemHolder(SolModContainer mod, String name, Supplier<Item> entrySupplier) {
         super(mod, name, entrySupplier);
@@ -78,5 +79,14 @@ public class ItemHolder extends Holder<Item> {
 
     public ModelTemplate getModel() {
         return this.model;
+    }
+
+    public ItemHolder withBlockModel() {
+        this.delegateModel = true;
+        return this;
+    }
+
+    public boolean hasBlockModel() {
+        return this.delegateModel;
     }
 }
