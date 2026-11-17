@@ -39,13 +39,15 @@ public class SModelProvider extends FabricModelProvider {
                     case PILLAR -> generator.woodProvider(holder.get()).log(holder.get());
                     case ROTATABLE -> generator.createRotatedVariantBlock(holder.get());
                     case CROSS -> generator.createCrossBlockWithDefaultItem(holder.get(), BlockModelGenerators.TintState.NOT_TINTED);
-                    case CROSS_POTTED -> pottedCrossBlock(generator, holder.get());
-                    case CROSS_DIRECTIONAL -> directionalCrossBlock(generator, holder.get());
+                    case CROSS_POTTED -> createPottedCrossBlock(generator, holder.get());
+                    case CROSS_DIRECTIONAL -> createDirectionalCrossBlock(generator, holder.get());
                     case DOOR -> generator.createDoor(holder.get());
                     case TRAPDOOR -> generator.createTrapdoor(holder.get());
                     case FLUID -> generator.createNonTemplateModelBlock(holder.get());
                 }
-            } else if (!holder.getBlockSet().isEmpty()) {
+            }
+
+            else if (!holder.getBlockSet().isEmpty()) {
                 BlockModelGenerators.BlockFamilyProvider familyProvider = generator.family(holder.get());
                 for (Map.Entry<BlockModel, BlockHolder> entry : holder.getBlockSet().entrySet()) {
                     switch (entry.getKey()) {
@@ -66,7 +68,9 @@ public class SModelProvider extends FabricModelProvider {
                     generator.createHangingSign(holder.get(),
                             holder.getBlockSet().get(BlockModel.HANGING_SIGN).get(),
                             holder.getBlockSet().get(BlockModel.WALL_HANGING_SIGN).get());
-            } else if (holder.hasItem() && holder.getItem().hasBlockModel()) {
+            }
+
+            else if (holder.hasItem() && holder.getItem().hasBlockModel()) {
                 generator.delegateItemModel(holder.get(), Identifier.mutate(holder.getID(), p -> "block/" + p));
             }
         });
@@ -80,14 +84,15 @@ public class SModelProvider extends FabricModelProvider {
         });
     }
 
-    private void pottedCrossBlock(BlockModelGenerators generators, Block block) {
+
+    private void createPottedCrossBlock(BlockModelGenerators generators, Block block) {
         Block plant = ((FlowerPotBlock) block).getContent();
         TextureMapping textureMapping = TextureMapping.plant(plant);
         ResourceLocation modelId = ModelTemplates.FLOWER_POT_CROSS.create(block, textureMapping, generators.modelOutput);
         generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, modelId));
     }
 
-    private void directionalCrossBlock(BlockModelGenerators generators, Block block) {
+    private void createDirectionalCrossBlock(BlockModelGenerators generators, Block block) {
         ResourceLocation modelId = ModelTemplates.CROSS.create(block, TextureMapping.cross(block), generators.modelOutput);
 
         var variantMap = PropertyDispatch.property(BlockStateProperties.FACING)

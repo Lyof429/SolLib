@@ -13,6 +13,7 @@
     "common.data.FallbackResourceManagerMixin",
     "common.data.MultiPackResourceManagerMixin",
     "common.data.SimpleReloadInstanceMixin",
+    "common.registry.BlockEntityTypeMixin",
     "common.worldgen.density.MinecraftServerMixin",
     "common.worldgen.density.PlayerAdvancementsMixin",
     "common.worldgen.density.PlayerListMixin"
